@@ -1,7 +1,6 @@
 package com.alchemist;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -11,6 +10,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
 public class DiscordMpNext {
+	private JDA jda;
 
 	public static void main(String[] args) {
 		try {
@@ -21,7 +21,7 @@ public class DiscordMpNext {
 	}
 	
 	private void startUp () throws LoginException {
-		// load toke from config
+		// load token from config
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream("src/main/resources/config.properties"));
@@ -32,7 +32,20 @@ public class DiscordMpNext {
 		
 		String token = properties.getProperty("token", null);
 		
-		JDA jda = JDABuilder.createDefault(token).build();
+		try {
+			jda = JDABuilder.createDefault(token)
+					.addEventListeners(new PingListener())
+					.build();
+			jda.awaitReady();
+			System.out.println("Finish building JDA!");
+		} catch (InterruptedException e) {
+			// await is a blocking method, if interrupted
+			e.printStackTrace();
+		} catch (LoginException e) {
+			// things go wrong in authentication
+			e.printStackTrace();
+		}
+		
 	}
 	
 }
