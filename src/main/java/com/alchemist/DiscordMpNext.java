@@ -20,6 +20,22 @@ public class DiscordMpNext {
 		}
 	}
 	
+	public void testApi(String ytKey) {
+		YoutubeApi api = new YoutubeApi(ytKey);
+		JsonResponse response = null;
+		try {
+			response = api.request();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(response.getStatus());
+		System.out.println(response.getBody());
+	}
+	
 	private void startUp () throws LoginException {
 		// load token from config
 		Properties properties = new Properties();
@@ -31,10 +47,14 @@ public class DiscordMpNext {
 		}
 		
 		String token = properties.getProperty("token", null);
+		String ytKey = properties.getProperty("yt_key", null);
+		
+		testApi(ytKey);
 		
 		try {
 			jda = JDABuilder.createDefault(token)
 					.addEventListeners(new PingListener())
+					.addEventListeners(new VtubeListener(ytKey))
 					.build();
 			jda.awaitReady();
 			System.out.println("Finish building JDA!");

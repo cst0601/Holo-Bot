@@ -25,5 +25,12 @@
 	 <artifactId>JDA</artifactId>
 	 <version>4.1.1_137</version>
 	</dependency>
+	
+	<dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20200518</version>
+    </dependency>
+    
   </dependencies>
 </project>
