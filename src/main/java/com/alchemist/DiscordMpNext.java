@@ -20,22 +20,11 @@ public class DiscordMpNext {
 		}
 	}
 	
-	public void testApi(String ytKey) {
-		YoutubeApi api = new YoutubeApi(ytKey);
-		JsonResponse response = null;
-		try {
-			response = api.request();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.out.println(response.getStatus());
-		System.out.println(response.getBody());
-	}
-	
+	/**
+	 * Loads some confidential informations [Discord bot token / youtube api
+	 * key] and creates JDA
+	 * @throws LoginException
+	 */
 	private void startUp () throws LoginException {
 		// load token from config
 		Properties properties = new Properties();
@@ -43,13 +32,13 @@ public class DiscordMpNext {
 			properties.load(new FileInputStream("src/main/resources/config.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.err.println("Failed to read from config.properties, please" +
+							   "check if the file exists.");
 			return;
 		}
 		
 		String token = properties.getProperty("token", null);
 		String ytKey = properties.getProperty("yt_key", null);
-		
-		testApi(ytKey);
 		
 		try {
 			jda = JDABuilder.createDefault(token)

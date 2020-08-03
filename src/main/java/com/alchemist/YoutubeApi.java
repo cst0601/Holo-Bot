@@ -27,8 +27,8 @@ public class YoutubeApi {
 	
 	private final String apiKey;
 	private final String mikoChannelId = "UC-hM6YJuNYVAmUWxeIr9FeA";
-	private final String defaultUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&"
-			+ "channelId=%s&eventType=live&type=video&key=%s";
+	private final String defaultUrl = "https://www.googleapis.com/youtube/v3/se"
+			+ "arch?part=snippet&channelId=%s&eventType=live&type=video&key=%s";
 	private HttpClient client;
 	private HttpRequest request;
 }

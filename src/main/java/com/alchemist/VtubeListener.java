@@ -1,9 +1,6 @@
 package com.alchemist;
 
-import java.io.IOException;
-
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -15,6 +12,7 @@ public class VtubeListener extends ListenerAdapter {
 		// this is some prototyping
 		this.key = key;
 	}
+	
 	public String contentFormat() {
 		return "";
 	}
@@ -45,8 +43,6 @@ public class VtubeListener extends ListenerAdapter {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				
-				
 			}
 		}
 	}
