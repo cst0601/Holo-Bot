@@ -9,7 +9,7 @@ import org.json.JSONObject;
  * Creates all kinds of objects of youtube content (livesteam, video)
  */
 public class ContentFactory {
-	public Content createContent(String contentType, JsonResponse json) {
+	public Content createContent(String contentType, JsonResponse json) {		
 		if (contentType.equals("live")) {
 			return createLiveStream(json.getBody());
 		}

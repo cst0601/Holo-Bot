@@ -5,12 +5,17 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+/**
+ * VtubeListener
+ * Message commands related to vtube
+ * @author greg8
+ *
+ */
 public class VtubeListener extends ListenerAdapter {
-	private String key;
+	private YoutubeApi api;
+	
 	public VtubeListener(String key) {
-		// TODO move this to somewhere else
-		// this is some prototyping
-		this.key = key;
+		api = new YoutubeApi(key);
 	}
 	
 	public String contentFormat() {
@@ -32,10 +37,12 @@ public class VtubeListener extends ListenerAdapter {
 			Guild guild = event.getGuild();
 			TextChannel textChannel = event.getTextChannel();
 			
-			if (msg.equals("!miko")) {
+			String [] commandVector = msg.split(" ");
+			if (commandVector[0].equals(">holo")) {
 				try {
-					YoutubeApi api = new YoutubeApi(key);
-					LiveStream liveStream = new ContentFactory().createLiveStream(api.request().getBody());
+					System.out.println(commandVector[1]);
+					LiveStream liveStream = new ContentFactory().createLiveStream(
+							api.request(commandVector[1]).getBody());
 					if (liveStream == null) 
 						channel.sendMessage("目前並沒有直播 :(").queue();
 					else
