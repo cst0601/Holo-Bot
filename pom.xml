@@ -4,6 +4,10 @@
   <artifactId>Discord_MP_Next</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
+  <properties>
+	    <maven.compiler.release>7</maven.compiler.release>
+  </properties>
+  
   <repositories>
 	<repository>
   		<id>jcenter</id>
