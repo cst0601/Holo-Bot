@@ -15,6 +15,11 @@ public class JsonResponse {
 		this.json = new JSONObject(body);
 	}
 	
+	// bad json response
+	public JsonResponse() {
+		this.statusCode = -1;
+	}
+	
 	public int getStatus() {
 		return statusCode;
 	}
