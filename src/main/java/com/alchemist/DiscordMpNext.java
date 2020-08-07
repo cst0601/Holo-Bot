@@ -6,6 +6,10 @@ import java.util.Properties;
 
 import javax.security.auth.login.LoginException;
 
+import com.alchemist.service.PingListener;
+import com.alchemist.service.RollListener;
+import com.alchemist.service.VtubeListener;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 
@@ -43,6 +47,7 @@ public class DiscordMpNext {
 		try {
 			jda = JDABuilder.createDefault(token)
 					.addEventListeners(new PingListener())
+					.addEventListeners(new RollListener())
 					.addEventListeners(new VtubeListener(ytKey))
 					.build();
 			jda.awaitReady();

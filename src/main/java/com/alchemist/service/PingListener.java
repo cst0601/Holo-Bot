@@ -1,9 +1,12 @@
-package com.alchemist;
+package com.alchemist.service;
 
 import java.awt.Color;
+import java.util.Stack;
+import java.util.Random;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -28,36 +31,18 @@ public class PingListener extends ListenerAdapter {
 		String msg = message.getContentDisplay();	// get readable version of the message
 		boolean isBot = author.isBot();
 		
-		System.out.println("Message received from: " + author.getName());
-		
 		if (event.isFromType(ChannelType.TEXT)) {
 			Guild guild = event.getGuild();
 			TextChannel textChannel = event.getTextChannel();
 			Member member = event.getMember();
 			
-			if (msg.equals(">ping")) {
+			String [] command = CommandUtil.parseCommand(msg);
+			
+			if (command[0].equals(">ping")) {
 				channel.sendMessage("pong!").queue();
 			}
 			
-			else if (msg.equals(">man mp")) {
-				EmbedBuilder embedBuilder;
-				
-				embedBuilder = new EmbedBuilder();
-				embedBuilder.setTitle("Discord MP-NExT Manual", null);
-				embedBuilder.setColor(Color.red);
-				embedBuilder.setDescription("List of commands and usage of MP-NExT");
-				embedBuilder.addField("Title of field", "Test of field (inline=false)", false);
-				embedBuilder.addField("Title of field", "Test of field (inline=false)", false);
-				embedBuilder.addBlankField(false);
-				embedBuilder.addField("Title of field", "Test of field (inline=true)", true);
-				embedBuilder.addField("Title of field", "Test of field (inline=true)", true);
-				embedBuilder.setAuthor("MP NExT", null, "https://i.imgur.com/GndAbTC.png");
-				embedBuilder.setFooter("35P Chikuma", "https://i.imgur.com/DOb1GZ1.png");
-				
-				channel.sendMessage(embedBuilder.build()).queue();
-			}
-			
-			else if (msg.equals(">sudo exit")) {
+			else if (command[0].equals(">sudo") && command[1].equals("exit")) {
 				if (!member.hasPermission(Permission.ADMINISTRATOR)) {
 					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
 					return;
