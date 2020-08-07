@@ -58,49 +58,48 @@ public class VtubeListener extends ListenerAdapter {
 			
 			String [] commandVector = parseArgv(msg);
 			if (commandVector[0].equals(">holo")) {
+				if (commandVector.length < 2) {
+					channel.sendMessage(new MessageBuilder("Error: Usage: ")
+							.append(">holo <member>", MessageBuilder.Formatting.BLOCK)
+							.append(".\nUse ")
+							.append(">holo list", MessageBuilder.Formatting.BLOCK)
+							.append(" to get a full list of available members.")
+							.build()).queue();
+					return;
+				}
+				
 				try {
-					if (commandVector.length < 2) {
-						channel.sendMessage(new MessageBuilder("Error: Usage: ")
-								.append(">holo <member>", MessageBuilder.Formatting.BLOCK)
-								.append(".\nUse ")
-								.append(">holo list", MessageBuilder.Formatting.BLOCK)
-								.append(" to get a full list of available members.")
-								.build()).queue();
+					JsonResponse response = api.request(commandVector[1]);
+					if (commandVector[1].equals("list")) {
+						
+						String members = "";
+						for (String name: api.getAvailableMembers())
+							members += " - " + name + "\n";
+						
+						channel.sendMessage(new EmbedBuilder()
+							.setTitle(">holo list")
+							.setColor(Color.red)
+							.addField("List of availble members", members, false)
+							.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png")
+							.build()).queue();
 					}
+					
+					else if (response != null) {	// if arg member name not avaliable
+						LiveStream liveStream = new ContentFactory().createLiveStream(api.request(commandVector[1]).getBody());
+					
+						if (liveStream == null) 
+							channel.sendMessage("Ω첿㉲쮁┳そ섹 :(").queue();
+						
+						else
+							channel.sendMessage("Ω첿ずそ섹좬\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
+					}
+					
 					else {
-						JsonResponse response = api.request(commandVector[1]);
-						if (commandVector[1].equals("list")) {
-							
-							String members = "";
-							for (String name: api.getAvailableMembers())
-								members += " - " + name + "\n";
-							
-							channel.sendMessage(new EmbedBuilder()
-								.setTitle(">holo list")
-								.setColor(Color.red)
-								.addField("List of availble members", members, false)
-								.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png")
-								.build()).queue();
-						}
-						
-						else if (response != null) {	// if arg member name not avaliable
-							LiveStream liveStream = new ContentFactory().createLiveStream(api.request(commandVector[1]).getBody());
-						
-							if (liveStream == null) 
-								channel.sendMessage("Ω첿㉲쮁┳そ섹 :(").queue();
-							
-							else
-								channel.sendMessage("Ω첿ずそ섹좬\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
-						}
-						
-						else {
-							channel.sendMessage(new MessageBuilder("Error: member not found.\n")
-								.append("Use ")
-								.append(">holo list", MessageBuilder.Formatting.BLOCK)
-								.append(" to get a full list of available members.")
-								.build()).queue();
-						}
-						
+						channel.sendMessage(new MessageBuilder("Error: member not found.\n")
+							.append("Use ")
+							.append(">holo list", MessageBuilder.Formatting.BLOCK)
+							.append(" to get a full list of available members.")
+							.build()).queue();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
