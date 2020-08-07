@@ -6,6 +6,9 @@ import java.util.Properties;
 
 import javax.security.auth.login.LoginException;
 
+import com.alchemist.service.PingListener;
+import com.alchemist.service.VtubeListener;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 

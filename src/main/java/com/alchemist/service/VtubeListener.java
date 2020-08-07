@@ -1,6 +1,12 @@
-package com.alchemist;
+package com.alchemist.service;
 
 import java.awt.Color;
+import java.util.ArrayList;
+
+import com.alchemist.ContentFactory;
+import com.alchemist.JsonResponse;
+import com.alchemist.LiveStream;
+import com.alchemist.YoutubeApi;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -26,6 +32,15 @@ public class VtubeListener extends ListenerAdapter {
 		return "";
 	}
 	
+	/**
+	 * Parse the command by splitting it by space or endings
+	 * @param command
+	 * @return parsed arguments
+	 */
+	public String[] parseArgv (String command) {
+		return command.split("\\s+");
+	}
+	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		// JDA jda = event.getJDA();	// core stuff jda
@@ -41,7 +56,7 @@ public class VtubeListener extends ListenerAdapter {
 			// Guild guild = event.getGuild();	// Not used in this case
 			// TextChannel textChannel = event.getTextChannel();
 			
-			String [] commandVector = msg.split(" ");
+			String [] commandVector = parseArgv(msg);
 			if (commandVector[0].equals(">holo")) {
 				try {
 					if (commandVector.length < 2) {
