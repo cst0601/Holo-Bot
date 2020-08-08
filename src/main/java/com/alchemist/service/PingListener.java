@@ -1,11 +1,5 @@
 package com.alchemist.service;
 
-import java.awt.Color;
-import java.util.Stack;
-import java.util.Random;
-
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
@@ -17,28 +11,60 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @author greg8
  *
  */
-public class PingListener extends ListenerAdapter {
+public class PingListener extends ListenerAdapter implements Service {
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		JDA jda = event.getJDA();
+		//JDA jda = event.getJDA();
 		
 		// Event specific information
-		User author = event.getAuthor();
+		//User author = event.getAuthor();
 		Message message = event.getMessage();
 		MessageChannel channel = event.getChannel();
 	
 		String msg = message.getContentDisplay();	// get readable version of the message
-		boolean isBot = author.isBot();
+		//boolean isBot = author.isBot();
 		
 		if (event.isFromType(ChannelType.TEXT)) {
-			Guild guild = event.getGuild();
-			TextChannel textChannel = event.getTextChannel();
+			//Guild guild = event.getGuild();
+			//TextChannel textChannel = event.getTextChannel();
 			Member member = event.getMember();
 			
 			String [] command = CommandUtil.parseCommand(msg);
 			
 			if (command[0].equals(">ping")) {
+				if (command.length > 1) {
+					if (command[1].equals("sl")) {
+						channel.sendMessage(new MessageBuilder()
+							.append("STEAM LOCOMOTIVE !!!", MessageBuilder.Formatting.BOLD)
+							.appendCodeBlock(
+									"                        (  ) (@@) ( )  (@)  ()    @@    O     @     O     @      O\n" + 
+									"                 (@@@)  \n" + 
+									"              (    )\n" + 
+									"            (@@@@)\n" + 
+									"          (   )\n" + 
+									"      ====        ________                ___________\n" + 
+									"  _D _|  |_______/        \\__I_I_____===__|_________|\n" + 
+									"   |(_)---  |   H\\________/ |   |        =|___ ___|      _________________\n" + 
+									"   /     |  |   H  |  |     |   |         ||_| |_||     _|                \\_____A\n" + 
+									"  |      |  |   H  |__--------------------| [___] |   =|                        |\n" + 
+									"  | ________|___H__/__|_____/[][]~\\_______|       |   -|                        |\n" + 
+									"  |/ |   |-----------I_____I [][] []  D   |=======|____|________________________|_\n" + 
+									"__/ =| o |=-~O=====O=====O=====O\\ ____Y___________|__|__________________________|_\n" + 
+									" |/-=|___|=    ||    ||    ||    |_____/~\\___/          |_D__D__D_|  |_D__D__D_|\n" + 
+									"  \\_/      \\__/  \\__/  \\__/  \\__/      \\_/               \\_/   \\_/    \\_/   \\_/\n"
+									+ "*Full screen to see better :)*",
+									null)
+							.build()).queue();
+						return;
+					}
+					else if (command[1].equals("ls")) {
+						channel.sendMessage(new MessageBuilder()
+							.append("P\nO\nN\nG", MessageBuilder.Formatting.BOLD)
+							.build()).queue();
+						return;
+					}
+				}
 				channel.sendMessage("pong!").queue();
 			}
 			
@@ -52,6 +78,23 @@ public class PingListener extends ListenerAdapter {
 				System.exit(0);
 			}
 		}
+	}
+
+	@Override
+	public String getServiceName() {
+		// TODO Auto-generated method stub
+		return "ping";
+	}
+
+	@Override
+	public String getServiceMan() {
+		return
+			"# NAME\n"
+			+ "    ping - pong!\n\n"
+			+ "# SYNOPSIS\n"
+			+ "    ping [ls]\n\n"
+			+ "# COMMANDS\n"
+			+ "    * ls: A listed version of ping\n";
 	}
 
 }

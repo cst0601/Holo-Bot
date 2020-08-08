@@ -6,12 +6,14 @@ import java.util.Properties;
 
 import javax.security.auth.login.LoginException;
 
+import com.alchemist.service.ManualListener;
 import com.alchemist.service.PingListener;
 import com.alchemist.service.RollListener;
 import com.alchemist.service.VtubeListener;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 
 public class DiscordMpNext {
 	private JDA jda;
@@ -48,7 +50,10 @@ public class DiscordMpNext {
 			jda = JDABuilder.createDefault(token)
 					.addEventListeners(new PingListener())
 					.addEventListeners(new RollListener())
+					.addEventListeners(new ManualListener())
 					.addEventListeners(new VtubeListener(ytKey))
+					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
+								 			 "Say >man to seek help!"))
 					.build();
 			jda.awaitReady();
 			System.out.println("Finish building JDA!");

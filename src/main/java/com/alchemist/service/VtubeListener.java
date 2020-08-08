@@ -1,14 +1,12 @@
 package com.alchemist.service;
 
 import java.awt.Color;
-import java.util.ArrayList;
 
 import com.alchemist.ContentFactory;
 import com.alchemist.JsonResponse;
 import com.alchemist.LiveStream;
 import com.alchemist.YoutubeApi;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
@@ -21,7 +19,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  * @author greg8
  *
  */
-public class VtubeListener extends ListenerAdapter {
+public class VtubeListener extends ListenerAdapter implements Service {
 	private YoutubeApi api;
 	
 	public VtubeListener(String key) {
@@ -45,7 +43,7 @@ public class VtubeListener extends ListenerAdapter {
 	public void onMessageReceived(MessageReceivedEvent event) {
 		// JDA jda = event.getJDA();	// core stuff jda
 		
-		User author = event.getAuthor();
+		// User author = event.getAuthor();
 		Message message = event.getMessage();
 		MessageChannel channel = event.getChannel();
 		
@@ -107,5 +105,22 @@ public class VtubeListener extends ListenerAdapter {
 				
 			}
 		}
+	}
+
+	@Override
+	public String getServiceName() {
+		return "holo";
+	}
+
+	@Override
+	public String getServiceMan() {
+		return
+			"# NAME\n"
+			+ "    holo - Hololive event tracker\n\n"
+			+ "# SYNOPSIS\n"
+			+ "    holo <command> [args]\n\n"
+			+ "# COMMANDS\n"
+			+ "    * list: List all available hololive members.\n"
+			+ "    * <member_name>: Fetch streams currently going on.\n";
 	}
 }

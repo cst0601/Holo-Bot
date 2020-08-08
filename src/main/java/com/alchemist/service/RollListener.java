@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class RollListener extends ListenerAdapter {
+public class RollListener extends ListenerAdapter implements Service {
 	
 	/**
 	 * Generate a sequence of random numbers.
@@ -102,5 +102,21 @@ public class RollListener extends ListenerAdapter {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public String getServiceName() {
+		return "roll";
+	}
+
+	@Override
+	public String getServiceMan() {
+		return "# NAME\n"
+		+ "    roll - Roll some dice\n\n"
+		+ "# SYNOPSIS\n"
+		+ "    roll <dice_size> <roll_number>\n\n"
+		+ "# COMMANDS\n"
+		+ "    * <dice_size>: Dice size, should be a number < 2e31-1.\n"
+		+ "    * <roll_number>: Times you want to toss the dice, maximum 20.\n";
 	}
 }
