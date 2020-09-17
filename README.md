@@ -11,4 +11,6 @@ The name `Discord MP Bot` is based on an old discord bot, might change that namg
 * `>ping [ls | sl]`: Pong!
 * `>roll`: Roll a dice, old function from 1st gen Discord MP Bot 
 
+## Note
+`>holo schedules` requires holo_schedule_api to run in local.
 
