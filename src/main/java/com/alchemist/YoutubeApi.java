@@ -2,8 +2,6 @@ package com.alchemist;
 
 import java.io.IOException;
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpClient.*;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.*;
@@ -12,15 +10,14 @@ import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.alchemist.jsonResponse.JsonResponse;
 
-public class YoutubeApi {
+
+public class YoutubeApi extends Api{
 	public YoutubeApi(String key) {
-		apiKey = key;
-		client = HttpClient.newBuilder()
-					.version(Version.HTTP_2)
-					.followRedirects(Redirect.NORMAL)
-					.build();
+		super();
 		
+		apiKey = key;
 		initChannelId();
 	}
 	
@@ -100,6 +97,6 @@ public class YoutubeApi {
 	private final String defaultUrl = "https://www.googleapis.com/youtube/v3/se"
 			+ "arch?part=snippet&channelId=%s&eventType=live&type=video&key=%s";
 	private Dictionary<String, String> channelId = new Hashtable<String, String>();
-	private HttpClient client;
+	//private HttpClient client;
 	private HttpRequest request;
 }

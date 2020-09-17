@@ -1,4 +1,4 @@
-package com.alchemist;
+package com.alchemist.jsonResponse;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

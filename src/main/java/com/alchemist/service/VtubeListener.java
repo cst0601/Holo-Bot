@@ -1,11 +1,14 @@
 package com.alchemist.service;
 
 import java.awt.Color;
+import java.util.ArrayList;
 
 import com.alchemist.ContentFactory;
-import com.alchemist.JsonResponse;
 import com.alchemist.LiveStream;
+import com.alchemist.Schedule;
 import com.alchemist.YoutubeApi;
+import com.alchemist.HoloApi;
+import com.alchemist.jsonResponse.JsonResponse;
 
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -21,9 +24,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  */
 public class VtubeListener extends ListenerAdapter implements Service {
 	private YoutubeApi api;
+	private HoloApi holoApi;
 	
 	public VtubeListener(String key) {
 		api = new YoutubeApi(key);
+		holoApi = new HoloApi();
 	}
 	
 	public String contentFormat() {
@@ -61,7 +66,9 @@ public class VtubeListener extends ListenerAdapter implements Service {
 							.append(">holo <member>", MessageBuilder.Formatting.BLOCK)
 							.append(".\nUse ")
 							.append(">holo list", MessageBuilder.Formatting.BLOCK)
-							.append(" to get a full list of available members.")
+							.append(" to get a full list of available members.\n")
+							.append(">holo schedules", MessageBuilder.Formatting.BLOCK)
+							.append(" to get schedules of today.")
 							.build()).queue();
 					return;
 				}
@@ -80,6 +87,27 @@ public class VtubeListener extends ListenerAdapter implements Service {
 							.addField("List of availble members", members, false)
 							.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png")
 							.build()).queue();
+					}
+					
+					else if (commandVector[1].equals("schedules")) {
+						try {
+							ArrayList<Schedule> schedules = holoApi.request();
+							String scheduleStr = "";
+							for (Schedule schedule: schedules)
+								scheduleStr += " - " + schedule.toString() + "\n";
+							
+							channel.sendMessage(new EmbedBuilder()
+									.setTitle(">holo schedule")
+									.setColor(Color.red)
+									.addField("Schedules of " + schedules.get(0).getDate(),
+											scheduleStr ,false)
+									.setFooter("updated@" + holoApi.getUpdateTime() +
+											" | All showed time are in JST")
+									.build()).queue();
+						} catch (Exception e) {
+							channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
+									+ "Contact admin to get help.").queue();
+						}
 					}
 					
 					else if (response != null) {	// if arg member name not avaliable
@@ -121,6 +149,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			+ "    holo <command> [args]\n\n"
 			+ "# COMMANDS\n"
 			+ "    * list: List all available hololive members.\n"
-			+ "    * <member_name>: Fetch streams currently going on.\n";
+			+ "    * <member_name>: Fetch streams currently going on.\n"
+			+ "    * schedules: Get all schedules of today (JST).\n";
 	}
 }
