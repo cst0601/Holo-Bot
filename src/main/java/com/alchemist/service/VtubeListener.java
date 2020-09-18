@@ -2,6 +2,8 @@ package com.alchemist.service;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import com.alchemist.ContentFactory;
 import com.alchemist.LiveStream;
@@ -25,10 +27,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class VtubeListener extends ListenerAdapter implements Service {
 	private YoutubeApi api;
 	private HoloApi holoApi;
+	private Logger logger;
 	
 	public VtubeListener(String key) {
 		api = new YoutubeApi(key);
 		holoApi = new HoloApi();
+		logger = Logger.getLogger(VtubeListener.class.getName());
 	}
 	
 	public String contentFormat() {
@@ -107,6 +111,8 @@ public class VtubeListener extends ListenerAdapter implements Service {
 						} catch (Exception e) {
 							channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
 									+ "Contact admin to get help.").queue();
+							logger.warning("Failed to use schedule api");
+							e.printStackTrace();
 						}
 					}
 					
