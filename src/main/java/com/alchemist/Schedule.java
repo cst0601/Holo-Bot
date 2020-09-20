@@ -12,6 +12,10 @@ public class Schedule {
 		return time + " " + member + " " + url;
 	}
 	
+	public String toMarkdownLink() {
+		return time + " [" + member + "](" + url + ")";
+	}
+	
 	public String getUrl() {
 		return url;
 	}

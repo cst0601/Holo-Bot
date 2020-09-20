@@ -2,6 +2,9 @@ package com.alchemist.service;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.logging.Logger;
 
 import com.alchemist.ContentFactory;
 import com.alchemist.LiveStream;
@@ -25,10 +28,12 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class VtubeListener extends ListenerAdapter implements Service {
 	private YoutubeApi api;
 	private HoloApi holoApi;
+	private Logger logger;
 	
 	public VtubeListener(String key) {
 		api = new YoutubeApi(key);
 		holoApi = new HoloApi();
+		logger = Logger.getLogger(VtubeListener.class.getName());
 	}
 	
 	public String contentFormat() {
@@ -92,21 +97,27 @@ public class VtubeListener extends ListenerAdapter implements Service {
 					else if (commandVector[1].equals("schedules")) {
 						try {
 							ArrayList<Schedule> schedules = holoApi.request();
-							String scheduleStr = "";
-							for (Schedule schedule: schedules)
-								scheduleStr += " - " + schedule.toString() + "\n";
-							
-							channel.sendMessage(new EmbedBuilder()
+							Queue<String> scheduleSlices = 
+									getSlicedScheduleString(schedules);
+														
+							EmbedBuilder builder = new EmbedBuilder()
 									.setTitle(">holo schedule")
 									.setColor(Color.red)
 									.addField("Schedules of " + schedules.get(0).getDate(),
-											scheduleStr ,false)
+											scheduleSlices.poll() ,false)
 									.setFooter("updated@" + holoApi.getUpdateTime() +
-											" | All showed time are in JST")
-									.build()).queue();
+											" | All showed time are in JST");
+							
+							while (scheduleSlices.peek() != null)	// add the rest of the schedules to message
+								builder.addField("", scheduleSlices.poll(), false);
+							
+							channel.sendMessage(builder.build()).queue();
+							
 						} catch (Exception e) {
 							channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
 									+ "Contact admin to get help.").queue();
+							logger.warning("Failed to use schedule api");
+							e.printStackTrace();
 						}
 					}
 					
@@ -134,7 +145,28 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			}
 		}
 	}
+	
+	/**
+	 * Limit of text in EmbedMessage.Field.text is 1024, if exceed, slice it.
+	 * @param schedules
+	 * @return
+	 */
+	public Queue<String> getSlicedScheduleString(ArrayList<Schedule> schedules) {
+		Queue<String> slicedSchedule = new LinkedList<String>();
+		String slice = "";
+		for (Schedule schedule: schedules) {
+			if (slice.length() + schedule.toMarkdownLink().length() > 1024) {
+				slicedSchedule.offer(slice);
+				slice = "";
+			}
+			slice += " - " + schedule.toMarkdownLink() + "\n";
+		}
+		if (!slice.equals(""))
+			slicedSchedule.offer(slice);
 
+		return slicedSchedule;
+	}
+	
 	@Override
 	public String getServiceName() {
 		return "holo";
