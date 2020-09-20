@@ -108,8 +108,8 @@ public class VtubeListener extends ListenerAdapter implements Service {
 									.setFooter("updated@" + holoApi.getUpdateTime() +
 											" | All showed time are in JST");
 							
-							for (String slice: scheduleSlices)	// add the rest of the schedules to message
-								builder.addField("", slice, false);
+							while (scheduleSlices.peek() != null)	// add the rest of the schedules to message
+								builder.addField("", scheduleSlices.poll(), false);
 							
 							channel.sendMessage(builder.build()).queue();
 							
@@ -161,6 +161,9 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			}
 			slice += " - " + schedule.toMarkdownLink() + "\n";
 		}
+		if (!slice.equals(""))
+			slicedSchedule.offer(slice);
+
 		return slicedSchedule;
 	}
 	
