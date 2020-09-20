@@ -2,8 +2,9 @@ package com.alchemist.service;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.logging.Logger;
-import java.util.logging.Level;
 
 import com.alchemist.ContentFactory;
 import com.alchemist.LiveStream;
@@ -96,18 +97,22 @@ public class VtubeListener extends ListenerAdapter implements Service {
 					else if (commandVector[1].equals("schedules")) {
 						try {
 							ArrayList<Schedule> schedules = holoApi.request();
-							String scheduleStr = "";
-							for (Schedule schedule: schedules)
-								scheduleStr += " - " + schedule.toString() + "\n";
-							
-							channel.sendMessage(new EmbedBuilder()
+							Queue<String> scheduleSlices = 
+									getSlicedScheduleString(schedules);
+														
+							EmbedBuilder builder = new EmbedBuilder()
 									.setTitle(">holo schedule")
 									.setColor(Color.red)
 									.addField("Schedules of " + schedules.get(0).getDate(),
-											scheduleStr ,false)
+											scheduleSlices.poll() ,false)
 									.setFooter("updated@" + holoApi.getUpdateTime() +
-											" | All showed time are in JST")
-									.build()).queue();
+											" | All showed time are in JST");
+							
+							for (String slice: scheduleSlices)	// add the rest of the schedules to message
+								builder.addField("", slice, false);
+							
+							channel.sendMessage(builder.build()).queue();
+							
 						} catch (Exception e) {
 							channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
 									+ "Contact admin to get help.").queue();
@@ -140,7 +145,25 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			}
 		}
 	}
-
+	
+	/**
+	 * Limit of text in EmbedMessage.Field.text is 1024, if exceed, slice it.
+	 * @param schedules
+	 * @return
+	 */
+	public Queue<String> getSlicedScheduleString(ArrayList<Schedule> schedules) {
+		Queue<String> slicedSchedule = new LinkedList<String>();
+		String slice = "";
+		for (Schedule schedule: schedules) {
+			if (slice.length() + schedule.toMarkdownLink().length() > 1024) {
+				slicedSchedule.offer(slice);
+				slice = "";
+			}
+			slice += " - " + schedule.toMarkdownLink() + "\n";
+		}
+		return slicedSchedule;
+	}
+	
 	@Override
 	public String getServiceName() {
 		return "holo";
