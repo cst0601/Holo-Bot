@@ -1,6 +1,7 @@
 package com.alchemist.service;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -81,38 +82,12 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				try {
 					JsonResponse response = api.request(commandVector[1]);
 					if (commandVector[1].equals("list")) {
-						
-						String members = "";
-						for (String name: api.getAvailableMembers())
-							members += " - " + name + "\n";
-						
-						channel.sendMessage(new EmbedBuilder()
-							.setTitle(">holo list")
-							.setColor(Color.red)
-							.addField("List of availble members", members, false)
-							.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png")
-							.build()).queue();
+						channel.sendMessage(getHoloMemberList()).queue();
 					}
 					
 					else if (commandVector[1].equals("schedules")) {
 						try {
-							ArrayList<Schedule> schedules = holoApi.request();
-							Queue<String> scheduleSlices = 
-									getSlicedScheduleString(schedules);
-														
-							EmbedBuilder builder = new EmbedBuilder()
-									.setTitle(">holo schedule")
-									.setColor(Color.red)
-									.addField("Schedules of " + schedules.get(0).getDate(),
-											scheduleSlices.poll() ,false)
-									.setFooter("updated@" + holoApi.getUpdateTime() +
-											" | All showed time are in JST");
-							
-							while (scheduleSlices.peek() != null)	// add the rest of the schedules to message
-								builder.addField("", scheduleSlices.poll(), false);
-							
-							channel.sendMessage(builder.build()).queue();
-							
+							channel.sendMessage(getSchedules()).queue();
 						} catch (Exception e) {
 							channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
 									+ "Contact admin to get help.").queue();
@@ -120,7 +95,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 							e.printStackTrace();
 						}
 					}
-					
+					// get stream
 					else if (response != null) {	// if arg member name not avaliable
 						LiveStream liveStream = new ContentFactory().createLiveStream(api.request(commandVector[1]).getBody());
 					
@@ -130,13 +105,9 @@ public class VtubeListener extends ListenerAdapter implements Service {
 						else
 							channel.sendMessage("目前的直播：\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
 					}
-					
+					// no member found
 					else {
-						channel.sendMessage(new MessageBuilder("Error: member not found.\n")
-							.append("Use ")
-							.append(">holo list", MessageBuilder.Formatting.BLOCK)
-							.append(" to get a full list of available members.")
-							.build()).queue();
+						channel.sendMessage(getErrorMessage()).queue();
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -146,25 +117,42 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		}
 	}
 	
-	/**
-	 * Limit of text in EmbedMessage.Field.text is 1024, if exceed, slice it.
-	 * @param schedules
-	 * @return
-	 */
-	public Queue<String> getSlicedScheduleString(ArrayList<Schedule> schedules) {
-		Queue<String> slicedSchedule = new LinkedList<String>();
-		String slice = "";
-		for (Schedule schedule: schedules) {
-			if (slice.length() + schedule.toMarkdownLink().length() > 1024) {
-				slicedSchedule.offer(slice);
-				slice = "";
-			}
-			slice += " - " + schedule.toMarkdownLink() + "\n";
-		}
-		if (!slice.equals(""))
-			slicedSchedule.offer(slice);
-
-		return slicedSchedule;
+	private MessageEmbed getSchedules() throws IOException, InterruptedException {
+		Queue<String> scheduleSlices = holoApi.getSlicedScheduleString();
+									
+		EmbedBuilder builder = new EmbedBuilder()
+				.setTitle(">holo schedule")
+				.setColor(Color.red)
+				.addField("Schedules of " + holoApi.getDateOfSchedule(),
+						scheduleSlices.poll() ,false)
+				.setFooter("updated@" + holoApi.getUpdateTime() +
+						" | All showed time are in JST");
+		
+		while (scheduleSlices.peek() != null)	// add the rest of the schedules to message
+			builder.addField("", scheduleSlices.poll(), false);
+		
+		return builder.build();
+	}
+	
+	private MessageEmbed getHoloMemberList() {
+		String members = "";
+		for (String name: api.getAvailableMembers())
+			members += " - " + name + "\n";
+		
+		return new EmbedBuilder()
+			.setTitle(">holo list")
+			.setColor(Color.red)
+			.addField("List of availble members", members, false)
+			.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png")
+			.build();
+	}
+	
+	private Message getErrorMessage () {
+		return new MessageBuilder("Error: member not found.\n")
+			.append("Use ")
+			.append(">holo list", MessageBuilder.Formatting.BLOCK)
+			.append(" to get a full list of available members.")
+			.build();
 	}
 	
 	@Override

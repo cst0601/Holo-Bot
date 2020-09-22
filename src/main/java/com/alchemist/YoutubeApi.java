@@ -49,7 +49,7 @@ public class YoutubeApi extends Api{
 	 */
 	public ArrayList<String> getAvailableMembers() {
 		ArrayList<String> memberNames = new ArrayList<String>();
-		for (Enumeration e = channelId.keys(); e.hasMoreElements();)
+		for (Enumeration<String> e = channelId.keys(); e.hasMoreElements();)
 			memberNames.add((String) e.nextElement());
 		return memberNames;
 	}
@@ -97,6 +97,5 @@ public class YoutubeApi extends Api{
 	private final String defaultUrl = "https://www.googleapis.com/youtube/v3/se"
 			+ "arch?part=snippet&channelId=%s&eventType=live&type=video&key=%s";
 	private Dictionary<String, String> channelId = new Hashtable<String, String>();
-	//private HttpClient client;
 	private HttpRequest request;
 }

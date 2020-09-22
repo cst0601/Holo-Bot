@@ -1,8 +1,8 @@
 package com.alchemist;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import javax.security.auth.login.LoginException;
 
@@ -17,7 +17,8 @@ import net.dv8tion.jda.api.entities.Activity;
 
 public class DiscordMpNext {
 	private JDA jda;
-
+	private Logger logger;
+	
 	public static void main(String[] args) {
 		try {
 			new DiscordMpNext().startUp();
@@ -32,14 +33,15 @@ public class DiscordMpNext {
 	 * @throws LoginException
 	 */
 	private void startUp () throws LoginException {
+		logger = Logger.getLogger(DiscordMpNext.class.getName());
 		// load token from config
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream("src/main/resources/config.properties"));
+			properties.load(DiscordMpNext.class.getResourceAsStream("/config.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.err.println("Failed to read from config.properties, please" +
-							   "check if the file exists.");
+			logger.severe("Failed to read from config.properties, please" +
+					      "check if the file exists.");
 			return;
 		}
 		
@@ -56,7 +58,8 @@ public class DiscordMpNext {
 								 			 "Say >man to seek help!"))
 					.build();
 			jda.awaitReady();
-			System.out.println("Finish building JDA!");
+			
+			logger.info("Finish building JDA!");
 		} catch (InterruptedException e) {
 			// await is a blocking method, if interrupted
 			e.printStackTrace();
