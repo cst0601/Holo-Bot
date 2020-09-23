@@ -43,7 +43,7 @@ public class YoutubeApi extends Api{
 	    
 		request = HttpRequest.newBuilder()
 				.uri(URI.create(String.format(
-						defaultUrl, members.get(vtubeName), apiKey)))
+						defaultUrl, members.get(vtubeName).getYoutubeId(), apiKey)))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 		return new JsonResponse(response.statusCode(), response.body());
