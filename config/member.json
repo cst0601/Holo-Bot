@@ -1,0 +1,200 @@
+[
+	{
+		"id": "sora",
+		"name": "ときのそら",
+		"generation": "0",
+		"channel_id": "UCp6993wxpyDPHUpavwDFqgg"
+	},
+	{
+		"id": "miko",
+		"name": "さくらみこ",
+		"generation": "0",
+		"channel_id": "UC-hM6YJuNYVAmUWxeIr9FeA"
+	},
+	{
+		"id": "suisei",
+		"name": "星街すいせい",
+		"generation": "0",
+		"channel_id": "UC5CwaMl1eIgY8h02uZw7u8A"
+	},
+	{
+		"id": "roboco",
+		"name": "ロボ子さん",
+		"generation": "0",
+		"channel_id": "UCDqI2jOz0weumE8s7paEk6g"
+	},
+	{
+		"id": "mel",
+		"name": "夜空メル",
+		"generation": "1",
+		"channel_id": "UCD8HOxPs4Xvsm8H0ZxXGiBw"
+	},
+	{
+		"id": "matsuri",
+		"name": "夏色まつり",
+		"generation": "1",
+		"channel_id": "UCQ0UDLQCjY0rmuxCDE38FGg"
+	},
+	{
+		"id": "haato",
+		"name": "赤井はあと",
+		"generation": "1",
+		"channel_id": "UC1CfXB_kRs3C-zaeTG3oGyg"
+	},
+	{
+		"id": "akirose",
+		"name": "アキ・ローゼンタール",
+		"generation": "1",
+		"channel_id": "UCFTLzh12_nrtzqBPsTCqenA"
+	},
+	{
+		"id": "fubuki",
+		"name": "白上フブキ",
+		"generation": "1",
+		"channel_id": "UCdn5BQ06XqgXoAxIhbqw5Rg"
+	},
+	{
+		"id": "aqua",
+		"name": "湊あくあ",
+		"generation": "2",
+		"channel_id": "UC1opHUrw8rvnsadT-iGp7Cg"
+	},
+	{
+		"id": "shion",
+		"name": "紫咲シオン",
+		"generation": "2",
+		"channel_id": "UCXTpFs_3PqI41qX2d9tL2Rw"
+	},
+	{
+		"id": "ayame",
+		"name": "百鬼あやめ",
+		"generation": "2",
+		"channel_id": "UC7fk0CB07ly8oSl0aqKkqFg"
+	},
+	{
+		"id": "choco",
+		"name": "癒月ちょこ",
+		"generation": "2",
+		"channel_id": "UC1suqwovbL1kzsoaZgFZLKg"
+	},
+	{
+		"id": "subaru",
+		"name": "大空スバル",
+		"generation": "2",
+		"channel_id": "UCvzGlP9oQwU--Y0r9id_jnA"
+	},
+	{
+		"id": "mio",
+		"name": "大神ミオ",
+		"generation": "gamers",
+		"channel_id": "UCp-5t9SrOQwXMU7iIjQfARg"
+	},
+	{
+		"id": "okayu",
+		"name": "猫又おかゆ",
+		"generation": "gamers",
+		"channel_id": "UCvaTdHTWBGv3MKj3KVqJVCw"
+	},
+	{
+		"id": "korone",
+		"name": "戌神ころね",
+		"generation": "gamers",
+		"channel_id": "UChAnqc_AY5_I3Px5dig3X1Q"
+	},
+	{
+		"id": "pekora",
+		"name": "兎田ぺこら",
+		"generation": "3",
+		"channel_id": "UC1DCedRgGHBdm81E1llLhOQ"
+	},
+	{
+		"id": "rushia",
+		"name": "潤羽るしあ",
+		"generation": "3",
+		"channel_id": "UCl_gCybOJRIgOXw6Qb4qJzQ"
+	},
+	{
+		"id": "flare",
+		"name": "不知火フレア",
+		"generation": "3",
+		"channel_id": "UCvInZx9h3jC2JzsIzoOebWg"
+	},
+	{
+		"id": "noel",
+		"name": "白銀ノエル",
+		"generation": "3",
+		"channel_id": "UCdyqAaZDKHXg4Ahi7VENThQ"
+	},
+	{
+		"id": "marine",
+		"name": "宝鐘マリン",
+		"generation": "3",
+		"channel_id": "UCCzUftO8KOVkV4wQG1vkUvg"
+	},
+	{
+		"id": "kanata",
+		"name": "天音かなた",
+		"generation": "4",
+		"channel_id": "UCZlDXzGoo7d44bwdNObFacg"
+	},
+	{
+		"id": "coco",
+		"name": "桐生ココ",
+		"generation": "4",
+		"channel_id": "UCS9uQI-jC3DE0L4IpXyvr6w"
+	},
+	{
+		"id": "watame",
+		"name": "角巻わため",
+		"generation": "4",
+		"channel_id": "UCqm3BQLlJfvkTsX_hvm0UmA"
+	},
+	{
+		"id": "towa",
+		"name": "常闇トワ",
+		"generation": "4",
+		"channel_id": "UC1uv2Oq6kNxgATlCiez59hw"
+	},
+	{
+		"id": "luna",
+		"name": "姫森ルーナ",
+		"generation": "4",
+		"channel_id": "UCa9Y57gfeY0Zro_noHRVrnw"
+	},
+	{
+		"id": "lamy",
+		"name": "雪花ラミィ",
+		"generation": "5",
+		"channel_id": "UCFKOVgVbGmX65RxO3EtH3iw"
+	},
+	{
+		"id": "nene",
+		"name": "桃鈴ねね",
+		"generation": "5",
+		"channel_id": "UCAWSyEs_Io8MtpY3m-zqILA"
+	},
+	{
+		"id": "botan",
+		"name": "獅白ぼたん",
+		"generation": "5",
+		"channel_id": "UCUKD-uaobj9jiqB-VXt71mA"
+	},
+	{
+		"id": "aloe",
+		"name": "魔乃アロエ",
+		"generation": "5",
+		"channel_id": "UCgZuwn-O7Szh9cAgHqJ6vjw"
+	},
+	{
+		"id": "polka",
+		"name": "尾丸ポルカ",
+		"generation": "5",
+		"channel_id": "UCK9V2B22uJYu3N7eR_BT9QA"
+	},
+	{
+		"id": "AZKi",
+		"name": "AZKi",
+		"generation": "INNK Music",
+		"channel_id": "UC0TXe_LYZ4scaW2XMyi5_kw"
+	},
+]

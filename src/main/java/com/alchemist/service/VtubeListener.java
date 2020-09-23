@@ -2,6 +2,8 @@ package com.alchemist.service;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.Queue;
 import java.util.logging.Logger;
 
@@ -9,6 +11,7 @@ import com.alchemist.ContentFactory;
 import com.alchemist.LiveStream;
 import com.alchemist.YoutubeApi;
 import com.alchemist.HoloApi;
+import com.alchemist.HoloMember;
 import com.alchemist.jsonResponse.JsonResponse;
 
 import net.dv8tion.jda.api.MessageBuilder;
@@ -132,16 +135,40 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	}
 	
 	private MessageEmbed getHoloMemberList() {
-		String members = "";
-		for (String name: api.getAvailableMembers())
-			members += " - " + name + "\n";
+		String memberInfo = " - %s: [%s](https://www.youtube.com/channel/%s)\n";
 		
-		return new EmbedBuilder()
-			.setTitle(">holo list")
-			.setColor(Color.red)
-			.addField("List of availble members", members, false)
-			.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png")
-			.build();
+		Dictionary<String, String> memberByGeneration = new Hashtable<String, String>();
+		for (HoloMember member: api.getAvailableMembers()) {
+			if (memberByGeneration.get(member.getGeneration()) == null) {
+				memberByGeneration.put(
+						member.getGeneration(), "");	// first init to empty string
+			}
+			memberByGeneration.put(						// add stuffs
+					member.getGeneration(),
+					memberByGeneration.get(member.getGeneration()) +
+					String.format(memberInfo,
+							member.getId(),
+							member.getName(),
+							member.getYoutubeId())
+					);
+		}
+		
+		/* TODO: think of a better data structure to sort member by generation */
+		EmbedBuilder builder = new EmbedBuilder()
+				.setTitle(">holo list")
+				.setColor(Color.red)
+				.addField("List of availble members", "- <id>: <name>", false)
+				.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png");
+		builder.addField("Generation 0", memberByGeneration.get("0"), false);
+		builder.addField("Generation 1", memberByGeneration.get("1"), false);
+		builder.addField("Generation 2", memberByGeneration.get("2"), false);
+		builder.addField("Generation 3", memberByGeneration.get("3"), false);
+		builder.addField("Generation 4", memberByGeneration.get("4"), false);
+		builder.addField("Generation 5", memberByGeneration.get("5"), false);
+		builder.addField("Hololive Gamers", memberByGeneration.get("gamers"), false);
+		builder.addField("INNK Music", memberByGeneration.get("INNK Music"), false);
+		
+		return builder.build();
 	}
 	
 	private Message getErrorMessage () {
