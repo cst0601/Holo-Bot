@@ -6,6 +6,10 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.logging.Logger;
+
+import com.alchemist.TwitterBroadcaster;
+
 /**
  * Listener of some basic commands: ping, sudo exit, about
  * @author greg8
@@ -74,7 +78,14 @@ public class PingListener extends ListenerAdapter implements Service {
 					return;
 				}
 				channel.sendMessage("Exiting...").queue();
-				System.out.println("Received exit command, terminating...");
+				Logger.getLogger(PingListener.class.getName()).info("Received exit command, terminating...");
+				
+				for (Object listener: event.getJDA().getRegisteredListeners()) {
+					if (listener instanceof TwitterBroadcaster) {
+						((TwitterBroadcaster)listener).terminate();
+					}
+				}
+
 				System.exit(0);
 			}
 		}

@@ -7,17 +7,30 @@ import java.util.logging.Logger;
 
 import org.json.JSONArray;
 
-import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class TwitterBroadcaster {
-	public TwitterBroadcaster(JDA jda) {
+public class TwitterBroadcaster extends ListenerAdapter {
+	public TwitterBroadcaster() {
 		logger = Logger.getLogger(TwitterBroadcaster.class.getName());
-		broadcastRunner = new TwitterBroadcasterRunner(jda, readBroadcastConfig());
 	}
 	
-	public void start() {
-		logger.info("twitter broadcaster ready!!!!");
+	@Override
+	public void onReady(ReadyEvent event) {
+		broadcastRunner = new TwitterBroadcasterRunner(event.getJDA(), readBroadcastConfig());
 		broadcastRunner.start();
+		logger.info("twitter broadcaster ready!!!!");
+	}
+	
+	public void terminate() {
+		logger.info("terminating twitter broadcaster...");
+		try {
+			broadcastRunner.sendMessage("stop");
+			broadcastRunner.join();
+		} catch (InterruptedException e) {
+			logger.warning("Interrupt occurred when stopping runner.");
+			e.printStackTrace();
+		}
 	}
 	
 	private ArrayList<TwitterSubscription> readBroadcastConfig() {

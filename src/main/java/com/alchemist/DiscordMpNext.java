@@ -14,8 +14,6 @@ import com.alchemist.service.VtubeListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class DiscordMpNext {
 	private JDA jda;
@@ -56,11 +54,7 @@ public class DiscordMpNext {
 					.addEventListeners(new RollListener())
 					.addEventListeners(new ManualListener())
 					.addEventListeners(new VtubeListener(ytKey))
-					.addEventListeners(new ListenerAdapter() {
-						@Override public void onReady(ReadyEvent event) {
-							new TwitterBroadcaster(event.getJDA()).start();
-						}
-					})
+					.addEventListeners(new TwitterBroadcaster())
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"))
 					.build();
