@@ -14,6 +14,13 @@ import com.alchemist.service.VtubeListener;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import twitter4j.Query;
+import twitter4j.QueryResult;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class DiscordMpNext {
 	private JDA jda;
@@ -23,6 +30,31 @@ public class DiscordMpNext {
 		try {
 			new DiscordMpNext().startUp();
 		} catch (LoginException e) {
+			e.printStackTrace();
+		}
+		
+		//testTwitter4j();
+	    
+	}
+	
+	public static void testTwitter4j() {
+		ConfigurationBuilder configBuilder = new ConfigurationBuilder();
+		configBuilder.setDebugEnabled(true)
+			.setOAuthConsumerKey("t5TTm7SD0UOxqWfZidwjcA0wt")
+			.setOAuthConsumerSecret("bWbwigqSFth9C7rsvcCT8cdqfsWkdKvMvE4ILvdzYqIW3yR2ex")
+			.setOAuthAccessToken("1293914385354694658-11mI5d3SfMfMiOy6ZvldodL3bF9Fvr")
+			.setOAuthAccessTokenSecret("P5TJW6148dVbVl0dsjV0K7iP7LNJY7W77EdjTMByAQrN4");
+		TwitterFactory tf = new TwitterFactory(configBuilder.build());
+		Twitter twitter = tf.getInstance();
+		Query query = new Query("source:twitter4j yusukey");
+	    QueryResult result;
+		try {
+			result = twitter.search(query);
+			for (Status status : result.getTweets()) {
+		        System.out.println("@" + status.getUser().getScreenName() + ":" + status.getText());
+		    }
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

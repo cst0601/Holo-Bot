@@ -1,7 +1,9 @@
 package com.alchemist;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Logger;
 
@@ -9,6 +11,9 @@ import org.json.JSONArray;
 
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import twitter4j.Twitter;
+import twitter4j.TwitterFactory;
+import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterBroadcaster extends ListenerAdapter {
 	public TwitterBroadcaster() {
@@ -17,7 +22,8 @@ public class TwitterBroadcaster extends ListenerAdapter {
 	
 	@Override
 	public void onReady(ReadyEvent event) {
-		broadcastRunner = new TwitterBroadcasterRunner(event.getJDA(), readBroadcastConfig());
+		broadcastRunner = new TwitterBroadcasterRunner(
+				event.getJDA(), initTwitterApi(), readBroadcastConfig());
 		broadcastRunner.start();
 		logger.info("twitter broadcaster ready!!!!");
 	}
@@ -55,10 +61,33 @@ public class TwitterBroadcaster extends ListenerAdapter {
 			}
 			
 		} catch (Exception e) {
-			logger.severe("Cannot read broadcast config file.");
+			logger.severe("Failed to read broadcast config file.");
 		}
 		
 		return subscriptions;
+	}
+	
+	/**
+	 * reads twitter4j properties and init an instance
+	 * @return
+	 */
+	private Twitter initTwitterApi() {
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream("config/credentials/twitter4j.properties"));
+		} catch (Exception e) {
+			logger.severe("Failed to read twitter4j token file");
+			return null;
+		}
+		
+		ConfigurationBuilder configBuilder = new ConfigurationBuilder();
+		configBuilder.setDebugEnabled(Boolean.parseBoolean(properties.getProperty("debug")))
+			.setOAuthConsumerKey(properties.getProperty("oauth.consumerKey"))
+			.setOAuthConsumerSecret(properties.getProperty("oauth.consumerSecret"))
+			.setOAuthAccessToken(properties.getProperty("oauth.accessToken"))
+			.setOAuthAccessTokenSecret(properties.getProperty("oauth.accessTokenSecret"));
+		TwitterFactory tf = new TwitterFactory(configBuilder.build());
+		return tf.getInstance();
 	}
 	
 	private TwitterBroadcasterRunner broadcastRunner;
