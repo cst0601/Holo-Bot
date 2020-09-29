@@ -47,10 +47,12 @@ public class TwitterBroadcasterRunner extends Thread {
 			}
 			
 			try {
-				sleep(15000);
+				sleep(300000);	// 5 min
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			logger.info("Update twitter info...");
 			
 			// send messages
 			for (TwitterSubscription subscription: subscriptions) {
