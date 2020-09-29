@@ -20,13 +20,13 @@ public class TweetCache {
 	public Queue<String> updateTweets(List<Status> statusList) {
 		differentTweets = new LinkedList<String>();
 		
-		for (Status status: statusList) {
+		for (int i = statusList.size() - 1; i >= 0; --i) {	// check status from old to new
 			String url = 
-				"https://twitter.com/" + status.getUser().getScreenName() +
-				"/status/" + status.getId();
+				"https://twitter.com/" + statusList.get(i).getUser().getScreenName() +
+				"/status/" + statusList.get(i).getId();
 			
 			if (!cache.contains(url)) {
-				logger.info("New tweet!");
+				logger.info("New tweet! -> " + url);
 				cache.add(url);
 				differentTweets.add(url);
 				
