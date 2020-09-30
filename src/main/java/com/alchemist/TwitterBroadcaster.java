@@ -29,9 +29,10 @@ public class TwitterBroadcaster extends ListenerAdapter {
 	}
 	
 	public void terminate() {
-		logger.info("terminating twitter broadcaster...");
+		logger.info("Terminating twitter broadcaster...");
 		try {
 			broadcastRunner.sendMessage("stop");
+			broadcastRunner.interrupt();
 			broadcastRunner.join();
 		} catch (InterruptedException e) {
 			logger.warning("Interrupt occurred when stopping runner.");
@@ -57,7 +58,7 @@ public class TwitterBroadcaster extends ListenerAdapter {
 
 				subscriptions.add(
 					new TwitterSubscription(
-						json.getJSONObject(i).getString("hashtag"), targetChannels));
+						json.getJSONObject(i).getString("query"), targetChannels));
 			}
 			
 		} catch (Exception e) {

@@ -10,6 +10,7 @@ import java.util.logging.Logger;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import twitter4j.Query;
 import twitter4j.QueryResult;
 import twitter4j.Twitter;
@@ -46,42 +47,57 @@ public class TwitterBroadcasterRunner extends Thread {
 				}
 			}
 			
-			try {
-				sleep(300000);	// 5 min
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+			else {
+				
+				try {
+					sleep(30000);	// 30 sec
+				} catch (InterruptedException e) {
+					logger.info("Runner sleep interrupted");
+				}
+				sendTwitterUpdate();
 			}
+		}
+	}
+	
+	public void sendTwitterUpdate() {
+		// send messages
+		for (TwitterSubscription subscription: subscriptions) {
 			
-			logger.info("Update twitter info...");
+			// search and construct message to send
+			String newTweetMessage = "";
+			for (String newTweet: search(subscription.getHashtag()))
+				newTweetMessage += newTweet + "\n";
 			
-			// send messages
-			for (TwitterSubscription subscription: subscriptions) {
-				
-				// search and construct message to send
-				String newTweetMessage = "";
-				for (String newTweet: search(subscription.getHashtag()))
-					newTweetMessage += newTweet + "\n";
-				
-				for (Long channelId: subscription.getTargetChannels()) {
-					MessageChannel channel = jda.getTextChannelById(channelId);
-					if (!newTweetMessage.equals(""))
+			for (Long channelId: subscription.getTargetChannels()) {
+				MessageChannel channel = jda.getTextChannelById(channelId);
+				if (!newTweetMessage.equals("")) {
+					try {
 						channel.sendMessage(newTweetMessage).queue();
+					} catch (InsufficientPermissionException e) {
+						logger.warning("Lacks permission to send message to "
+								+ "target text channel: " + channel.getId());
+					}
 				}
 			}
 		}
 	}
 	
+	/**
+	 * Thread synchronization
+	 * @param message
+	 * @throws InterruptedException
+	 */
 	public void sendMessage(String message) throws InterruptedException {
 		messageBox.put(message);
 	}
 	
-	public Queue<String> search(String target) {
-		Query query = new Query("#" + target + " -filter:retweets");
+	public Queue<String> search(String search) {
+		Query query = new Query(search);
 	    QueryResult result;
 	    Queue<String> newTweets = null;
 	    try {
 			result = twitter.search(query);
-			newTweets = caches.get(target).updateTweets(result.getTweets());
+			newTweets = caches.get(search).updateTweets(result.getTweets());
 		} catch (TwitterException e) {
 			logger.warning("Failed searching");
 			e.printStackTrace();

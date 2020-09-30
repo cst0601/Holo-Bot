@@ -32,7 +32,6 @@ public class TweetCache {
 				
 				if (cache.size() > 15) {	// cache maximum size 15
 					cache.poll();
-					logger.info("cache size: " + cache.size());
 				}
 			}
 		}

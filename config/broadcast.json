@@ -1,6 +1,14 @@
 [
 	{
-		"hashtag": "miko_Art",
+		"query": "#miko_Art -filter:retweets",
 		"target": [280691749528272897, 757941157421645924]
+	},
+	{
+		"query": "from:@sakuramiko35",
+		"target": [757941157421645924]
+	},
+	{
+		"query": "from:@Jelly_Lio #巫女推文翻譯",
+		"target": [760459104031342612]
 	}
 ]
