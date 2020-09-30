@@ -76,9 +76,11 @@ public class ManualListener extends ListenerAdapter implements Service {
 	public String getManualList(List<Object> services) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < services.size(); ++i) {
-			buffer.append(" - ");
-			buffer.append(((Service)services.get(i)).getServiceName());
-			buffer.append("\n");
+			if (services.get(i) instanceof Service) {	// preclude non service listeners
+				buffer.append(" - ");
+				buffer.append(((Service)services.get(i)).getServiceName());
+				buffer.append("\n");
+			}
 		}
 		return buffer.toString();
 	}

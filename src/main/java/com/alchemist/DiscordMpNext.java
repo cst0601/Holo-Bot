@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 
+
 public class DiscordMpNext {
 	private JDA jda;
 	private Logger logger;
@@ -24,7 +25,7 @@ public class DiscordMpNext {
 			new DiscordMpNext().startUp();
 		} catch (LoginException e) {
 			e.printStackTrace();
-		}
+		}	    
 	}
 	
 	/**
@@ -54,6 +55,7 @@ public class DiscordMpNext {
 					.addEventListeners(new RollListener())
 					.addEventListeners(new ManualListener())
 					.addEventListeners(new VtubeListener(ytKey))
+					.addEventListeners(new TwitterBroadcaster())
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"))
 					.build();

@@ -25,15 +25,21 @@
 	</dependency>
   	
 	<dependency>
-	 <groupId>net.dv8tion</groupId>
-	 <artifactId>JDA</artifactId>
-	 <version>4.1.1_137</version>
+		<groupId>net.dv8tion</groupId>
+		<artifactId>JDA</artifactId>
+		<version>4.1.1_137</version>
 	</dependency>
 	
 	<dependency>
-      <groupId>org.json</groupId>
-      <artifactId>json</artifactId>
-      <version>20200518</version>
+    	<groupId>org.json</groupId>
+    	<artifactId>json</artifactId>
+    	<version>20200518</version>
+    </dependency>
+    
+    <dependency>
+  		<groupId>org.twitter4j</groupId>
+    	<artifactId>twitter4j-core</artifactId>
+    	<version>[4.0,)</version>
     </dependency>
     
   </dependencies>
