@@ -41,13 +41,14 @@ public class ManualListener extends ListenerAdapter implements Service {
 				}
 				
 				for (int i = 0; i < listeners.size(); ++i) {
-					if (command[1].equals(((Service) listeners.get(i)).getServiceName())) {
-						channel.sendMessage(new MessageBuilder()
-							.appendCodeBlock(
-								((Service) listeners.get(i)).getServiceMan(),
-								"md")
-							.build()).queue();
-					}
+					if (listeners.get(i) instanceof Service)
+						if (command[1].equals(((Service) listeners.get(i)).getServiceName())) {
+							channel.sendMessage(new MessageBuilder()
+								.appendCodeBlock(
+									((Service) listeners.get(i)).getServiceMan(),
+									"md")
+								.build()).queue();
+						}
 				}
 			}
 		}
