@@ -3,6 +3,7 @@ package com.alchemist;
 import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
+import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -31,9 +32,10 @@ public class TwitterBroadcasterRunner extends Thread {
 		this.subscriptions = subscriptions;
 		
 		for (TwitterSubscription sub: subscriptions) {
-			caches.put(sub.getHashtag(), new TweetCache(sub.getHashtag()));
+			caches.put(sub.getSearchQuery(), new TweetCache(sub.getSearchQuery()));
+			logger.info("Create cache for: " + sub.getSearchQuery());
 			// update cache for init to avoid sending old message
-			search(sub.getHashtag());
+			search(sub.getSearchQuery());
 		}
 	}
 	
@@ -46,9 +48,7 @@ public class TwitterBroadcasterRunner extends Thread {
 					break;
 				}
 			}
-			
-			else {
-				
+			else {				// if no message to handle
 				try {
 					sleep(30000);	// 30 sec
 				} catch (InterruptedException e) {
@@ -65,7 +65,7 @@ public class TwitterBroadcasterRunner extends Thread {
 			
 			// search and construct message to send
 			String newTweetMessage = "";
-			for (String newTweet: search(subscription.getHashtag()))
+			for (String newTweet: search(subscription.getSearchQuery()))
 				newTweetMessage += newTweet + "\n";
 			
 			for (Long channelId: subscription.getTargetChannels()) {
@@ -93,12 +93,18 @@ public class TwitterBroadcasterRunner extends Thread {
 	
 	public Queue<String> search(String search) {
 		Query query = new Query(search);
+		query.setResultType(Query.RECENT);
+		
 	    QueryResult result;
 	    Queue<String> newTweets = null;
 	    try {
 			result = twitter.search(query);
 			newTweets = caches.get(search).updateTweets(result.getTweets());
+
+			if (newTweets.size() != 0)
+				logger.info(newTweets.size() + " new tweets from " + search);
 		} catch (TwitterException e) {
+			newTweets = new LinkedList<String>();
 			logger.warning("Failed searching");
 			e.printStackTrace();
 		}

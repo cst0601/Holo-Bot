@@ -33,19 +33,37 @@ public class TestTweetCache {
 		
 		for (int i = 14; i >= 0 ; --i) {
 			statusList.add(new TestStatus(i, "Name_" + i));
-			updatedStatusList.add(new TestStatus(i + 2, "Name_" + (i + 2)));
+			updatedStatusList.add(new TestStatus(i + 5, "Name_" + (i + 5)));
 		}
 	}
 
 	@Test
 	void testUpdateTweets() {
-		TweetCache cache = new TweetCache("test_hashtag");
+		TweetCache cache = new TweetCache("test_query");
 		cache.updateTweets(statusList);
 		Queue<String> newTweets = cache.updateTweets(updatedStatusList);
 		
-		assertEquals(2, newTweets.size());
+		assertEquals(5, newTweets.size());
 		assertEquals("https://twitter.com/Name_15/status/15", newTweets.poll());
 		assertEquals("https://twitter.com/Name_16/status/16", newTweets.poll());
+		assertEquals("https://twitter.com/Name_17/status/17", newTweets.poll());
+		assertEquals("https://twitter.com/Name_18/status/18", newTweets.poll());
+		assertEquals("https://twitter.com/Name_19/status/19", newTweets.poll());
+	}
+	
+	@Test
+	void testUpdateManyTweets() {
+		TweetCache cache = new TweetCache("test_query");
+		for (int i = 0; i < 15; ++i) {
+			ArrayList<Status> newTweet = new ArrayList<Status>();
+			newTweet.add(new TestStatus(i + 15, "Name_" + (i + 15)));
+			Queue<String> temp = cache.updateTweets(newTweet);
+			assertEquals("https://twitter.com/Name_" + (i + 15) + "/status/" + (i + 15), temp.poll());
+		}
+		
+		ArrayList<Status> newTweet = new ArrayList<Status>();
+		newTweet.add(new TestStatus(1600, "The 16th new tweet"));
+		assertEquals(1, cache.updateTweets(newTweet).size());
 	}
 }
 
@@ -57,18 +75,6 @@ class TestUser implements User {
 	public TestUser(String name) {
 		this.name = name;
 	}
-	
-	@Override
-	public int compareTo(User o) { return 0; }
-
-	@Override
-	public RateLimitStatus getRateLimitStatus() { return null; }
-
-	@Override
-	public int getAccessLevel() {return 0;}
-
-	@Override
-	public long getId() {return 0;}
 
 	@Override
 	public String getName() {
@@ -404,6 +410,33 @@ class TestUser implements User {
 		 
 		return null;
 	}
+
+	@Override
+	public int compareTo(User o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public RateLimitStatus getRateLimitStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int getAccessLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public long getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 	
 }
 
@@ -416,27 +449,6 @@ class TestStatus implements Status {
 		this.id = id;
 		this.userName = userName;
 	}
-
-	@Override
-	public int compareTo(Status o) {return 0;}
-
-	@Override
-	public RateLimitStatus getRateLimitStatus() {return null;}
-
-	@Override
-	public int getAccessLevel() {return 0;}
-
-	@Override
-	public UserMentionEntity[] getUserMentionEntities() {return null;}
-
-	@Override
-	public URLEntity[] getURLEntities() {return null;}
-
-	@Override
-	public HashtagEntity[] getHashtagEntities() {return null;}
-
-	@Override
-	public MediaEntity[] getMediaEntities() {return null;}
 
 	@Override
 	public SymbolEntity[] getSymbolEntities() {
@@ -612,6 +624,54 @@ class TestStatus implements Status {
 
 	@Override
 	public URLEntity getQuotedStatusPermalink() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int compareTo(Status o) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public RateLimitStatus getRateLimitStatus() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public int getAccessLevel() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+
+	@Override
+	public UserMentionEntity[] getUserMentionEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public URLEntity[] getURLEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public HashtagEntity[] getHashtagEntities() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
+	@Override
+	public MediaEntity[] getMediaEntities() {
 		// TODO Auto-generated method stub
 		return null;
 	}

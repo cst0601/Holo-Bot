@@ -3,24 +3,24 @@ package com.alchemist;
 import java.util.ArrayList;
 
 /**
- * Data class of discord channels subscribe to twitter hashtags
+ * Data class of discord channels subscribe to twitter search queries
  * @author chikuma
  *
  */
 public class TwitterSubscription {
-	public TwitterSubscription(String hashtag, ArrayList<Long> targetChannels) {
-		this.hashtag = hashtag;
+	public TwitterSubscription(String searchQuery, ArrayList<Long> targetChannels) {
+		this.searchQuery = searchQuery;
 		this.targetChannels = targetChannels;
 	}
 	
-	public String getHashtag() {
-		return hashtag;
+	public String getSearchQuery() {
+		return searchQuery;
 	}
 	
 	public ArrayList<Long> getTargetChannels() {
 		return targetChannels;
 	}
 	
-	private String hashtag;
+	private String searchQuery;
 	private ArrayList<Long> targetChannels;
 }
