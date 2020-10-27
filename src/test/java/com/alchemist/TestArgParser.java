@@ -99,5 +99,16 @@ class TestArgParser {
 		);
 		assertTrue(thrown.getMessage().equals("Token \"not_valid_token\" does not exist."));
 	}
+	
+	@Test
+	void testNormalFlag() {
+		try {
+			ArgParser parser = new ArgParser("   >holo   schedules  -flag ");
+			parser.parse();
+			assertTrue(parser.containsArgs("-flag"));
+		} catch (ArgumentParseException e) {
+			fail();
+		}
+	}
 
 }

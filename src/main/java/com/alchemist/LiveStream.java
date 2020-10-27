@@ -6,8 +6,19 @@ package com.alchemist;
  * Stores the information of a live steam
  */
 public class LiveStream extends Content {
+	// deprecated
 	public LiveStream(String videoId, String title, String description,
 					  String channelTitle, String time) {
+		this.videoId = videoId;
+		this.title = title;
+		this.description = description;
+		this.channelTitle = channelTitle;
+		this.time = time;
+	}
+	
+	public LiveStream(String memberName, String videoId, String title,
+					  String description, String channelTitle, String time) {
+		this.memberName = memberName;
 		this.videoId = videoId;
 		this.title = title;
 		this.description = description;
@@ -19,12 +30,18 @@ public class LiveStream extends Content {
 		return getYtUrl(videoId);
 	}
 	
+	public String toMarkdownLink() {
+		return String.format("[%s](%s)", title, getYtUrl(videoId));
+	}
+	
+	public String getMemberName() { return memberName; }
 	public String getVideoId() { return videoId; }
 	public String getTitle() { return title; }
 	public String getDescription() { return description; }
 	public String getChannelName () { return channelTitle; }
 	public String getTime() { return time; }
 	
+	private String memberName;
 	private String videoId;
 	private String title;
 	private String description;

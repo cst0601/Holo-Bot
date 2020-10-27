@@ -27,7 +27,10 @@ public class ArgParser {
 	
 	public void parse() throws ArgumentParseException {
 		for (String command: commands) {
-			if (command.charAt(0) == '-') {
+			
+			// -example_param=100
+			if (command.charAt(0) == '-' && command.contains("=")) {
+				
 				String[] keyAndValue = command.split("=");
 				if (keyAndValue[0].equals("-"))
 					throw new ArgumentParseException("Parameters needs token before \"=\"");
@@ -36,7 +39,7 @@ public class ArgParser {
 				
 				param.put(keyAndValue[0].substring(1), keyAndValue[1]);
 			}
-			else {
+			else {	// sample_args or -example_flag
 				args.add(command);
 			}
 		}

@@ -13,6 +13,7 @@ import com.alchemist.YoutubeApi;
 import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.HoloApi;
 import com.alchemist.HoloMember;
+import com.alchemist.HoloToolsApi;
 import com.alchemist.jsonResponse.JsonResponse;
 
 import net.dv8tion.jda.api.MessageBuilder;
@@ -30,11 +31,15 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class VtubeListener extends ListenerAdapter implements Service {
 	private YoutubeApi api;
 	private HoloApi holoApi;
+	private HoloToolsApi holoToolsApi;
 	private Logger logger;
+	private ArgParser parser = null;
+
 	
 	public VtubeListener(String key) {
 		api = new YoutubeApi(key);
 		holoApi = new HoloApi();
+		holoToolsApi = new HoloToolsApi();
 		logger = Logger.getLogger(VtubeListener.class.getName());
 	}
 	
@@ -50,7 +55,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		String msg = message.getContentDisplay();
 		
 		if (event.isFromType(ChannelType.TEXT)) {
-			ArgParser parser = new ArgParser(msg);
+			parser = new ArgParser(msg);
 
 			if (parser.getCommand().equals(">holo")) {
 				
@@ -75,17 +80,21 @@ public class VtubeListener extends ListenerAdapter implements Service {
 					}
 					
 					else if (parser.containsArgs("schedules")) {
-						getSchedules(channel, parser);
+						getSchedules(channel);
+					}
+					
+					else if (parser.containsArgs("live")) {
+						getLive(channel);
 					}
 					// get stream
 					else if (response != null) {	// if arg member name not avaliable
 						LiveStream liveStream = new ContentFactory().createLiveStream(api.request(parser.getCommand(1)).getBody());
 					
 						if (liveStream == null) 
-							channel.sendMessage("¥Ø«e¨Ã¨S¦³ª½¼½ :(").queue();
+							channel.sendMessage("ç›®å‰ä¸¦æ²’æœ‰ç›´æ’­ :(").queue();
 						
 						else
-							channel.sendMessage("¥Ø«eªºª½¼½¡G\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
+							channel.sendMessage("ç›®å‰çš„ç›´æ’­ï¼š\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
 					}
 					// no member found
 					else {
@@ -100,7 +109,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	}
 	
 	// does not bother to test these methods :)
-	private void getSchedules(MessageChannel channel, ArgParser parser) {
+	private void getSchedules(MessageChannel channel) {
 		try {
 			if (parser.containsParam("page")) {
 				try {
@@ -168,6 +177,26 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		channel.sendMessage(builder.build()).queue();
 	}
 	
+	private void getLive(MessageChannel channel) {
+		EmbedBuilder builder = new EmbedBuilder()
+				.setTitle(">holo live")
+				.setColor(Color.red)
+				.setDescription(":red_circle: Streams now")
+				.setFooter("Data gathered from HoloToolsAPI", "https://i.imgur.com/DOb1GZ1.png");
+		
+		try {
+			for (LiveStream stream: holoToolsApi.request()) {
+				builder.addField(stream.getMemberName(), stream.toMarkdownLink(), false);
+			}
+			
+			channel.sendMessage(builder.build()).queue();
+			
+		} catch (Exception e) {
+			logger.warning("Failed to get request from holoToolsApi.");
+			e.printStackTrace();
+		}
+	}
+	
 	private Message getErrorMessage() {
 		return new MessageBuilder("Error: member not found.\n")
 			.append("Use ")
@@ -201,6 +230,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			+ "    holo <command> [args]\n\n"
 			+ "# COMMANDS\n"
 			+ "    * list: List all available hololive members.\n"
+			+ "    * live: Get all streams that are currently live.\n"
 			+ "    * <member_name>: Fetch streams currently going on.\n"
 			+ "    * schedules: Get all schedules of today (JST).\n";
 	}

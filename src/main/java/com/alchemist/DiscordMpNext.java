@@ -20,19 +20,10 @@ import net.dv8tion.jda.api.entities.Activity;
 public class DiscordMpNext {
 	private JDA jda;
 	private Logger logger;
-	private static boolean twitterMode = true;
 	
 	public static void main(String[] args) {
-		
-		for (String arg: args) {
-			if (arg.equals("noTwitter")) {
-				twitterMode = false;
-				break;
-			}
-		}
-		
 		try {
-			new DiscordMpNext().startUp();
+			new DiscordMpNext().startUp(args);
 		} catch (LoginException e) {
 			e.printStackTrace();
 		}
@@ -43,7 +34,7 @@ public class DiscordMpNext {
 	 * key] and creates JDA
 	 * @throws LoginException
 	 */
-	private void startUp () throws LoginException {
+	private void startUp (String args[]) throws LoginException {
 		logger = Logger.getLogger(DiscordMpNext.class.getName());
 		// load token from config
 		Properties properties = new Properties();
@@ -69,8 +60,7 @@ public class DiscordMpNext {
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));
 			
-			if (twitterMode)
-				builder.addEventListeners(new TwitterBroadcaster());
+			builder = buildTwitterBroadcaster(builder, args);				
 			
 			jda = builder.build();
 			jda.awaitReady();
@@ -83,7 +73,30 @@ public class DiscordMpNext {
 			// things go wrong in authentication
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Checks twitter mode and add twitter listener to JDA if mode is true
+	 * @param builder
+	 * @param args
+	 * @return
+	 */
+	private JDABuilder buildTwitterBroadcaster(JDABuilder builder, String args[]) {
+		boolean twitterMode = true;
 		
+		for (String arg: args) {
+			if (arg.equals("noTwitter")) {
+				logger.info("Twitter mode is false");
+				twitterMode = false;
+				break;
+			}
+		}
+		
+		if (twitterMode) {
+			builder.addEventListeners(new TwitterBroadcaster());
+		}
+		
+		return builder;
 	}
 	
 }
