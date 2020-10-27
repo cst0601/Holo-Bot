@@ -1,15 +1,16 @@
 package com.alchemist.service;
 
 import java.awt.Color;
-import java.io.IOException;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.Queue;
 import java.util.logging.Logger;
 
+import com.alchemist.ArgParser;
 import com.alchemist.ContentFactory;
 import com.alchemist.LiveStream;
+import com.alchemist.ScheduleEmbedBuilder;
 import com.alchemist.YoutubeApi;
+import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.HoloApi;
 import com.alchemist.HoloMember;
 import com.alchemist.jsonResponse.JsonResponse;
@@ -41,63 +42,44 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		return "";
 	}
 	
-	/**
-	 * Parse the command by splitting it by space or endings
-	 * @param command
-	 * @return parsed arguments
-	 */
-	public String[] parseArgv (String command) {
-		return command.split("\\s+");
-	}
-	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		// JDA jda = event.getJDA();	// core stuff jda
-		
-		// User author = event.getAuthor();
 		Message message = event.getMessage();
 		MessageChannel channel = event.getChannel();
 		
 		String msg = message.getContentDisplay();
-		// boolean isBot = author.isBot();
 		
 		if (event.isFromType(ChannelType.TEXT)) {
-			// Guild guild = event.getGuild();	// Not used in this case
-			// TextChannel textChannel = event.getTextChannel();
-			
-			String [] commandVector = parseArgv(msg);
-			if (commandVector[0].equals(">holo")) {
-				if (commandVector.length < 2) {
-					channel.sendMessage(new MessageBuilder("Error: Usage: ")
-							.append(">holo <member>", MessageBuilder.Formatting.BLOCK)
-							.append(".\nUse ")
-							.append(">holo list", MessageBuilder.Formatting.BLOCK)
-							.append(" to get a full list of available members.\n")
-							.append(">holo schedules", MessageBuilder.Formatting.BLOCK)
-							.append(" to get schedules of today.")
-							.build()).queue();
+			ArgParser parser = new ArgParser(msg);
+
+			if (parser.getCommand().equals(">holo")) {
+				
+				// actual parse the command if sure this is a command
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e1) {
+					channel.sendMessage("Command format error.\n" + e1.getMessage()).queue();
+					return;
+				}
+				
+
+				if (parser.getParamSize() < 2) {
+					channel.sendMessage(getMemberNotFoundMessage()).queue();
 					return;
 				}
 				
 				try {
-					JsonResponse response = api.request(commandVector[1]);
-					if (commandVector[1].equals("list")) {
-						channel.sendMessage(getHoloMemberList()).queue();
+					JsonResponse response = api.request(parser.getCommand(1));
+					if (parser.containsArgs("list")) {
+						getHoloMemberList(channel);
 					}
 					
-					else if (commandVector[1].equals("schedules")) {
-						try {
-							channel.sendMessage(getSchedules()).queue();
-						} catch (Exception e) {
-							channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
-									+ "Contact admin to get help.").queue();
-							logger.warning("Failed to use schedule api");
-							e.printStackTrace();
-						}
+					else if (parser.containsArgs("schedules")) {
+						getSchedules(channel, parser);
 					}
 					// get stream
 					else if (response != null) {	// if arg member name not avaliable
-						LiveStream liveStream = new ContentFactory().createLiveStream(api.request(commandVector[1]).getBody());
+						LiveStream liveStream = new ContentFactory().createLiveStream(api.request(parser.getCommand(1)).getBody());
 					
 						if (liveStream == null) 
 							channel.sendMessage("目前並沒有直播 :(").queue();
@@ -117,24 +99,39 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		}
 	}
 	
-	private MessageEmbed getSchedules() throws IOException, InterruptedException {
-		Queue<String> scheduleSlices = holoApi.getSlicedScheduleString();
-									
-		EmbedBuilder builder = new EmbedBuilder()
-				.setTitle(">holo schedule")
-				.setColor(Color.red)
-				.addField("Schedules of " + holoApi.getDateOfSchedule(),
-						scheduleSlices.poll() ,false)
-				.setFooter("updated@" + holoApi.getUpdateTime() +
-						" | All showed time are in JST");
+	// does not bother to test these methods :)
+	private void getSchedules(MessageChannel channel, ArgParser parser) {
+		try {
+			if (parser.containsParam("page")) {
+				try {
+					int page = parser.getInt("page");
+					ScheduleEmbedBuilder builder = new ScheduleEmbedBuilder(holoApi.request())
+							.addDateOfSchedule(holoApi.getDateOfSchedule())
+							.addTimeStamp(holoApi.getUpdateTime())
+							.setMessageMode(ScheduleEmbedBuilder.MessageMode.PAGED)
+							.setPage(page);
+					channel.sendMessage(builder.build()).queue();
+				} catch (ArgumentParseException e1) {
+					channel.sendMessage(e1.getMessage()).queue();
+				}
+			}
+			else {
+				ScheduleEmbedBuilder builder = new ScheduleEmbedBuilder(holoApi.request())
+						.addDateOfSchedule(holoApi.getDateOfSchedule())
+						.addTimeStamp(holoApi.getUpdateTime());
+				channel.sendMessage(builder.build()).queue();
+				
+			}
+		} catch (Exception e) {		// schedule api exceptions
+			channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
+					+ "Contact admin to get help.").queue();
+			logger.warning("Failed to use schedule api");
+			e.printStackTrace();
+		}
 		
-		while (scheduleSlices.peek() != null)	// add the rest of the schedules to message
-			builder.addField("", scheduleSlices.poll(), false);
-		
-		return builder.build();
 	}
 	
-	private MessageEmbed getHoloMemberList() {
+	private void getHoloMemberList(MessageChannel channel) {
 		String memberInfo = " - %s: [%s](https://www.youtube.com/channel/%s)\n";
 		
 		Dictionary<String, String> memberByGeneration = new Hashtable<String, String>();
@@ -168,15 +165,26 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		builder.addField("Hololive Gamers", memberByGeneration.get("gamers"), false);
 		builder.addField("INNK Music", memberByGeneration.get("INNK Music"), false);
 		
-		return builder.build();
+		channel.sendMessage(builder.build()).queue();
 	}
 	
-	private Message getErrorMessage () {
+	private Message getErrorMessage() {
 		return new MessageBuilder("Error: member not found.\n")
 			.append("Use ")
 			.append(">holo list", MessageBuilder.Formatting.BLOCK)
 			.append(" to get a full list of available members.")
 			.build();
+	}
+	
+	private Message getMemberNotFoundMessage() {
+		MessageBuilder builder = new MessageBuilder("Error: Usage: ")
+			.append(">holo <member>", MessageBuilder.Formatting.BLOCK)
+			.append(".\nUse ")
+			.append(">holo list", MessageBuilder.Formatting.BLOCK)
+			.append(" to get a full list of available members.\n")
+			.append(">holo schedules", MessageBuilder.Formatting.BLOCK)
+			.append(" to get schedules of today.");
+		return builder.build();
 	}
 	
 	@Override

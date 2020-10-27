@@ -65,7 +65,9 @@ public class TwitterBroadcasterRunner extends Thread {
 			
 			// search and construct message to send
 			String newTweetMessage = "";
-			for (String newTweet: search(subscription.getSearchQuery()))
+			Queue<String> searchResult = search(subscription.getSearchQuery());
+			
+			for (String newTweet: searchResult)
 				newTweetMessage += newTweet + "\n";
 			
 			for (Long channelId: subscription.getTargetChannels()) {
@@ -103,8 +105,9 @@ public class TwitterBroadcasterRunner extends Thread {
 
 			if (newTweets.size() != 0)
 				logger.info(newTweets.size() + " new tweets from " + search);
-		} catch (TwitterException e) {
-			newTweets = new LinkedList<String>();
+			
+		} catch (TwitterException e) {				// connection error, rate limit exceeded...
+			newTweets = new LinkedList<String>();	// no new tweets if exception occurred
 			logger.warning("Failed searching");
 			e.printStackTrace();
 		}
