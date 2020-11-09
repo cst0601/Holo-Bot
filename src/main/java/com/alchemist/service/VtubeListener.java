@@ -6,15 +6,13 @@ import java.util.Hashtable;
 import java.util.logging.Logger;
 
 import com.alchemist.ArgParser;
-import com.alchemist.ContentFactory;
 import com.alchemist.LiveStream;
 import com.alchemist.ScheduleEmbedBuilder;
-import com.alchemist.YoutubeApi;
 import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.HoloApi;
 import com.alchemist.HoloMember;
+import com.alchemist.HoloMemberData;
 import com.alchemist.HoloToolsApi;
-import com.alchemist.jsonResponse.JsonResponse;
 
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -29,7 +27,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
  *
  */
 public class VtubeListener extends ListenerAdapter implements Service {
-	private YoutubeApi api;
 	private HoloApi holoApi;
 	private HoloToolsApi holoToolsApi;
 	private Logger logger;
@@ -37,7 +34,6 @@ public class VtubeListener extends ListenerAdapter implements Service {
 
 	
 	public VtubeListener(String key) {
-		api = new YoutubeApi(key);
 		holoApi = new HoloApi();
 		holoToolsApi = new HoloToolsApi();
 		logger = Logger.getLogger(VtubeListener.class.getName());
@@ -74,7 +70,6 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				}
 				
 				try {
-					JsonResponse response = api.request(parser.getCommand(1));
 					if (parser.containsArgs("list")) {
 						getHoloMemberList(channel);
 					}
@@ -87,8 +82,8 @@ public class VtubeListener extends ListenerAdapter implements Service {
 						getLive(channel);
 					}
 					// get stream
-					else if (response != null) {	// if arg member name not avaliable
-						LiveStream liveStream = new ContentFactory().createLiveStream(api.request(parser.getCommand(1)).getBody());
+					else if (HoloMemberData.getInstance().getMemberByName(parser.getCommand(1)) != null) {	// if arg member name not avaliable
+						LiveStream liveStream = holoToolsApi.getLiveStreamOfMember(parser.getCommand(1));
 					
 						if (liveStream == null) 
 							channel.sendMessage("目前並沒有直播 :(").queue();
@@ -144,7 +139,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		String memberInfo = " - %s: [%s](https://www.youtube.com/channel/%s)\n";
 		
 		Dictionary<String, String> memberByGeneration = new Hashtable<String, String>();
-		for (HoloMember member: api.getAvailableMembers()) {
+		for (HoloMember member: HoloMemberData.getInstance().getAvaliableMembers()) {
 			if (memberByGeneration.get(member.getGeneration()) == null) {
 				memberByGeneration.put(
 						member.getGeneration(), "");	// first init to empty string
@@ -182,10 +177,10 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				.setTitle(">holo live")
 				.setColor(Color.red)
 				.setDescription(":red_circle: Streams now")
-				.setFooter("Data gathered from HoloToolsAPI", "https://i.imgur.com/DOb1GZ1.png");
+				.setFooter("Holo Bot", "https://i.imgur.com/DOb1GZ1.png");
 		
 		try {
-			for (LiveStream stream: holoToolsApi.request()) {
+			for (LiveStream stream: holoToolsApi.getLiveStreams()) {
 				builder.addField(stream.getMemberName(), stream.toMarkdownLink(), false);
 			}
 			

@@ -18,7 +18,7 @@ import org.json.JSONArray;
 
 import com.alchemist.jsonResponse.JsonResponse;
 
-
+// DEPRECATED
 public class YoutubeApi extends Api{
 	public YoutubeApi(String key) {
 		super();
@@ -73,7 +73,8 @@ public class YoutubeApi extends Api{
 						json.getJSONObject(i).getString("id"),
 						json.getJSONObject(i).getString("name"),
 						json.getJSONObject(i).getString("generation"),
-						json.getJSONObject(i).getString("channel_id"));
+						json.getJSONObject(i).getString("channel_id"),
+						json.getJSONObject(i).getInt("api_id"));
 				members.put(member.getId(), member);
 			}
 			

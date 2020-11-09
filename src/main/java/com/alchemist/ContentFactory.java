@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import com.alchemist.jsonResponse.JsonResponse;
 
 /**
- * ContentFactory
+ * ContentFactory, DEPRECATED
  * @author greg8
  * Creates all kinds of objects of youtube content (livesteam, video)
  */
@@ -32,9 +32,7 @@ public class ContentFactory {
 		return new LiveStream(
 					content.getJSONObject("id").getString("videoId"),
 					content.getJSONObject("snippet").getString("title"),
-					content.getJSONObject("snippet").getString("description"),
-					content.getJSONObject("snippet").getString("channelTitle"),
-					content.getJSONObject("snippet").getString("publishedAt")
+					content.getJSONObject("snippet").getString("channelTitle")
 				);
 	}
 }

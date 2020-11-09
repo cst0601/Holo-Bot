@@ -14,16 +14,32 @@ public class HoloToolsApi extends Api {
 		super();
 	}
 	
-	public ArrayList<LiveStream> request() throws IOException, InterruptedException {
+	public HoloToolsLiveJsonResponse request(String uri)
+			throws IOException, InterruptedException {
 		request = HttpRequest.newBuilder()
-				.uri(URI.create(defaultUrl))
+				.uri(URI.create(uri))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-		HoloToolsLiveJsonResponse json = new HoloToolsLiveJsonResponse(
+		return new HoloToolsLiveJsonResponse(
 				response.statusCode(), response.body());
-		
-		return json.getLiveStreams();
 	}
 	
-	private final String defaultUrl = "https://api.holotools.app/v1/live?max_upcoming_hours=48&hide_channel_desc=1";
+	public ArrayList<LiveStream> getLiveStreams()
+			throws IOException, InterruptedException {
+		String apiRequest = "https://api.holotools.app/v1/live?"
+				+ "max_upcoming_hours=48&hide_channel_desc=1";
+		return request(apiRequest).getLiveStreams();
+	}
+	
+	public LiveStream getLiveStreamOfMember(String member)
+			throws IOException, InterruptedException {
+		int apiMemberId = HoloMemberData.getInstance().getApiIdByName(member);
+		
+		String apiRequest = String.format("https://api.holotools.app/v1/live?"
+				+ "channel_id=%d&max_upcoming_hours=48&hide_channel_desc=1", apiMemberId);
+		
+		ArrayList<LiveStream> streams = request(apiRequest).getLiveStreams();
+
+		return (streams.size() > 0)? streams.get(0): null;
+	}
 }

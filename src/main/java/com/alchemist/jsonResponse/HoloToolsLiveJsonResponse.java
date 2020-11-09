@@ -1,22 +1,18 @@
 package com.alchemist.jsonResponse;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.Scanner;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import com.alchemist.HoloMemberData;
 import com.alchemist.LiveStream;
-import com.alchemist.YoutubeApi;
 
 public class HoloToolsLiveJsonResponse {
 	public HoloToolsLiveJsonResponse(int statusCode, String body) {
-		loadHoloMemberFromFile();
+		members = HoloMemberData.getInstance().generateChannelIdNameMap();
 		this.statusCode = statusCode;
 		this.body = new JSONObject(body);
 	}
@@ -37,9 +33,7 @@ public class HoloToolsLiveJsonResponse {
 						memberName,
 						stream.getString("yt_video_key"),
 						stream.getString("title"),
-						"",	// description
-						stream.getJSONObject("channel").getString("name"),
-						stream.getString("live_start")
+						stream.getJSONObject("channel").getString("name")
 					));
 			}
 		}
@@ -47,25 +41,7 @@ public class HoloToolsLiveJsonResponse {
 		return streams;
 	}
 	
-	private void loadHoloMemberFromFile() {
-		Logger logger = Logger.getLogger(YoutubeApi.class.getName());
-		try {
-			Scanner scanner = new Scanner(new File("config/member.json"));
-			scanner.useDelimiter("\\Z");
-			JSONArray json = new JSONArray(scanner.next());
-			scanner.close();
-			
-			for (int i = 0; i < json.length(); ++i) {
-				members.put(json.getJSONObject(i).getString("channel_id"),
-						    json.getJSONObject(i).getString("name"));
-			}
-			
-		} catch (FileNotFoundException e) {
-			logger.severe("Cannot read member file.");
-		}
-	}
-	
 	private int statusCode;
 	private JSONObject body;
-	private Dictionary<String, String> members = new Hashtable<String, String>();
+	private Map<String, String> members = new HashMap<String, String>();	// channel_id, name
 }
