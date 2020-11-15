@@ -101,7 +101,7 @@ public class TwitterBroadcasterRunner extends Thread {
 	    Queue<String> newTweets = null;
 	    try {
 			result = twitter.search(query);
-			newTweets = caches.get(search).updateTweets(result.getTweets());
+			newTweets = caches.get(search).updateTweets(result.getTweets(), result.getMaxId());
 
 			if (newTweets.size() != 0)
 				logger.info(newTweets.size() + " new tweets from " + search);

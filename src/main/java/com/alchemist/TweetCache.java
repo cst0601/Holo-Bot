@@ -15,26 +15,23 @@ public class TweetCache {
 		return searchQuery;
 	}
 	
-	public Queue<String> updateTweets(List<Status> statusList) {
+	public Queue<String> updateTweets(List<Status> statusList, long maxId) {
 		Queue<String> differentTweets = new LinkedList<String>();
-		Queue<String> newCache = new LinkedList<String>();
 		
 		for (int i = statusList.size() - 1; i >= 0; --i) {	// check status from old to new
-			String url = 
-				"https://twitter.com/" + statusList.get(i).getUser().getScreenName() +
-				"/status/" + statusList.get(i).getId();
-			
-			newCache.add(url);
-			
-			if (!cache.contains(url)) {
+			if (statusList.get(i).getId() > this.maxId) {
+				String url = 
+						"https://twitter.com/" + statusList.get(i).getUser().getScreenName() +
+						"/status/" + statusList.get(i).getId();
 				differentTweets.add(url);
 			}
 		}
-		cache = newCache;
+		
+		this.maxId = maxId;
+		
 		return differentTweets;
 	}
 	
 	private String searchQuery;
-	private Queue<String> cache = new LinkedList<String>();
-	// TODO: Use another data type to store tweet urls (Queue is from old way of cache updating)
+	private long maxId = 0;
 }
