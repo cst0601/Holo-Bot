@@ -13,14 +13,14 @@ The name `Discord MP Bot` is based on an old discord bot, might change that namg
 	* `live` to list all members that are currently streaming on youtube.
 * `>ping [ls | sl]`: Pong!
 * `>roll`: Roll a dice, old function from 1st gen Discord MP Bot
+* `>about`: About Holo Bot.
 
 ## Setup
 
 ### YoutubeAPI key and Discord bot token
-To run this bot, youtube key and discord bot token needs to be placed in `config.properties` with the form:
+To run this bot, discord bot token needs to be placed in `config.properties` with the form:
 ```properties
 token=
-yt_key=
 ```
 
 ### Running the bot

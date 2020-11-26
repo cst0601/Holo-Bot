@@ -4,6 +4,9 @@ import java.awt.Color;
 import java.util.Random;
 import java.util.Stack;
 
+import com.alchemist.ArgParser;
+import com.alchemist.exceptions.ArgumentParseException;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -39,10 +42,18 @@ public class RollListener extends ListenerAdapter implements Service {
 		String msg = message.getContentDisplay();	// get readable version of the message
 		
 		if (event.isFromType(ChannelType.TEXT)) {			
-			String [] command = CommandUtil.parseCommand(msg);
+			ArgParser parser = new ArgParser(msg);
 			
-			if (command[0].equals(">roll")) {
-				if (command.length < 2) {
+			if (parser.getCommand().equals(">roll")) {
+				
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e) {
+					e.printStackTrace();
+					return;
+				}
+				
+				if (parser.getCommandSize() < 2) {
 					channel.sendMessage(new MessageBuilder()
 							.append("Error: Usage: ")
 							.append(">roll <dice_size> [roll_number]", MessageBuilder.Formatting.BLOCK)
@@ -52,9 +63,9 @@ public class RollListener extends ListenerAdapter implements Service {
 					int diceSize = 0, rollNumber = 1;
 					
 					try {
-						diceSize = Integer.parseInt(command[1]);
-						if (command.length > 2)
-							rollNumber = Integer.parseInt(command[2]);
+						diceSize = Integer.parseInt(parser.getCommand(1));
+						if (parser.getCommandSize() > 2)
+							rollNumber = Integer.parseInt(parser.getCommand(2));
 					} catch (NumberFormatException e) {
 						channel.sendMessage(new MessageBuilder()
 							.append("Error: Invalid input, ")

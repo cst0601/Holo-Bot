@@ -3,6 +3,9 @@ package com.alchemist.service;
 import java.awt.Color;
 import java.util.List;
 
+import com.alchemist.ArgParser;
+import com.alchemist.exceptions.ArgumentParseException;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.MessageBuilder;
@@ -24,12 +27,20 @@ public class ManualListener extends ListenerAdapter implements Service {
 	
 		String msg = message.getContentDisplay();	// get readable version of the message
 		
-		if (event.isFromType(ChannelType.TEXT)) {			
-			String [] command = CommandUtil.parseCommand(msg);
+		if (event.isFromType(ChannelType.TEXT) && !event.getAuthor().isBot()) {
 			
-			if (command[0].equals(">man")) {
+			ArgParser parser = new ArgParser(msg);
+			
+			if (parser.getCommand().equals(">man")) {
 				
-				if (command.length < 2) {
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e1) {
+					channel.sendMessage("Command format error.\n" + e1.getMessage()).queue();
+					return;
+				}
+				
+				if (parser.getCommandSize() < 2) {
 					channel.sendMessage(new EmbedBuilder()
 						.setTitle("Manual (help)")
 						.setColor(Color.red)
@@ -42,7 +53,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 				
 				for (int i = 0; i < listeners.size(); ++i) {
 					if (listeners.get(i) instanceof Service)
-						if (command[1].equals(((Service) listeners.get(i)).getServiceName())) {
+						if (parser.getCommand(1).equals(((Service) listeners.get(i)).getServiceName())) {
 							channel.sendMessage(new MessageBuilder()
 								.appendCodeBlock(
 									((Service) listeners.get(i)).getServiceMan(),

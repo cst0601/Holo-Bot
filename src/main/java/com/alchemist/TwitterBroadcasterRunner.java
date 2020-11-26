@@ -7,7 +7,9 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -26,7 +28,7 @@ public class TwitterBroadcasterRunner extends Thread {
 	public TwitterBroadcasterRunner(
 			JDA jda, Twitter twitter,
 			ArrayList<TwitterSubscription> subscriptions) {
-		logger = Logger.getLogger(TwitterBroadcasterRunner.class.getName());
+		logger = LoggerFactory.getLogger(TwitterBroadcasterRunner.class);
 		this.jda = jda;
 		this.twitter = twitter;
 		this.subscriptions = subscriptions;
@@ -76,8 +78,8 @@ public class TwitterBroadcasterRunner extends Thread {
 					try {
 						channel.sendMessage(newTweetMessage).queue();
 					} catch (InsufficientPermissionException e) {
-						logger.warning("Lacks permission to send message to "
-								+ "target text channel: " + channel.getId());
+						logger.warn("Lacks permission to send message to "
+								  + "target text channel: " + channel.getId());
 					}
 				}
 			}
@@ -108,7 +110,7 @@ public class TwitterBroadcasterRunner extends Thread {
 			
 		} catch (TwitterException e) {				// connection error, rate limit exceeded...
 			newTweets = new LinkedList<String>();	// no new tweets if exception occurred
-			logger.warning("Failed searching");
+			logger.warn("Failed searching");
 			e.printStackTrace();
 		}
 	    return newTweets;

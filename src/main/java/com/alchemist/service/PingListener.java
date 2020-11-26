@@ -6,9 +6,11 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.util.logging.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.alchemist.ArgParser;
 import com.alchemist.TwitterBroadcaster;
+import com.alchemist.exceptions.ArgumentParseException;
 
 /**
  * Listener of some basic commands: ping, sudo exit, about
@@ -16,79 +18,89 @@ import com.alchemist.TwitterBroadcaster;
  *
  */
 public class PingListener extends ListenerAdapter implements Service {
+	
+	private ArgParser parser = null;
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		//JDA jda = event.getJDA();
-		
-		// Event specific information
-		//User author = event.getAuthor();
 		Message message = event.getMessage();
 		MessageChannel channel = event.getChannel();
 	
 		String msg = message.getContentDisplay();	// get readable version of the message
-		//boolean isBot = author.isBot();
 		
 		if (event.isFromType(ChannelType.TEXT)) {
-			//Guild guild = event.getGuild();
-			//TextChannel textChannel = event.getTextChannel();
+			
 			Member member = event.getMember();
+			parser = new ArgParser(msg);
 			
-			String [] command = CommandUtil.parseCommand(msg);
-			
-			if (command[0].equals(">ping")) {
-				if (command.length > 1) {
-					if (command[1].equals("sl")) {
-						channel.sendMessage(new MessageBuilder()
-							.append("STEAM LOCOMOTIVE !!!", MessageBuilder.Formatting.BOLD)
-							.appendCodeBlock(
-									"                        (  ) (@@) ( )  (@)  ()    @@    O     @     O     @      O\n" + 
-									"                 (@@@)  \n" + 
-									"              (    )\n" + 
-									"            (@@@@)\n" + 
-									"          (   )\n" + 
-									"      ====        ________                ___________\n" + 
-									"  _D _|  |_______/        \\__I_I_____===__|_________|\n" + 
-									"   |(_)---  |   H\\________/ |   |        =|___ ___|      _________________\n" + 
-									"   /     |  |   H  |  |     |   |         ||_| |_||     _|                \\_____A\n" + 
-									"  |      |  |   H  |__--------------------| [___] |   =|                        |\n" + 
-									"  | ________|___H__/__|_____/[][]~\\_______|       |   -|                        |\n" + 
-									"  |/ |   |-----------I_____I [][] []  D   |=======|____|________________________|_\n" + 
-									"__/ =| o |=-~O=====O=====O=====O\\ ____Y___________|__|__________________________|_\n" + 
-									" |/-=|___|=    ||    ||    ||    |_____/~\\___/          |_D__D__D_|  |_D__D__D_|\n" + 
-									"  \\_/      \\__/  \\__/  \\__/  \\__/      \\_/               \\_/   \\_/    \\_/   \\_/\n"
-									+ "*Full screen to see better :)*",
-									null)
-							.build()).queue();
-						return;
-					}
-					else if (command[1].equals("ls")) {
-						channel.sendMessage(new MessageBuilder()
-							.append("P\nO\nN\nG", MessageBuilder.Formatting.BOLD)
-							.build()).queue();
-						return;
-					}
-				}
-				channel.sendMessage("pong!").queue();
-			}
-			
-			else if (command[0].equals(">sudo") && command[1].equals("exit")) {
-				if (!member.hasPermission(Permission.ADMINISTRATOR)) {
-					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
+			// :((
+			if (parser.getCommand().equals(">ping") || parser.getCommand().equals(">sudo"))
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e) {
+					e.printStackTrace();
 					return;
 				}
-				channel.sendMessage("Exiting...").queue();
-				Logger.getLogger(PingListener.class.getName()).info("Received exit command, terminating...");
-				
-				for (Object listener: event.getJDA().getRegisteredListeners()) {
-					if (listener instanceof TwitterBroadcaster) {
-						((TwitterBroadcaster)listener).terminate();
+			
+			if (parser.getCommand().equals(">ping")) {
+				ping(channel);
+			}
+			
+			else if (parser.getCommandSize() > 1) 
+				if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("exit")) {
+					if (!member.hasPermission(Permission.ADMINISTRATOR)) {
+						channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
+					}
+					else {
+						channel.sendMessage("Exiting...").queue();
+						LoggerFactory.getLogger(PingListener.class).info("Received exit command, terminating...");
+						
+						for (Object listener: event.getJDA().getRegisteredListeners()) {
+							if (listener instanceof TwitterBroadcaster) {
+								((TwitterBroadcaster)listener).terminate();
+							}
+						}
+		
+						System.exit(0);
 					}
 				}
-
-				System.exit(0);
-			}
 		}
+	}
+	
+	private void ping(MessageChannel channel) {
+		if (parser.getCommandSize() > 1) {
+			if (parser.getCommand(1).equals("sl")) {
+				channel.sendMessage(new MessageBuilder()
+					.append("STEAM LOCOMOTIVE !!!", MessageBuilder.Formatting.BOLD)
+					.appendCodeBlock(
+							"                        (  ) (@@) ( )  (@)  ()    @@    O     @     O     @      O\n" + 
+							"                 (@@@)  \n" + 
+							"              (    )\n" + 
+							"            (@@@@)\n" + 
+							"          (   )\n" + 
+							"      ====        ________                ___________\n" + 
+							"  _D _|  |_______/        \\__I_I_____===__|_________|\n" + 
+							"   |(_)---  |   H\\________/ |   |        =|___ ___|      _________________\n" + 
+							"   /     |  |   H  |  |     |   |         ||_| |_||     _|                \\_____A\n" + 
+							"  |      |  |   H  |__--------------------| [___] |   =|                        |\n" + 
+							"  | ________|___H__/__|_____/[][]~\\_______|       |   -|                        |\n" + 
+							"  |/ |   |-----------I_____I [][] []  D   |=======|____|________________________|_\n" + 
+							"__/ =| o |=-~O=====O=====O=====O\\ ____Y___________|__|__________________________|_\n" + 
+							" |/-=|___|=    ||    ||    ||    |_____/~\\___/          |_D__D__D_|  |_D__D__D_|\n" + 
+							"  \\_/      \\__/  \\__/  \\__/  \\__/      \\_/               \\_/   \\_/    \\_/   \\_/\n"
+							+ "*Full screen to see better :)*",
+							null)
+					.build()).queue();
+			}
+			else if (parser.getCommand(1).equals("ls")) {
+				channel.sendMessage(new MessageBuilder()
+					.append("P\nO\nN\nG", MessageBuilder.Formatting.BOLD)
+					.build()).queue();
+			}				
+		}
+		else
+			channel.sendMessage("pong!").queue();
+		
 	}
 
 	@Override

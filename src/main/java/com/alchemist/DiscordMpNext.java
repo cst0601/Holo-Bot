@@ -2,10 +2,13 @@ package com.alchemist;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 
+import com.alchemist.service.AboutListener;
 import com.alchemist.service.CountDownListener;
 import com.alchemist.service.ManualListener;
 import com.alchemist.service.PingListener;
@@ -35,15 +38,15 @@ public class DiscordMpNext {
 	 * @throws LoginException
 	 */
 	private void startUp (String args[]) throws LoginException {
-		logger = Logger.getLogger(DiscordMpNext.class.getName());
+		logger = LoggerFactory.getLogger(DiscordMpNext.class);
 		// load token from config
 		Properties properties = new Properties();
 		try {
 			properties.load(DiscordMpNext.class.getResourceAsStream("/config.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
-			logger.severe("Failed to read from config.properties, please" +
-					      "check if the file exists.");
+			logger.error("Failed to read from config.properties, please" +
+					     "check if the file exists.");
 			return;
 		}
 		
@@ -56,6 +59,7 @@ public class DiscordMpNext {
 					.addEventListeners(new RollListener())
 					.addEventListeners(new ManualListener())
 					.addEventListeners(new VtubeListener(ytKey))
+					.addEventListeners(new AboutListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));

@@ -5,9 +5,10 @@ import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 import org.json.JSONArray;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -17,7 +18,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 public class TwitterBroadcaster extends ListenerAdapter {
 	public TwitterBroadcaster() {
-		logger = Logger.getLogger(TwitterBroadcaster.class.getName());
+		logger = LoggerFactory.getLogger(TwitterBroadcaster.class);
 	}
 	
 	@Override
@@ -35,7 +36,7 @@ public class TwitterBroadcaster extends ListenerAdapter {
 			broadcastRunner.interrupt();
 			broadcastRunner.join();
 		} catch (InterruptedException e) {
-			logger.warning("Interrupt occurred when stopping runner.");
+			logger.warn("Interrupt occurred when stopping runner.");
 			e.printStackTrace();
 		}
 	}
@@ -62,7 +63,7 @@ public class TwitterBroadcaster extends ListenerAdapter {
 			}
 			
 		} catch (Exception e) {
-			logger.severe("Failed to read broadcast config file.");
+			logger.error("Failed to read broadcast config file.");
 		}
 		
 		return subscriptions;
@@ -77,7 +78,7 @@ public class TwitterBroadcaster extends ListenerAdapter {
 		try {
 			properties.load(new FileInputStream("config/credentials/twitter4j.properties"));
 		} catch (Exception e) {
-			logger.severe("Failed to read twitter4j token file");
+			logger.error("Failed to read twitter4j token file");
 			return null;
 		}
 		
