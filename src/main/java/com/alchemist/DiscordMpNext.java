@@ -8,12 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 
-import com.alchemist.service.AboutListener;
-import com.alchemist.service.CountDownListener;
-import com.alchemist.service.ManualListener;
-import com.alchemist.service.PingListener;
-import com.alchemist.service.RollListener;
-import com.alchemist.service.VtubeListener;
+import com.alchemist.service.*;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -60,6 +55,7 @@ public class DiscordMpNext {
 					.addEventListeners(new ManualListener())
 					.addEventListeners(new VtubeListener(ytKey))
 					.addEventListeners(new AboutListener())
+					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));
