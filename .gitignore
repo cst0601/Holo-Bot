@@ -1,6 +1,7 @@
 src/main/resources/config.properties
 config/credentials/twitter4j.properties
 target/
+logs
 
 .DS_Store
 */.DS_Store

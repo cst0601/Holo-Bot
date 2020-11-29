@@ -1,7 +1,7 @@
 # Discord MP Bot
 
-A simple discord bot that help tracks events of hololive
-The name `Discord MP Bot` is based on an old discord bot, might change that namge after some time.
+A simple discord bot that help tracks events of hololive.
+The name `Discord MP Bot` is based on an old discord bot, might change that name after some time.
 
 
 ## Usage
@@ -12,7 +12,8 @@ The name `Discord MP Bot` is based on an old discord bot, might change that namg
 	* `schedules` to list the schedules of today, requires holo_schedule_api.
 	* `live` to list all members that are currently streaming on youtube.
 * `>ping [ls | sl]`: Pong!
-* `>roll`: Roll a dice, old function from 1st gen Discord MP Bot
+* `>roll`: Roll a dice, old function from 1st gen Discord MP Bot.
+* `>bonk @member`: Bonk the mentioned member.
 * `>about`: About Holo Bot.
 
 ## Setup
@@ -36,12 +37,15 @@ java -jar discord_mp_bot.jar noTwitter
 
 Edit `config/broadcast.json` to subscribe to twitter content and broadcast it in designated text channel.
 
+* `query`: The search query for twitter.
+* `target`: Target channel ID
+
 Example: 
 ```json
 [
 	{
 		"query": "from:@sakuramiko25",
-		"target": [channel_id_1, channel_id_2]
+		"target": [757941157421645924, 757941157421645925]
 	}
 ]
 ```
@@ -56,5 +60,6 @@ oauth.accessTokenSecret=
 ```
 
 ## Note
-`>holo schedules` requires holo_schedule_api to run in local.
+`>holo schedules` requires Holo Schedule API to run in local.
+See more at [Holo Schedule API](https://github.com/cst0601/holo_schedule_api) repo.
 
