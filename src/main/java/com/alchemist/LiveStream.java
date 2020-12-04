@@ -5,14 +5,7 @@ package com.alchemist;
  * @author greg8
  * Stores the information of a live steam
  */
-public class LiveStream extends Content {
-	// deprecated
-	public LiveStream(String videoId, String title, String channelTitle) {
-		this.videoId = videoId;
-		this.title = title;
-		this.channelTitle = channelTitle;
-	}
-	
+public class LiveStream {
 	public LiveStream(String memberName, String videoId, String title,
 					  String channelTitle) {
 		this.memberName = memberName;
@@ -34,6 +27,11 @@ public class LiveStream extends Content {
 	public String getTitle() { return title; }
 	public String getChannelName () { return channelTitle; }
 	
+	private String getYtUrl(String id) {
+		return String.format(URL_PREFIX, id);
+	}
+	
+	private final String URL_PREFIX = "https://www.youtube.com/watch?v=%s";
 	private String memberName;
 	private String videoId;
 	private String title;

@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.json.JSONArray;
 
 public class HoloMemberData {
@@ -48,7 +49,7 @@ public class HoloMemberData {
 	}
 	
 	private HoloMemberData() {
-		logger = Logger.getLogger(HoloMemberData.class.getName());
+		logger = LoggerFactory.getLogger(HoloMemberData.class);
 		logger.info("Reading member data from config/member.json");
 		
 		memberDict = new HashMap<String, HoloMember>();
@@ -73,7 +74,7 @@ public class HoloMemberData {
 				sortedMember.add(member);
 			}
 		} catch (FileNotFoundException e) {
-			logger.severe("Cannot read member file.");
+			logger.error("config/member.json is missing.");
 		}
 	}
 	

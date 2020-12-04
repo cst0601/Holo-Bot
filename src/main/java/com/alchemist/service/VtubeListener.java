@@ -3,7 +3,6 @@ package com.alchemist.service;
 import java.awt.Color;
 import java.util.Dictionary;
 import java.util.Hashtable;
-import java.util.logging.Logger;
 
 import com.alchemist.ArgParser;
 import com.alchemist.LiveStream;
@@ -19,6 +18,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * VtubeListener
@@ -36,7 +39,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	public VtubeListener(String key) {
 		holoApi = new HoloApi();
 		holoToolsApi = new HoloToolsApi();
-		logger = Logger.getLogger(VtubeListener.class.getName());
+		logger = LoggerFactory.getLogger(VtubeListener.class.getName());
 	}
 	
 	public String contentFormat() {
@@ -129,7 +132,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		} catch (Exception e) {		// schedule api exceptions
 			channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
 					+ "Contact admin to get help.").queue();
-			logger.warning("Failed to use schedule api");
+			logger.warn("Failed to use schedule api");
 			e.printStackTrace();
 		}
 		
@@ -187,7 +190,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			channel.sendMessage(builder.build()).queue();
 			
 		} catch (Exception e) {
-			logger.warning("Failed to get request from holoToolsApi.");
+			logger.warn("Failed to get request from holoToolsApi.");
 			e.printStackTrace();
 		}
 	}
