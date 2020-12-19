@@ -142,7 +142,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		String memberInfo = " - %s: [%s](https://www.youtube.com/channel/%s)\n";
 		
 		Dictionary<String, String> memberByGeneration = new Hashtable<String, String>();
-		for (HoloMember member: HoloMemberData.getInstance().getAvaliableMembers()) {
+		for (HoloMember member: HoloMemberData.getInstance().getAvaliableMembers(HoloMemberData.DIVISION.JP)) {
 			if (memberByGeneration.get(member.getGeneration()) == null) {
 				memberByGeneration.put(
 						member.getGeneration(), "");	// first init to empty string

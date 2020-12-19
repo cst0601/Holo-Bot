@@ -1,0 +1,37 @@
+[
+	{
+		"id": "calliope",
+		"name": "森美声",
+		"generation": "EN",
+		"channel_id": "UCL_qhgtOy0dy1Agp8vkySQg",
+		"api_id": 199073
+	},
+	{
+		"id": "kiara",
+		"name": "小鳥遊キアラ",
+		"generation": "EN",
+		"channel_id": "UCHsx4Hqa-1ORjQTh9TYDhww",
+		"api_id": 199074
+	},
+	{
+		"id": "ina",
+		"name": "一伊那尓栖",
+		"generation": "EN",
+		"channel_id": "UCMwGHR0BTZuLsmjY_NT5Pwg",
+		"api_id": 199075
+	},
+	{
+		"id": "gura",
+		"name": "がうる・ぐら",
+		"generation": "EN",
+		"channel_id": "UCoSrY_IQQVpmIRZ9Xf-y93g",
+		"api_id": 199076
+	},
+	{
+		"id": "amelia",
+		"name": "ワトソン・アメリア",
+		"generation": "EN",
+		"channel_id": "UCyl1z3jo3XHR1riLFKG5UAg",
+		"api_id": 199077
+	},
+]
