@@ -1,15 +1,12 @@
 package com.alchemist.service;
 
 import java.awt.Color;
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 import com.alchemist.ArgParser;
 import com.alchemist.LiveStream;
-import com.alchemist.ScheduleEmbedBuilder;
 import com.alchemist.exceptions.ArgumentParseException;
-import com.alchemist.HoloApi;
-import com.alchemist.HoloMember;
+import com.alchemist.holoModel.HoloMemberListModel;
+import com.alchemist.holoModel.HoloScheduleModel;
 import com.alchemist.HoloMemberData;
 import com.alchemist.HoloToolsApi;
 
@@ -30,14 +27,14 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class VtubeListener extends ListenerAdapter implements Service {
-	private HoloApi holoApi;
+	private HoloScheduleModel holoScheduleModel;
 	private HoloToolsApi holoToolsApi;
 	private Logger logger;
 	private ArgParser parser = null;
 
 	
 	public VtubeListener(String key) {
-		holoApi = new HoloApi();
+		holoScheduleModel = new HoloScheduleModel();
 		holoToolsApi = new HoloToolsApi();
 		logger = LoggerFactory.getLogger(VtubeListener.class.getName());
 	}
@@ -74,11 +71,11 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				
 				try {
 					if (parser.containsArgs("list")) {
-						getHoloMemberList(channel);
+						getHoloMemberList(channel, parser);
 					}
 					
 					else if (parser.containsArgs("schedules")) {
-						getSchedules(channel);
+						getSchedules(channel, parser);
 					}
 					
 					else if (parser.containsArgs("live")) {
@@ -107,72 +104,31 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	}
 	
 	// does not bother to test these methods :)
-	private void getSchedules(MessageChannel channel) {
+	private void getSchedules(MessageChannel channel, ArgParser parser) {
 		try {
-			if (parser.containsParam("page")) {
-				try {
-					int page = parser.getInt("page");
-					ScheduleEmbedBuilder builder = new ScheduleEmbedBuilder(holoApi.request())
-							.addDateOfSchedule(holoApi.getDateOfSchedule())
-							.addTimeStamp(holoApi.getUpdateTime())
-							.setMessageMode(ScheduleEmbedBuilder.MessageMode.PAGED)
-							.setPage(page);
-					channel.sendMessage(builder.build()).queue();
-				} catch (ArgumentParseException e1) {
-					channel.sendMessage(e1.getMessage()).queue();
-				}
-			}
-			else {
-				ScheduleEmbedBuilder builder = new ScheduleEmbedBuilder(holoApi.request())
-						.addDateOfSchedule(holoApi.getDateOfSchedule())
-						.addTimeStamp(holoApi.getUpdateTime());
-				channel.sendMessage(builder.build()).queue();
-				
-			}
+			if (parser.containsArgs("jp") || parser.getCommandSize() == 2)		
+				channel.sendMessage(holoScheduleModel.getHoloSchedule()).queue();
+			else if (parser.containsArgs("en"))
+				channel.sendMessage(holoScheduleModel.getHoloEnSchedule()).queue();
+			else
+				channel.sendMessage("Error: Unknown group of Hololive").queue();
 		} catch (Exception e) {		// schedule api exceptions
 			channel.sendMessage("Looks like schedule api went on vacation.  :((\n"
 					+ "Contact admin to get help.").queue();
 			logger.warn("Failed to use schedule api");
 			e.printStackTrace();
 		}
-		
 	}
 	
-	private void getHoloMemberList(MessageChannel channel) {
-		String memberInfo = " - %s: [%s](https://www.youtube.com/channel/%s)\n";
+	private void getHoloMemberList(MessageChannel channel, ArgParser parser) {
+		HoloMemberListModel holoMemberList = new HoloMemberListModel();
 		
-		Dictionary<String, String> memberByGeneration = new Hashtable<String, String>();
-		for (HoloMember member: HoloMemberData.getInstance().getAvaliableMembers(HoloMemberData.DIVISION.JP)) {
-			if (memberByGeneration.get(member.getGeneration()) == null) {
-				memberByGeneration.put(
-						member.getGeneration(), "");	// first init to empty string
-			}
-			memberByGeneration.put(						// add stuffs
-					member.getGeneration(),
-					memberByGeneration.get(member.getGeneration()) +
-					String.format(memberInfo,
-							member.getId(),
-							member.getName(),
-							member.getYoutubeId())
-					);
-		}
-		
-		/* TODO: think of a better data structure to sort member by generation */
-		EmbedBuilder builder = new EmbedBuilder()
-				.setTitle(">holo list")
-				.setColor(Color.red)
-				.addField("List of availble members", "- <id>: <name>", false)
-				.setFooter("35P | Chikuma", "https://i.imgur.com/DOb1GZ1.png");
-		builder.addField("Generation 0", memberByGeneration.get("0"), false);
-		builder.addField("Generation 1", memberByGeneration.get("1"), false);
-		builder.addField("Generation 2", memberByGeneration.get("2"), false);
-		builder.addField("Generation 3", memberByGeneration.get("3"), false);
-		builder.addField("Generation 4", memberByGeneration.get("4"), false);
-		builder.addField("Generation 5", memberByGeneration.get("5"), false);
-		builder.addField("Hololive Gamers", memberByGeneration.get("gamers"), false);
-		builder.addField("INNK Music", memberByGeneration.get("INNK Music"), false);
-		
-		channel.sendMessage(builder.build()).queue();
+		if (parser.containsArgs("jp") || parser.getCommandSize() == 2)
+			channel.sendMessage(holoMemberList.getHoloMemberList()).queue();
+		else if (parser.containsArgs("en"))
+			channel.sendMessage(holoMemberList.getHoloEnMemberList()).queue();
+		else
+			channel.sendMessage("Error: Unknown group of Hololive").queue();
 	}
 	
 	private void getLive(MessageChannel channel) {

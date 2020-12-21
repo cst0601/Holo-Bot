@@ -112,7 +112,7 @@ public class HoloMemberData {
 			sortedMember.put(division, sortedList);
 			
 		} catch (FileNotFoundException e) {
-			logger.error("config/member.json is missing.");
+			logger.error("config/" + path + " is missing.");
 		}
 	}
 	
