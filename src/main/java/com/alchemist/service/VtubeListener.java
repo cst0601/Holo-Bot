@@ -110,6 +110,8 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				channel.sendMessage(holoScheduleModel.getHoloSchedule()).queue();
 			else if (parser.containsArgs("en"))
 				channel.sendMessage(holoScheduleModel.getHoloEnSchedule()).queue();
+			else if (parser.containsArgs("id"))
+				channel.sendMessage(holoScheduleModel.getHoloIdSchedule()).queue();
 			else
 				channel.sendMessage("Error: Unknown group of Hololive").queue();
 		} catch (Exception e) {		// schedule api exceptions
@@ -127,6 +129,8 @@ public class VtubeListener extends ListenerAdapter implements Service {
 			channel.sendMessage(holoMemberList.getHoloMemberList()).queue();
 		else if (parser.containsArgs("en"))
 			channel.sendMessage(holoMemberList.getHoloEnMemberList()).queue();
+		else if (parser.containsArgs("id"))
+			channel.sendMessage(holoMemberList.getHoloIdMemberList()).queue();
 		else
 			channel.sendMessage("Error: Unknown group of Hololive").queue();
 	}

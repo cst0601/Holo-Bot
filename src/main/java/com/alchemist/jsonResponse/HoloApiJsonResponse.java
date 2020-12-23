@@ -31,6 +31,9 @@ public class HoloApiJsonResponse {
 	 * @return
 	 */
 	public ArrayList<Schedule> getSchedules() {
+		if (json.isNull("schedule"))	// if no schedules yet
+			return new ArrayList<Schedule>();
+
 		JSONArray jsonSchedules = json.getJSONObject("schedule").getJSONArray("schedules");
 		ArrayList<Schedule> schedules = new ArrayList<Schedule>();
 		for (int i = 0; i < jsonSchedules.length(); ++i) {

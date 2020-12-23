@@ -30,4 +30,12 @@ public class HoloScheduleModel {
 				.addTimeStamp(holoApi.getUpdateTime());
 		return builder.build();
 	}
+	
+	public MessageEmbed getHoloIdSchedule()
+			throws ConnectException, IOException, InterruptedException {
+		ScheduleEmbedBuilder builder = new ScheduleEmbedBuilder(holoApi.request("id"))
+				.addDateOfSchedule(holoApi.getDateOfSchedule())
+				.addTimeStamp(holoApi.getUpdateTime());
+		return builder.build();
+	}
 }

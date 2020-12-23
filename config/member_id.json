@@ -1,0 +1,44 @@
+[
+	{
+		"id": "lofi",
+		"name": "アイラニ・イオフィフティーン",
+		"generation": "ID_1",
+		"channel_id": "UCAoy6rzhSf4ydcYjJw3WoVg",
+		"api_id": 19
+	},
+	{
+		"id": "moona",
+		"name": "ムーナ・ホシノヴァ",
+		"generation": "ID_1",
+		"channel_id": "UCP0BspO_AMEe3aQqqpo89Dg",
+		"api_id": 22
+	},
+	{
+		"id": "risu",
+		"name": "アユンダ・リス",
+		"generation": "ID_1",
+		"channel_id": "UCOyYb1c43VlX9rc_lT6NKQw",
+		"api_id": 31
+	},
+	{
+		"id": "kureiji",
+		"name": "アイラニ・イオフィフティーン",
+		"generation": "ID_2",
+		"channel_id": "UCYz_5n-uDuChHtLo7My1HnQ",
+		"api_id": 676413
+	},
+	{
+		"id": "anya",
+		"name": "アーニャ・メルフィッサ",
+		"generation": "ID_2",
+		"channel_id": "UC727SQYUvx5pDDGQpTICNWg",
+		"api_id": 676414
+	},
+	{
+		"id": "reine",
+		"name": "パヴォリア・レイネ",
+		"generation": "ID_2",
+		"channel_id": "UChgTyjG-pdNvxxhdsXfHQ5Q",
+		"api_id": 676415
+	},
+]

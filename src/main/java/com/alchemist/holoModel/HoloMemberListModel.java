@@ -43,6 +43,16 @@ public class HoloMemberListModel {
 		return builder.build();
 	}
 	
+	public MessageEmbed getHoloIdMemberList() {
+		Map <String, String> memberByGeneration = getMemberByGeneration(DIVISION.ID);
+		
+		EmbedBuilder builder = getEmbedPrototype();
+		builder.addField("ID Generation 1", memberByGeneration.get("ID_1"), false);
+		builder.addField("ID Generation 2", memberByGeneration.get("ID_2"), false);
+		
+		return builder.build();
+	}
+	
 	private Map<String, String> getMemberByGeneration(DIVISION division) {
 		String memberInfo = " - %s: [%s](https://www.youtube.com/channel/%s)\n";
 		

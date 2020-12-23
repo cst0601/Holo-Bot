@@ -29,7 +29,9 @@ public class HoloApi extends Api {
 		HoloApiJsonResponse jsonResponse = new HoloApiJsonResponse(
 				response.statusCode(), response.body());
 		updateTime = jsonResponse.getUpdateTime();
-		date = jsonResponse.getSchedules().get(0).getDate();
+		if (jsonResponse.getSchedules().size() > 0)	// if no schedules yet, no data could be extract from request
+			date = jsonResponse.getSchedules().get(0).getDate();
+		
 		return jsonResponse.getSchedules();
 	}
 

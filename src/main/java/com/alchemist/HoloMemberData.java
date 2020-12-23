@@ -78,6 +78,7 @@ public class HoloMemberData {
 		
 		loadMemberInfoFromFile(DIVISION.JP, "member.json");
 		loadMemberInfoFromFile(DIVISION.EN, "member_en.json");
+		loadMemberInfoFromFile(DIVISION.ID, "member_id.json");
 	}
 	
 	/**
