@@ -1,6 +1,7 @@
 package com.alchemist;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
@@ -19,16 +20,18 @@ public class HoloApi extends Api {
 		super();	
 	}
 	
-	public ArrayList<Schedule> request() throws IOException, InterruptedException {
+	public ArrayList<Schedule> request(String group) throws IOException, InterruptedException, ConnectException {
 		request = HttpRequest.newBuilder()
-				.uri(URI.create(defaultUrl))
+				.uri(URI.create(String.format(defaultUrl, group)))
 				.build();
 		
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 		HoloApiJsonResponse jsonResponse = new HoloApiJsonResponse(
 				response.statusCode(), response.body());
 		updateTime = jsonResponse.getUpdateTime();
-		date = jsonResponse.getSchedules().get(0).getDate();
+		if (jsonResponse.getSchedules().size() > 0)	// if no schedules yet, no data could be extract from request
+			date = jsonResponse.getSchedules().get(0).getDate();
+		
 		return jsonResponse.getSchedules();
 	}
 
@@ -40,7 +43,7 @@ public class HoloApi extends Api {
 		return date;
 	}
 		
-	private final String defaultUrl = "http://127.0.0.1:5000/schedules/today";
+	private final String defaultUrl = "http://127.0.0.1:5000/%s/schedules/today";
 	private HttpRequest request;
 	private String updateTime = "";
 	private String date = "";

@@ -52,6 +52,11 @@ public class ScheduleEmbedBuilder {
 	}
 	
 	public MessageEmbed build() {
+		if (slicedSchedules.size() == 0) {
+			builder.addField("No stream schedules yet :(((", "Check again later.", false);
+			return builder.build();
+		}
+		
 		if (mode == MessageMode.ALL) {
 			builder.addField("Schedules of " + dateOfSchedule,
 							 slicedSchedules.get(0) ,false);
