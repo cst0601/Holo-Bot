@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class CountDownListener extends ListenerAdapter implements Service {
-	private final String targetTime = "2020-10-21 21:00:00 +09:00";
+	private final String targetTime = "2021-03-05 00:00:00 +09:00";
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
@@ -61,13 +61,13 @@ public class CountDownListener extends ListenerAdapter implements Service {
 				String differenceString = setCountDownFormat(difference, countDownMode);
 				
 				EmbedBuilder builder = new EmbedBuilder()
-						.setTitle(">miko 距離復歸倒數")
+						.setTitle(">miko 距離生日倒數")
 						.setColor(Color.red)
 						.addField("現在時刻",
 								DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(timeNow), false)
 						.addField("預定時刻",
 								DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(eventTime), false)
-						.addField("距離復歸", differenceString, false)
+						.addField("距離生日還有", differenceString, false)
 						.addBlankField(false)
 						.setFooter("All time shown are in JST | Might have latency in seconds");
 				

@@ -110,8 +110,12 @@ public class TwitterBroadcasterRunner extends Thread {
 			
 		} catch (TwitterException e) {				// connection error, rate limit exceeded...
 			newTweets = new LinkedList<String>();	// no new tweets if exception occurred
+			
 			logger.warn("Failed searching");
-			e.printStackTrace();
+			if (e.exceededRateLimitation())
+				logger.warn("Exceeded rate limitation");
+			else
+				logger.warn("Failed with reason other that rate limitation\n" + e.getMessage());
 		}
 	    return newTweets;
 	}
