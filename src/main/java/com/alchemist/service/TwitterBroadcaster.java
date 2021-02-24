@@ -1,4 +1,4 @@
-package com.alchemist;
+package com.alchemist.service;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -10,13 +10,16 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alchemist.TwitterBroadcasterRunner;
+import com.alchemist.TwitterSubscription;
+
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class TwitterBroadcaster extends ListenerAdapter {
+public class TwitterBroadcaster extends ListenerAdapter implements Service {
 	public TwitterBroadcaster() {
 		logger = LoggerFactory.getLogger(TwitterBroadcaster.class);
 	}
@@ -26,7 +29,7 @@ public class TwitterBroadcaster extends ListenerAdapter {
 		broadcastRunner = new TwitterBroadcasterRunner(
 				event.getJDA(), initTwitterApi(), readBroadcastConfig());
 		broadcastRunner.start();
-		logger.info("twitter broadcaster ready!!!!");
+		logger.info("Twitter broadcaster ready!!!!");
 	}
 	
 	public void terminate() {

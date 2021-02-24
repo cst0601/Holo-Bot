@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.slf4j.LoggerFactory;
 
 import com.alchemist.ArgParser;
-import com.alchemist.TwitterBroadcaster;
 import com.alchemist.exceptions.ArgumentParseException;
 
 /**
@@ -56,9 +55,7 @@ public class PingListener extends ListenerAdapter implements Service {
 						LoggerFactory.getLogger(PingListener.class).info("Received exit command, terminating...");
 						
 						for (Object listener: event.getJDA().getRegisteredListeners()) {
-							if (listener instanceof TwitterBroadcaster) {
-								((TwitterBroadcaster)listener).terminate();
-							}
+							((Service)listener).terminate();
 						}
 		
 						System.exit(0);

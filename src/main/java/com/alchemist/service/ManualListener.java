@@ -17,10 +17,11 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class ManualListener extends ListenerAdapter implements Service {
 	
+	@SuppressWarnings("unchecked")	// convert List<Object> to List<Service>
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		JDA jda = event.getJDA();
-		List<Object> listeners = jda.getRegisteredListeners();
+		List<Service> listeners = (List<Service>)(Object)jda.getRegisteredListeners(); 	// triggers unchecked warning
 		
 		Message message = event.getMessage();
 		MessageChannel channel = event.getChannel();
@@ -52,15 +53,13 @@ public class ManualListener extends ListenerAdapter implements Service {
 				}
 				
 				for (int i = 0; i < listeners.size(); ++i) {
-					if (listeners.get(i) instanceof Service)
-						if (parser.getCommand(1).equals(((Service) listeners.get(i)).getServiceName())) {
-							channel.sendMessage(new MessageBuilder()
-								.appendCodeBlock(
-									((Service) listeners.get(i)).getServiceMan(),
-									"md")
-								.build()).queue();
-						}
+					if (parser.getCommand(1).equals(((Service) listeners.get(i)).getServiceName())) {
+						channel.sendMessage(new MessageBuilder()
+							.appendCodeBlock(listeners.get(i).getServiceMan(), "md")
+							.build()).queue();
+					}
 				}
+				channel.sendMessage("Not a vaild manual page.").queue();	// not a vaild manual page
 			}
 		}
 	}
@@ -85,10 +84,10 @@ public class ManualListener extends ListenerAdapter implements Service {
 	 * @param services
 	 * @return String contains list of service names
 	 */
-	public String getManualList(List<Object> services) {
+	public String getManualList(List<Service> services) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < services.size(); ++i) {
-			if (services.get(i) instanceof Service) {	// preclude non service listeners
+			if (services.get(i).getServiceName() != null) { // preclude non backend listeners
 				buffer.append(" - ");
 				buffer.append(((Service)services.get(i)).getServiceName());
 				buffer.append("\n");
