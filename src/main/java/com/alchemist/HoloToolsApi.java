@@ -24,6 +24,12 @@ public class HoloToolsApi extends Api {
 				response.statusCode(), response.body());
 	}
 	
+	/**
+	 * Get all live streams of all members
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	public ArrayList<LiveStream> getLiveStreams()
 			throws IOException, InterruptedException {
 		String apiRequest = "https://api.holotools.app/v1/live?"
@@ -31,15 +37,35 @@ public class HoloToolsApi extends Api {
 		return request(apiRequest).getLiveStreams();
 	}
 	
-	public LiveStream getLiveStreamOfMember(String member)
+	/**
+	 * Get stream by member name and stream type
+	 * @param member
+	 * @param streamType
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public ArrayList<LiveStream> getStreamOfMember(String member, String streamType)
 			throws IOException, InterruptedException {
 		int apiMemberId = HoloMemberData.getInstance().getApiIdByName(member);
 		
 		String apiRequest = String.format("https://api.holotools.app/v1/live?"
 				+ "channel_id=%d&max_upcoming_hours=48&hide_channel_desc=1", apiMemberId);
 		
-		ArrayList<LiveStream> streams = request(apiRequest).getLiveStreams();
-
+		return request(apiRequest).getStream(streamType);
+	}
+	
+	/**
+	 * Get "live" stream by member name.
+	 * (assumed there is only one stream on live at a time)
+	 * @param member name
+	 * @return a live stream. If there are no stream on live, return null
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public LiveStream getLiveStreamOfMember(String member) 
+			throws IOException, InterruptedException {
+		ArrayList<LiveStream> streams = getStreamOfMember(member, "live");
 		return (streams.size() > 0)? streams.get(0): null;
 	}
 }

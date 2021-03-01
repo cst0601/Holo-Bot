@@ -1,16 +1,21 @@
 package com.alchemist;
 
+import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 /**
  * LiveStream
  * @author greg8
  * Stores the information of a live steam
  */
 public class LiveStream {
-	public LiveStream(String memberName, String videoId, String title,
-					  String channelTitle) {
+	public LiveStream(String memberName, String videoId, String title, String liveSchedule,
+					  String channelTitle) throws ParseException {
 		this.memberName = memberName;
 		this.videoId = videoId;
 		this.title = title;
+		this.liveSchedule = ZonedDateTime.parse(liveSchedule, formatter);
 		this.channelTitle = channelTitle;
 	}
 	
@@ -25,15 +30,18 @@ public class LiveStream {
 	public String getMemberName() { return memberName; }
 	public String getVideoId() { return videoId; }
 	public String getTitle() { return title; }
-	public String getChannelName () { return channelTitle; }
+	public String getChannelName() { return channelTitle; }
+	public ZonedDateTime getStreamStartTime() { return liveSchedule; }
 	
 	private String getYtUrl(String id) {
 		return String.format(URL_PREFIX, id);
 	}
 	
-	private final String URL_PREFIX = "https://www.youtube.com/watch?v=%s";
+	private static final String URL_PREFIX = "https://www.youtube.com/watch?v=%s";
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 	private String memberName;
 	private String videoId;
 	private String title;
+	private ZonedDateTime liveSchedule;
 	private String channelTitle;
 }

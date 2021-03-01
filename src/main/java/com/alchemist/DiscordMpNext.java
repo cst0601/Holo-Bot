@@ -57,6 +57,7 @@ public class DiscordMpNext {
 					.addEventListeners(new AboutListener())
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
+					.addEventListeners(new StreamNotifierService())
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));
 			
@@ -93,7 +94,7 @@ public class DiscordMpNext {
 		}
 		
 		if (twitterMode) {
-			builder.addEventListeners(new TwitterBroadcaster());
+			builder.addEventListeners(new TwitterBroadcastService());
 		}
 		
 		return builder;

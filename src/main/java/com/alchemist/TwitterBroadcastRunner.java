@@ -24,11 +24,11 @@ import twitter4j.TwitterException;
  * @author chikuma
  *
  */
-public class TwitterBroadcasterRunner extends Thread {
-	public TwitterBroadcasterRunner(
+public class TwitterBroadcastRunner extends Thread {
+	public TwitterBroadcastRunner(
 			JDA jda, Twitter twitter,
 			ArrayList<TwitterSubscription> subscriptions) {
-		logger = LoggerFactory.getLogger(TwitterBroadcasterRunner.class);
+		logger = LoggerFactory.getLogger(TwitterBroadcastRunner.class);
 		this.jda = jda;
 		this.twitter = twitter;
 		this.subscriptions = subscriptions;

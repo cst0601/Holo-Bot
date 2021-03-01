@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alchemist.TwitterBroadcasterRunner;
+import com.alchemist.TwitterBroadcastRunner;
 import com.alchemist.TwitterSubscription;
 
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -19,17 +19,17 @@ import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
-public class TwitterBroadcaster extends ListenerAdapter implements Service {
-	public TwitterBroadcaster() {
-		logger = LoggerFactory.getLogger(TwitterBroadcaster.class);
+public class TwitterBroadcastService extends ListenerAdapter implements Service {
+	public TwitterBroadcastService() {
+		logger = LoggerFactory.getLogger(TwitterBroadcastService.class);
 	}
 	
 	@Override
 	public void onReady(ReadyEvent event) {
-		broadcastRunner = new TwitterBroadcasterRunner(
+		broadcastRunner = new TwitterBroadcastRunner(
 				event.getJDA(), initTwitterApi(), readBroadcastConfig());
 		broadcastRunner.start();
-		logger.info("Twitter broadcaster ready!!!!");
+		logger.info("Twitter broadcaster ready!");
 	}
 	
 	public void terminate() {
@@ -95,6 +95,6 @@ public class TwitterBroadcaster extends ListenerAdapter implements Service {
 		return tf.getInstance();
 	}
 	
-	private TwitterBroadcasterRunner broadcastRunner;
+	private TwitterBroadcastRunner broadcastRunner;
 	private Logger logger;
 }
