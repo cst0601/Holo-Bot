@@ -26,7 +26,6 @@ public class StreamNotifierRunner extends Thread {
 		upcommingStreams = new LinkedList<UpcommingStream>();
 		this.memberName = memberName;
 		this.messageChannelId = messageChannelId;
-		logger.warn(String.format("%d", messageChannelId));
 	}
 	
 	public void run() {
@@ -55,9 +54,9 @@ public class StreamNotifierRunner extends Thread {
 	
 	private void updateUpcommingStreams() {
 		try {
-			for (LiveStream stream: api.getStreamOfMember(memberName, "upcomming")) {
+			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
 				UpcommingStream upcommingStream = new UpcommingStream(stream);
-				logger.debug(String.format("api get stream: %s", stream.toString()));
+				logger.info(String.format("api get stream: %s", stream.toString()));
 				if (!upcommingStreams.contains(upcommingStream))
 					upcommingStreams.add(upcommingStream);
 			}	

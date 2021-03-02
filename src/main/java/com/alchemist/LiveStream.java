@@ -38,7 +38,7 @@ public class LiveStream {
 	}
 	
 	private static final String URL_PREFIX = "https://www.youtube.com/watch?v=%s";
-	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 	private String memberName;
 	private String videoId;
 	private String title;
