@@ -25,7 +25,8 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 			streamNotifierRunner = new StreamNotifierRunner(
 					event.getJDA(),
 					config.memberName,
-					config.targetChannel);
+					config.targetChannel,
+					config.roleId);
 			streamNotifierRunner.start();
 			logger.info("Stream notifier ready!");
 		} catch (Exception e) {
@@ -57,15 +58,18 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 		scanner.close();
 		
 		return new StreamNotifierConfig(json.getString("member_name"),
-								        json.getLong("target_channel"));
+								        json.getLong("target_channel"),
+								        json.getLong("ping_role_id"));
 	}
 	
 	private class StreamNotifierConfig {
 		private final String memberName;
-		private final Long targetChannel;
-		public StreamNotifierConfig(String memberName, Long targetChannel) {
+		private final long targetChannel;
+		private final long roleId;
+		public StreamNotifierConfig(String memberName, long targetChannel, long roleId) {
 			this.memberName = memberName;
 			this.targetChannel = targetChannel;
+			this.roleId = roleId;
 		}
 	}
 

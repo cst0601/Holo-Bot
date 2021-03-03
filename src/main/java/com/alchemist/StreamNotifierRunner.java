@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.Role;
 
 /**
  * Workhorse of stream notification
@@ -19,13 +20,14 @@ import net.dv8tion.jda.api.entities.MessageChannel;
  *
  */
 public class StreamNotifierRunner extends Thread {
-	public StreamNotifierRunner(JDA jda, String memberName, long messageChannelId) {
+	public StreamNotifierRunner(JDA jda, String memberName,
+			long messageChannelId, long pingId) {
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
-		this.jda = jda;
 		api = new HoloToolsApi();
 		upcommingStreams = new LinkedList<UpcommingStream>();
+		targetChannel = jda.getTextChannelById(messageChannelId);
+		pingRole = jda.getRoleById(pingId);
 		this.memberName = memberName;
-		this.messageChannelId = messageChannelId;
 	}
 	
 	public void run() {
@@ -52,41 +54,48 @@ public class StreamNotifierRunner extends Thread {
 		messageBox.put(message);
 	}
 	
+	private boolean containsUpcomingStream(UpcommingStream newStream) {
+		for (UpcommingStream stream: upcommingStreams) {
+			if (stream.getStreamUrl().equals(newStream.getStreamUrl()))
+				return true;
+		}
+		return false;
+	}
+	
 	private void updateUpcommingStreams() {
 		try {
 			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
-				UpcommingStream upcommingStream = new UpcommingStream(stream);
-				logger.info(String.format("api get stream: %s", stream.toString()));
-				if (!upcommingStreams.contains(upcommingStream))
+				UpcommingStream upcommingStream = new UpcommingStream(stream, pingRole);
+				if (!containsUpcomingStream(upcommingStream)) {
 					upcommingStreams.add(upcommingStream);
+					logger.info("new upcocmming stream " + upcommingStream.getStreamUrl());
+				}
 			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.warn("Failed to update upomming streams.");
 		}
 		
-		MessageChannel channel = jda.getTextChannelById(messageChannelId);
-		
 		ListIterator<UpcommingStream> iter = upcommingStreams.listIterator();
 		while(iter.hasNext()) {
 			UpcommingStream stream = iter.next();
 			Message message = stream.broadcast();
 			if (message != null) {
-				channel.sendMessage(message).queue();
-				logger.info("Notified stream");	
+				targetChannel.sendMessage(message).queue();
+				logger.info("Notified stream: " + stream.getStreamUrl());	
 			}
 			if (stream.hasStarted()) {
-				logger.debug("remove started stream");
+				logger.info("Remove started stream: " + stream.getStreamUrl());
 				iter.remove();
 			}
 		}
 	}
 	
-	private JDA jda;
 	private Logger logger;
 	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
 	private HoloToolsApi api;
 	private String memberName;
-	private long messageChannelId;
+	private MessageChannel targetChannel;
+	private Role pingRole;
 	private List<UpcommingStream> upcommingStreams;
 }
