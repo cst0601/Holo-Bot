@@ -29,7 +29,7 @@ public class AboutListener extends ListenerAdapter implements Service {
 				EmbedBuilder embedBuilder = new EmbedBuilder()
 						.setTitle("Holo Bot", "https://github.com/cst0601/Discord-MP-Bot")
 						.setColor(Color.red)
-						.setDescription("Discord MP-NeXT 1.4b \"しけ村の魔王！(Beta)\"")
+						.setDescription("Discord MP-NeXT 1.4 \"しけ村の魔王！\"")
 						.addField("About Holo Bot", "A simple discord bot that help "
 								+ "tracks events of hololive.\n"
 								+ "Type `>man` to get manual of this bot.\n\n"

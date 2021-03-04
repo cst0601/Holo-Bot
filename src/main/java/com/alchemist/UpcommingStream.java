@@ -23,8 +23,7 @@ public class UpcommingStream {
 		if (state == StreamState.INIT) {
 			nextState();
 			return new MessageBuilder()
-					.append(mentionRole)
-					.append("ÀW¹D¦³·s°ÊÀR¡I§Ö¥h¬İ¬İ¡I\n")
+					.append("é »é“æœ‰æ–°å‹•éœï¼å¿«å»çœ‹çœ‹ï¼\n")
 					.append(liveStream.toString())
 					.build();
 		}
@@ -32,8 +31,7 @@ public class UpcommingStream {
 			if (upcommingNotificationTime.toInstant().isBefore(Instant.now())) {
 				nextState();
 				return new MessageBuilder()
-						.append("¦A¹L¤­¤ÀÄÁ°t«H¶}©l¡I\n")
-						.append(mentionRole)
+						.append("å†éäº”åˆ†é˜é…ä¿¡é–‹å§‹ï¼\n")
 						.append(liveStream.toString())
 						.build();
 			}
@@ -42,8 +40,8 @@ public class UpcommingStream {
 			if (liveStream.getStreamStartTime().toInstant().isBefore(Instant.now())) {
 				nextState();
 				return new MessageBuilder()
-						.append("°t«H¶}©l¤F¡I\n")
 						.append(mentionRole)
+						.append(" ã«ã‚ƒã£ã¯ã‚ï½ï¼é…ä¿¡é–‹å§‹äº†ï¼\n")
 						.append(liveStream.toString())
 						.build();
 			}
