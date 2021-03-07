@@ -31,6 +31,9 @@ public class StreamNotifierRunner extends Thread {
 	}
 	
 	public void run() {
+		updateUpcomingStreams();	// init upcoming stream list
+		notifyUpcomingStreams(false);
+		
 		while (true) {
 			String message;
 			if ((message = messageBox.poll()) != null) {
@@ -40,7 +43,8 @@ public class StreamNotifierRunner extends Thread {
 				}
 			}
 			else {
-				updateUpcommingStreams();
+				updateUpcomingStreams();
+				notifyUpcomingStreams(true);
 				try {
 					sleep(60000);	// 1 min
 				} catch (InterruptedException e) {
@@ -62,25 +66,27 @@ public class StreamNotifierRunner extends Thread {
 		return false;
 	}
 	
-	private void updateUpcommingStreams() {
+	private void updateUpcomingStreams() {
 		try {
 			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
 				UpcommingStream upcommingStream = new UpcommingStream(stream, pingRole);
 				if (!containsUpcomingStream(upcommingStream)) {
 					upcommingStreams.add(upcommingStream);
-					logger.info("new upcocmming stream " + upcommingStream.getStreamUrl());
+					logger.info("New upcocmming stream " + upcommingStream.getStreamUrl());
 				}
 			}	
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.warn("Failed to update upomming streams.");
 		}
-		
+	}
+	
+	private void notifyUpcomingStreams(boolean sendMessage) {
 		ListIterator<UpcommingStream> iter = upcommingStreams.listIterator();
 		while(iter.hasNext()) {
 			UpcommingStream stream = iter.next();
 			Message message = stream.broadcast();
-			if (message != null) {
+			if (message != null && sendMessage) {
 				targetChannel.sendMessage(message).queue();
 				logger.info("Notified stream: " + stream.getStreamUrl());	
 			}
