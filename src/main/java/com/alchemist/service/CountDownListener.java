@@ -61,13 +61,13 @@ public class CountDownListener extends ListenerAdapter implements Service {
 				String differenceString = setCountDownFormat(difference, countDownMode);
 				
 				EmbedBuilder builder = new EmbedBuilder()
-						.setTitle(">miko ¶ZÂ÷¥Í¤é­Ë¼Æ")
+						.setTitle(">miko è·é›¢ç”Ÿæ—¥å€’æ•¸")
 						.setColor(Color.red)
-						.addField("²{¦b®É¨è",
+						.addField("ç¾åœ¨æ™‚åˆ»",
 								DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(timeNow), false)
-						.addField("¹w©w®É¨è",
+						.addField("é å®šæ™‚åˆ»",
 								DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(eventTime), false)
-						.addField("¶ZÂ÷¥Í¤éÁÙ¦³", differenceString, false)
+						.addField("è·é›¢ç”Ÿæ—¥é‚„æœ‰", differenceString, false)
 						.addBlankField(false)
 						.setFooter("All time shown are in JST | Might have latency in seconds");
 				
@@ -77,24 +77,24 @@ public class CountDownListener extends ListenerAdapter implements Service {
 	}
 	
 	public String setCountDownFormat(Duration duration, Mode mode) {
-		String format = "%2d ¤Ñ  %02d ¤p®É %02d ¤ÀÄÁ %02d ¬í";
+		String format = "%2d å¤©  %02d å°æ™‚ %02d åˆ†é˜ %02d ç§’";
 		Boolean isAfterTargetTime = !duration.isNegative();
 		duration = duration.abs();
 		
 		switch (mode) {
 		case HOUR:
-			format = String.format("%d ¤p®É %02d ¤ÀÄÁ %02d ¬í",
+			format = String.format("%d å°æ™‚ %02d åˆ†é˜ %02d ç§’",
 					duration.toHours(),
 					duration.toMinutesPart(),
 					duration.toSecondsPart());
 			break;
 		case MINUTE:
-			format = String.format("%02d ¤ÀÄÁ %02d ¬í",
+			format = String.format("%02d åˆ†é˜ %02d ç§’",
 					duration.toMinutes(),
 					duration.toSecondsPart());
 			break;
 		case SECOND:
-			format = String.format("%d ¬í",
+			format = String.format("%d ç§’",
 					duration.toSeconds());
 		case NORM:
 		default:

@@ -1,8 +1,2 @@
 eclipse.preferences.version=1
-encoding//src/main/java/com/alchemist/DiscordMpNext.java=UTF-8
-encoding//src/main/java/com/alchemist/TwitterBroadcastRunner.java=UTF-8
-encoding//src/main/java/com/alchemist/UpcommingStream.java=UTF-8
-encoding//src/main/java/com/alchemist/service/AboutListener.java=UTF-8
-encoding//src/main/java/com/alchemist/service/PingListener.java=UTF-8
-encoding//src/main/java/com/alchemist/service/VtubeListener.java=UTF-8
 encoding/<project>=UTF-8
