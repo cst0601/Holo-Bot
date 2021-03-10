@@ -57,6 +57,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 						channel.sendMessage(new MessageBuilder()
 							.appendCodeBlock(listeners.get(i).getServiceMan(), "md")
 							.build()).queue();
+						return;	// man page found
 					}
 				}
 				channel.sendMessage("Not a vaild manual page.").queue();	// not a vaild manual page
