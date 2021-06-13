@@ -3,6 +3,7 @@ package com.alchemist;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -58,21 +59,31 @@ public class StreamNotifierRunner extends Thread {
 		messageBox.put(message);
 	}
 	
-	private boolean containsUpcomingStream(UpcommingStream newStream) {
-		for (UpcommingStream stream: upcommingStreams) {
-			if (stream.getStreamUrl().equals(newStream.getStreamUrl()))
-				return true;
+	private int containsUpcomingStream(LiveStream newStream) throws NoSuchElementException {
+		for (int i = 0; i < upcommingStreams.size(); ++i) {
+			if (upcommingStreams.get(i).getStreamUrl().equals(newStream.toString()))
+				return i;
 		}
-		return false;
+		throw new NoSuchElementException("Stream does not exist");
 	}
 	
 	private void updateUpcomingStreams() {
 		try {
 			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
-				UpcommingStream upcommingStream = new UpcommingStream(stream, pingRole);
-				if (!containsUpcomingStream(upcommingStream)) {
-					upcommingStreams.add(upcommingStream);
-					logger.info("New upcocmming stream " + upcommingStream.getStreamUrl());
+				// if stream does not exist, add it to list
+				// if does exist, check if scheduled start time needs update
+				try {
+					int streamIndex = containsUpcomingStream(stream);
+					Message updateMessage = upcommingStreams.get(streamIndex).checkStreamStartTime(stream);
+					
+					if (updateMessage != null) {
+						targetChannel.sendMessage(updateMessage).queue();
+						logger.info("Updated stream start time " + stream.toString());
+					}
+					
+				} catch (NoSuchElementException e) {
+					upcommingStreams.add(new UpcommingStream(stream, pingRole));
+					logger.info("New upcocmming stream " + stream.toString());
 				}
 			}	
 		} catch (Exception e) {
@@ -103,5 +114,6 @@ public class StreamNotifierRunner extends Thread {
 	private String memberName;
 	private MessageChannel targetChannel;
 	private Role pingRole;
-	private List<UpcommingStream> upcommingStreams;
+	private List<UpcommingStream> upcommingStreams;	// Welp, upcoming stream usually does not have a lot, so...
+
 }

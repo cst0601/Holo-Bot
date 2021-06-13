@@ -49,6 +49,23 @@ public class UpcommingStream {
 		return null;
 	}
 	
+	public Message checkStreamStartTime(LiveStream liveStream) {
+		ZonedDateTime newNotificationTime = liveStream.getStreamStartTime().minusMinutes(5);
+		if (!upcommingNotificationTime.equals(newNotificationTime)) {
+			upcommingNotificationTime = newNotificationTime;
+			
+			state = StreamState.INIT;	// update to the corresponding state
+			Message msg = broadcast();
+			while (msg != null) { msg = broadcast(); }
+		
+			return new MessageBuilder()
+					.append("直播開始時間更新了！")
+					.append(liveStream.toString())
+					.build();
+		}
+		return null;
+	}
+	
 	public boolean hasStarted() {
 		return state == StreamState.STARTED;
 	}
