@@ -1,5 +1,6 @@
 package com.alchemist;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -25,7 +26,7 @@ public class StreamNotifierRunner extends Thread {
 			long messageChannelId, long pingId) {
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
 		api = new HoloToolsApi();
-		upcommingStreams = new LinkedList<UpcommingStream>();
+		upcomingStreams = new LinkedList<UpcomingStream>();
 		targetChannel = jda.getTextChannelById(messageChannelId);
 		pingRole = jda.getRoleById(pingId);
 		this.memberName = memberName;
@@ -41,6 +42,16 @@ public class StreamNotifierRunner extends Thread {
 				if (message.equals("stop")) {
 					logger.info("Terminaing stream notifier runner...");
 					break;
+				}
+				else if (message.equals("flush")) {
+					upcomingStreams.clear();
+					updateUpcomingStreams();
+					notifyUpcomingStreams(false);
+					logger.info("flushed all cached streams.");
+				}
+				else if (message.equals("list")) {
+					listAllUpcomingStreams();
+					logger.info("listed all upcoming stream");
 				}
 			}
 			else {
@@ -59,9 +70,9 @@ public class StreamNotifierRunner extends Thread {
 		messageBox.put(message);
 	}
 	
-	private int containsUpcomingStream(LiveStream newStream) throws NoSuchElementException {
-		for (int i = 0; i < upcommingStreams.size(); ++i) {
-			if (upcommingStreams.get(i).getStreamUrl().equals(newStream.toString()))
+	private int containsUpcomingStream(UpcomingStream newStream) throws NoSuchElementException {
+		for (int i = 0; i < upcomingStreams.size(); ++i) {
+			if (upcomingStreams.get(i).getStreamUrl().equals(newStream.getStreamUrl()))
 				return i;
 		}
 		throw new NoSuchElementException("Stream does not exist");
@@ -69,12 +80,17 @@ public class StreamNotifierRunner extends Thread {
 	
 	private void updateUpcomingStreams() {
 		try {
-			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
+			List<UpcomingStream> updateStream = new ArrayList<UpcomingStream>();
+			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming"))
+				updateStream.add(new UpcomingStream(stream, pingRole));
+			
+			for (UpcomingStream stream: updateStream) {
 				// if stream does not exist, add it to list
 				// if does exist, check if scheduled start time needs update
+				// TODO: if stream exist in cache but no longer in yt, delete it
 				try {
 					int streamIndex = containsUpcomingStream(stream);
-					Message updateMessage = upcommingStreams.get(streamIndex).checkStreamStartTime(stream);
+					Message updateMessage = upcomingStreams.get(streamIndex).checkStreamStartTime(stream);
 					
 					if (updateMessage != null) {
 						targetChannel.sendMessage(updateMessage).queue();
@@ -82,7 +98,7 @@ public class StreamNotifierRunner extends Thread {
 					}
 					
 				} catch (NoSuchElementException e) {
-					upcommingStreams.add(new UpcommingStream(stream, pingRole));
+					upcomingStreams.add(stream);
 					logger.info("New upcocmming stream " + stream.toString());
 				}
 			}	
@@ -93,9 +109,9 @@ public class StreamNotifierRunner extends Thread {
 	}
 	
 	private void notifyUpcomingStreams(boolean sendMessage) {
-		ListIterator<UpcommingStream> iter = upcommingStreams.listIterator();
+		ListIterator<UpcomingStream> iter = upcomingStreams.listIterator();
 		while(iter.hasNext()) {
-			UpcommingStream stream = iter.next();
+			UpcomingStream stream = iter.next();
 			Message message = stream.broadcast();
 			if (message != null && sendMessage) {
 				targetChannel.sendMessage(message).queue();
@@ -108,12 +124,20 @@ public class StreamNotifierRunner extends Thread {
 		}
 	}
 	
+	private void listAllUpcomingStreams() {
+		String message = "# Upcoming streams\n";
+		for (UpcomingStream stream: upcomingStreams) {
+			message += stream.toString() + "\n";
+		}
+		logger.info(message);
+	}
+	
 	private Logger logger;
 	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
 	private HoloToolsApi api;
 	private String memberName;
 	private MessageChannel targetChannel;
 	private Role pingRole;
-	private List<UpcommingStream> upcommingStreams;	// Welp, upcoming stream usually does not have a lot, so...
+	private List<UpcomingStream> upcomingStreams;	// Welp, upcoming stream usually does not have a lot, so...
 
 }

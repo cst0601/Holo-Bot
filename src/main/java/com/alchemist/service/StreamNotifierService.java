@@ -1,6 +1,11 @@
 package com.alchemist.service;
 
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.io.File;
@@ -11,7 +16,9 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alchemist.ArgParser;
 import com.alchemist.StreamNotifierRunner;
+import com.alchemist.exceptions.ArgumentParseException;
 
 public class StreamNotifierService extends ListenerAdapter implements Service {
 	public StreamNotifierService() {
@@ -32,6 +39,47 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.warn("Error occured when reading config file, skip runner build.");
+		}
+	}
+	
+	@Override
+	public void onMessageReceived(MessageReceivedEvent event) {
+		MessageChannel channel = event.getChannel();
+		String msg = event.getMessage().getContentDisplay();	// get readable version of the message
+
+		if (event.isFromType(ChannelType.TEXT)) {
+			Member member = event.getMember();
+			parser = new ArgParser(msg);
+			
+			if (parser.getCommand().equals(">sudo") && member.hasPermission(Permission.ADMINISTRATOR)) {
+				try { parser.parse(); } 
+				catch (ArgumentParseException e1) { e1.printStackTrace(); }
+				if (parser.getCommandSize() > 1) {
+					if (parser.getCommand().equals(">sudo") &&
+						parser.getCommand(1).equals("stream_flush")) {
+					
+						try {
+							streamNotifierRunner.sendMessage("flush");
+							streamNotifierRunner.interrupt();
+							channel.sendMessage("upcoming stream cache cleared.").queue();
+						} catch (InterruptedException e) {
+							logger.warn("Interrupt occured when flushing stream cache.");
+							e.printStackTrace();
+						}
+					}
+					else if (parser.getCommand().equals(">sudo") &&
+						parser.getCommand(1).equals("stream_list")) {
+					
+						try {
+							streamNotifierRunner.sendMessage("list");
+							streamNotifierRunner.interrupt();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
+				}
+			}
 		}
 	}
 	
@@ -75,4 +123,5 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 
 	private Logger logger;
 	private StreamNotifierRunner streamNotifierRunner = null;
+	private ArgParser parser = null;
 }

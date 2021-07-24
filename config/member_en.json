@@ -34,4 +34,11 @@
 		"channel_id": "UCyl1z3jo3XHR1riLFKG5UAg",
 		"api_id": 199077
 	},
+	{
+        "id": "irys",
+        "name": "アイリス",
+        "generation": "EN",
+        "channel_id": "UC8rcEBzJSleTkf_-agPM20g",
+        "api_id": 2024827
+    },
 ]

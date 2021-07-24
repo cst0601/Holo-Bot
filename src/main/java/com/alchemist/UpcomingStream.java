@@ -12,11 +12,11 @@ import net.dv8tion.jda.api.entities.Role;
  * @author greg8
  *
  */
-public class UpcommingStream {
-	public UpcommingStream(LiveStream liveStream, Role mentionRole) {
+public class UpcomingStream {
+	public UpcomingStream(LiveStream liveStream, Role mentionRole) {
 		this.liveStream = liveStream;
 		this.mentionRole = mentionRole;
-		upcommingNotificationTime = liveStream.getStreamStartTime().minusMinutes(5);
+		upcomingNotificationTime = liveStream.getStreamStartTime().minusMinutes(5);
 	}
 	
 	public Message broadcast() {
@@ -24,15 +24,15 @@ public class UpcommingStream {
 			nextState();
 			return new MessageBuilder()
 					.append("頻道有新動靜！快去看看！\n")
-					.append(liveStream.toString())
+					.append(getStreamUrl())
 					.build();
 		}
 		else if (state == StreamState.NOTIFIED) {
-			if (upcommingNotificationTime.toInstant().isBefore(Instant.now())) {
+			if (upcomingNotificationTime.toInstant().isBefore(Instant.now())) {
 				nextState();
 				return new MessageBuilder()
 						.append("再過五分鐘配信開始！\n")
-						.append(liveStream.toString())
+						.append(getStreamUrl())
 						.build();
 			}
 		}
@@ -42,17 +42,18 @@ public class UpcommingStream {
 				return new MessageBuilder()
 						.append(mentionRole)
 						.append(" にゃっはろ～！配信開始了！\n")
-						.append(liveStream.toString())
+						.append(getStreamUrl())
 						.build();
 			}
 		}
 		return null;
 	}
 	
-	public Message checkStreamStartTime(LiveStream liveStream) {
-		ZonedDateTime newNotificationTime = liveStream.getStreamStartTime().minusMinutes(5);
-		if (!upcommingNotificationTime.equals(newNotificationTime)) {
-			upcommingNotificationTime = newNotificationTime;
+	public Message checkStreamStartTime(UpcomingStream stream) {
+		ZonedDateTime newNotificationTime = stream.upcomingNotificationTime;
+		liveStream = stream.liveStream;
+		if (!upcomingNotificationTime.equals(newNotificationTime)) {
+			upcomingNotificationTime = newNotificationTime;
 			
 			state = StreamState.INIT;	// update to the corresponding state
 			Message msg = broadcast();
@@ -60,7 +61,7 @@ public class UpcommingStream {
 		
 			return new MessageBuilder()
 					.append("直播開始時間更新了！")
-					.append(liveStream.toString())
+					.append(getStreamUrl())
 					.build();
 		}
 		return null;
@@ -72,6 +73,12 @@ public class UpcommingStream {
 	
 	public String getStreamUrl() {
 		return liveStream.toString();
+	}
+	
+	public String toString() {
+		return "* state: " + state + 
+			   ",\n start_time:" + upcomingNotificationTime.toString() +
+			   ",\n url: " + liveStream.toString();
 	}
 	
 	private void nextState() {
@@ -100,6 +107,6 @@ public class UpcommingStream {
 	
 	private LiveStream liveStream;
 	private Role mentionRole;
-	private ZonedDateTime upcommingNotificationTime;
+	private ZonedDateTime upcomingNotificationTime;
 	private StreamState state = StreamState.INIT;
 }
