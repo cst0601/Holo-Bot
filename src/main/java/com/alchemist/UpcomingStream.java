@@ -41,7 +41,7 @@ public class UpcomingStream {
 				nextState();
 				return new MessageBuilder()
 						.append(mentionRole)
-						.append(" にゃっはろ～！配信開始了！\n")
+						.append("にゃっはろ～！配信開始了！\n")
 						.append(getStreamUrl())
 						.build();
 			}
