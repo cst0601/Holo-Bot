@@ -34,10 +34,10 @@ public class AboutListener extends ListenerAdapter implements Service {
 								+ "tracks events of hololive.\n"
 								+ "Type `>man` to get manual of this bot.\n\n"
 								+ "Created by Chikuma, 2020", false)
-						.addField("Changes of v1.4.2b",
-								" - Probably fixed false stream notification when scheduled time changed.\n"
-								+ " - Added debug commands for su\n"
-								+ " - Some issues have been identified but not fixed.\n"
+						.addField("Changes of v1.4.2",
+								" - Fixed false stream notification when scheduled time changed.\n"
+								+ " - Fixed `>bonk @User` command.\n"
+								+ " - Added debug commands for su, the commands will be removed for next version.\n"
 								+ " - にゃ...助けて！！！！！Benさん怖い！", false)
 						.addBlankField(false)
 						.addField("Subscribe to さくらみこ and become a 35P!",

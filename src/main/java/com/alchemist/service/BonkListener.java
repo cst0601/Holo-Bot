@@ -6,14 +6,13 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 
-import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,18 +64,26 @@ public class BonkListener extends ListenerAdapter implements Service {
 		MessageHistory history = MessageHistory.getHistoryBefore(channel, messageId)
 				.limit(10).complete();
 		for(Message message: history.getRetrievedHistory()) {
-			if (targetMember.contains(message.getMember())) {
-				logger.info("target aquired");
-				targetMember.remove(message.getMember());
-				message.addReaction(emote).queue(
-						null,
-						new ErrorHandler().handle(
-								EnumSet.of(ErrorResponse.MISSING_PERMISSIONS),
-								(ex) -> channel.sendMessage("Action failed due to missing permission.")
-							)
-						);
-			}
+			try {
+				int index = containsMember(targetMember, message.getAuthor());
+				targetMember.remove(index);
+				message.addReaction(emote).queue();
+			} catch (NoSuchElementException e) { }
 		}
+	}
+	
+	/**
+	 * Check if there are member with same ID
+	 * @param lhs
+	 * @param rhs
+	 * @return
+	 */
+	private int containsMember(List<Member> list, User target) throws NoSuchElementException {
+		for (int i = 0; i < list.size(); ++i) {
+			if (list.get(i).getId().equals(target.getId()))
+					return i;
+		}
+		throw new NoSuchElementException("Member with ID " + target.getId() + " does not exist.");
 	}
 
 	@Override
