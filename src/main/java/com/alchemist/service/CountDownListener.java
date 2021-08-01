@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class CountDownListener extends ListenerAdapter implements Service {
-	private final String targetTime = "2021-03-05 00:00:00 +09:00";
+	private final static String targetTime = "2022-03-05 00:00:00 +09:00";
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
