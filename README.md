@@ -1,8 +1,6 @@
-# Discord MP Bot
+# Holo Bot
 
 A simple discord bot that help tracks events of hololive.
-The name `Discord MP Bot` is based on an old discord bot, might change that name after some time.
-
 
 ## Usage
 
@@ -18,7 +16,7 @@ The name `Discord MP Bot` is based on an old discord bot, might change that name
 
 ## Setup
 
-### YoutubeAPI key and Discord bot token
+### Discord bot token
 To run this bot, discord bot token needs to be placed in `config.properties` with the form:
 ```properties
 token=
@@ -28,7 +26,7 @@ token=
 ```
 java -jar discord_mp_bot.jar
 ```
-If you do not with to activate twitter content broadcasting, do
+If you do not wish to activate twitter content broadcasting, do
 ```
 java -jar discord_mp_bot.jar noTwitter
 ```

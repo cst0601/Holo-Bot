@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Scanner;
 
+import javax.naming.ConfigurationException;
+
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import com.alchemist.TwitterBroadcastRunner;
 import com.alchemist.TwitterSubscription;
 
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import twitter4j.Twitter;
@@ -26,14 +29,20 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 	
 	@Override
 	public void onReady(ReadyEvent event) {
+		ArrayList<TwitterSubscription> config = readBroadcastConfig();
+		try {
+			isTwitterBroadcastConfigVaild(event.getJDA(), config);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		broadcastRunner = new TwitterBroadcastRunner(
-				event.getJDA(), initTwitterApi(), readBroadcastConfig());
+				event.getJDA(), initTwitterApi(), config);
 		broadcastRunner.start();
-		logger.info("Twitter broadcaster ready!");
+		logger.info("TwitterBroadcastService ready!");
 	}
 	
 	public void terminate() {
-		logger.info("Terminating twitter broadcaster...");
+		logger.info("Terminating TwitterBroadcastService...");
 		try {
 			broadcastRunner.sendMessage("stop");
 			broadcastRunner.interrupt();
@@ -42,6 +51,24 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 			logger.warn("Interrupt occurred when stopping runner.");
 			e.printStackTrace();
 		}
+	}
+	
+	private void isTwitterBroadcastConfigVaild(JDA jda, ArrayList<TwitterSubscription> subscriptions) throws ConfigurationException {
+		logger.info("TwitterBroadcastService configuration verification start ...");
+		boolean isVaild = true;
+		for (TwitterSubscription subscription: subscriptions) {
+			for (long textChannelId: subscription.getTargetChannels()) {
+				if (jda.getTextChannelById(textChannelId) == null) {
+					logger.warn("Text channel with ID: " + textChannelId + " does not exist. >>> Continue verification.");
+					isVaild = false;
+				}
+			}
+		}
+		
+		if (!isVaild) {
+			throw new ConfigurationException("TwitterBroadcastService configuraiton verification failed.");
+		}
+		logger.info("TwitterBroadcastService configuration ... OK");
 	}
 	
 	private ArrayList<TwitterSubscription> readBroadcastConfig() {
