@@ -28,6 +28,7 @@ public class HoloMemberListModel {
 		builder.addField("Generation 3", memberByGeneration.get("3"), false);
 		builder.addField("Generation 4", memberByGeneration.get("4"), false);
 		builder.addField("Generation 5", memberByGeneration.get("5"), false);
+		builder.addField("Generation 6", memberByGeneration.get("6"), false);
 		builder.addField("Hololive Gamers", memberByGeneration.get("gamers"), false);
 		builder.addField("INNK Music", memberByGeneration.get("INNK Music"), false);
 		

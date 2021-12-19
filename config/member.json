@@ -224,6 +224,41 @@
 		"api_id": 31883
 	},
 	{
+		"id": "laplace",
+		"name": "ラプラス・ダークネス",
+		"generation": "6",
+		"channel_id": "UCENwRMx5Yh42zWpzURebzTw",
+		"api_id": 2908909
+	},
+	{
+		"id": "rui",
+		"name": "鷹嶺ルイ",
+		"generation": "6",
+		"channel_id": "UCs9_O1tRPMQTHQ-N_L6FU2g",
+		"api_id": 2908910
+	},
+	{
+		"id": "koyori",
+		"name": "博衣こより",
+		"generation": "6",
+		"channel_id": "UC6eWCld0KwmyHFbAqK3V-Rw",
+		"api_id": 2908911
+	},
+	{
+		"id": "chloe",
+		"name": "沙花叉クロヱ",
+		"generation": "6",
+		"channel_id": "UCIBY1ollUsauvVi4hW4cumw",
+		"api_id": 2908912
+	},
+	{
+		"id": "iroha",
+		"name": "風真いろは",
+		"generation": "6",
+		"channel_id": "UC_vMYWcDjmfdpH6r4TTn1MQ",
+		"api_id": 2908913
+	},
+	{
 		"id": "AZKi",
 		"name": "AZKi",
 		"generation": "INNK Music",
