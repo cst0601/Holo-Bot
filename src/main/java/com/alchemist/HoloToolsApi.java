@@ -6,22 +6,19 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alchemist.jsonResponse.HoloToolsLiveJsonResponse;
+
+
 
 public class HoloToolsApi extends Api {
 	public HoloToolsApi() {
 		super();
-	}
-	
-	public HoloToolsLiveJsonResponse request(String uri)
-			throws IOException, InterruptedException {
-		request = HttpRequest.newBuilder()
-				.uri(URI.create(uri))
-				.build();
-		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-		return new HoloToolsLiveJsonResponse(
-				response.statusCode(), response.body());
+		logger = LoggerFactory.getLogger(HoloToolsApi.class);
 	}
 	
 	/**
@@ -47,12 +44,17 @@ public class HoloToolsApi extends Api {
 	 */
 	public ArrayList<LiveStream> getStreamOfMember(String member, String streamType)
 			throws IOException, InterruptedException {
-		int apiMemberId = HoloMemberData.getInstance().getApiIdByName(member);
-		
-		String apiRequest = String.format("https://api.holotools.app/v1/live?"
-				+ "channel_id=%d&max_upcoming_hours=48&hide_channel_desc=1", apiMemberId);
-		
-		return request(apiRequest).getStream(streamType);
+		try {
+			int apiMemberId = HoloMemberData.getInstance().getApiIdByName(member);
+			String apiRequest = String.format("https://api.holotools.app/v1/live?"
+					+ "channel_id=%d&max_upcoming_hours=48&hide_channel_desc=1", apiMemberId);
+			
+			return request(apiRequest).getStream(streamType);
+		} catch (NoSuchElementException e) {
+			logger.warn("Member with name " + member + " not found.");
+		}
+
+		return new ArrayList<LiveStream>();
 	}
 	
 	/**
@@ -68,4 +70,16 @@ public class HoloToolsApi extends Api {
 		ArrayList<LiveStream> streams = getStreamOfMember(member, "live");
 		return (streams.size() > 0)? streams.get(0): null;
 	}
+	
+	private HoloToolsLiveJsonResponse request(String uri)
+			throws IOException, InterruptedException {
+		request = HttpRequest.newBuilder()
+				.uri(URI.create(uri))
+				.build();
+		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
+		return new HoloToolsLiveJsonResponse(
+				response.statusCode(), response.body());
+	}
+	
+	private Logger logger;
 }

@@ -33,7 +33,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	private ArgParser parser = null;
 
 	
-	public VtubeListener(String key) {
+	public VtubeListener() {
 		holoScheduleModel = new HoloScheduleModel();
 		holoToolsApi = new HoloToolsApi();
 		logger = LoggerFactory.getLogger(VtubeListener.class.getName());
@@ -175,7 +175,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	}
 	
 	@Override
-	public String getServiceName() {
+	public String getServiceManualName() {
 		return "holo";
 	}
 

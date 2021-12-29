@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import org.slf4j.Logger;
@@ -44,13 +45,13 @@ public class HoloMemberData {
 	 * @param name
 	 * @return
 	 */
-	public int getApiIdByName(String name) {
+	public int getApiIdByName(String name) throws NoSuchElementException {
 		for (Map<String, HoloMember> divisionDict: memberDict.values()) {
 			HoloMember member = divisionDict.get(name);
 			if (member != null)
 				return member.getApiId();
 		}
-		return -1;	// debt :(((((
+		throw new NoSuchElementException("Member with given name does not exist.");
 	}
 	
 	public Map<String, String> generateChannelIdNameMap() {

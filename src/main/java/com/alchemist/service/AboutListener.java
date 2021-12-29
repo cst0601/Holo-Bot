@@ -21,14 +21,15 @@ public class AboutListener extends ListenerAdapter implements Service {
 		EmbedBuilder embedBuilder = new EmbedBuilder()
 				.setTitle("Holo Bot", "https://github.com/cst0601/Discord-MP-Bot")
 				.setColor(Color.red)
-				.setDescription("Discord MP-NeXT 1.4.5 \"みっころね！\"")
+				.setDescription("Discord MP-NeXT 1.4.6 \"みっころね！\"")
 				.addField("About Holo Bot", "A simple discord bot that help "
 						+ "tracks events of hololive.\n"
 						+ "Type `>man` to get manual of this bot.\n\n"
 						+ "Created by Chikuma, 2020", false)
 				.addBlankField(false)
-				.addField("Changes of v1.4.5",
+				.addField("Changes of v1.4.6",
 						" - Added EN Generation 2\n"
+						+ " - Added some system commands.\n"
 						+ " - Updates for issuing command in discord threads be will postpond\n"
 						+ "   until JDA v5 beta released.\n"
 						+ " - みっころね２４！\n", false)
@@ -58,7 +59,7 @@ public class AboutListener extends ListenerAdapter implements Service {
 	}
 
 	@Override
-	public String getServiceName() {
+	public String getServiceManualName() {
 		return "about";
 	}
 

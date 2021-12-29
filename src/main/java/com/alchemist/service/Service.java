@@ -3,10 +3,10 @@ package com.alchemist.service;
 public abstract interface Service {
 	
 	/**
-	 * Get the name of service, usually the command prefix, e.g. "holo"
+	 * Get the name of service for manual, usually the command prefix, e.g. "holo"
 	 * @return
 	 */
-	public default String getServiceName() { return null; };
+	public default String getServiceManualName() { return null; };
 	
 	/**
 	 * Get the service's manual
@@ -18,5 +18,10 @@ public abstract interface Service {
 	 * Override this method if service termination needs to be notified
 	 */
 	public default void terminate() {}
+	
+	/**
+	 * @return the service name (class name) for su
+	 */
+	public default String getServiceName() { return getClass().getName(); }
 	
 }

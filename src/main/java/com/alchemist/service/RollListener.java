@@ -116,7 +116,7 @@ public class RollListener extends ListenerAdapter implements Service {
 	}
 	
 	@Override
-	public String getServiceName() {
+	public String getServiceManualName() {
 		return "roll";
 	}
 

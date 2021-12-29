@@ -117,7 +117,7 @@ public class CountDownListener extends ListenerAdapter implements Service {
 	public enum Mode { NORM, HOUR, MINUTE, SECOND }
 
 	@Override
-	public String getServiceName() {
+	public String getServiceManualName() {
 		return "miko";
 	}
 

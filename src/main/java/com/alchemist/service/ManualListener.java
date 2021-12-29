@@ -66,7 +66,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 	}
 
 	@Override
-	public String getServiceName() {
+	public String getServiceManualName() {
 		return "man";
 	}
 
@@ -88,7 +88,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 	public String getManualList(List<Service> services) {
 		StringBuffer buffer = new StringBuffer();
 		for (int i = 0; i < services.size(); ++i) {
-			if (services.get(i).getServiceName() != null) { // preclude non backend listeners
+			if (services.get(i).getServiceManualName() != null) { // preclude non backend listeners
 				buffer.append(" - ");
 				buffer.append(((Service)services.get(i)).getServiceName());
 				buffer.append("\n");

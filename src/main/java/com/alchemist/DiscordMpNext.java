@@ -46,14 +46,13 @@ public class DiscordMpNext {
 		}
 		
 		String token = properties.getProperty("token", null);
-		String ytKey = properties.getProperty("yt_key", null);
 		
 		try {
 			JDABuilder builder = JDABuilder.createDefault(token)
 					.addEventListeners(new PingListener())
 					.addEventListeners(new RollListener())
 					.addEventListeners(new ManualListener())
-					.addEventListeners(new VtubeListener(ytKey))
+					.addEventListeners(new VtubeListener())
 					.addEventListeners(new AboutListener())
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
