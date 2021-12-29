@@ -21,16 +21,17 @@ public class AboutListener extends ListenerAdapter implements Service {
 		EmbedBuilder embedBuilder = new EmbedBuilder()
 				.setTitle("Holo Bot", "https://github.com/cst0601/Discord-MP-Bot")
 				.setColor(Color.red)
-				.setDescription("Discord MP-NeXT 1.4.3 \"花月ノ夢\"")
+				.setDescription("Discord MP-NeXT 1.4.5 \"みっころね！\"")
 				.addField("About Holo Bot", "A simple discord bot that help "
 						+ "tracks events of hololive.\n"
 						+ "Type `>man` to get manual of this bot.\n\n"
 						+ "Created by Chikuma, 2020", false)
 				.addBlankField(false)
-				.addField("Changes of v1.4.3",
-						" - Update `>miko` to 2022 birthday!\n"
-						+ " - Add more emotes when issue `>bonk` command.\n"
-						+ " - みこち！三周年おめでとうございます！！！\n", false)
+				.addField("Changes of v1.4.5",
+						" - Added EN Generation 2\n"
+						+ " - Updates for issuing command in discord threads be will postpond\n"
+						+ "   until JDA v5 beta released.\n"
+						+ " - みっころね２４！\n", false)
 				.addField("Subscribe to さくらみこ and become a 35P!",
 						"[Youtube](https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA)\n"
 						+ "[Twitter](https://twitter.com/sakuramiko35)", false)

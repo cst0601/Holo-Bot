@@ -37,8 +37,43 @@
 	{
         "id": "irys",
         "name": "アイリス",
-        "generation": "EN",
+        "generation": "HOPE",
         "channel_id": "UC8rcEBzJSleTkf_-agPM20g",
         "api_id": 2024827
+    },
+    {
+        "id": "sana",
+        "name": "九十九佐命",
+        "generation": "EN_2",
+        "channel_id": "UCsUj0dszADCGbF3gNrQEuSQ",
+        "api_id": 2260364
+    },
+    {
+        "id": "fauna",
+        "name": "セレス・ファウナ",
+        "generation": "EN_2",
+        "channel_id": "UCO_aKKYxn4tvrqPjcTzZ6EQ",
+        "api_id": 2260365
+    },
+    {
+        "id": "kronii",
+        "name": "オーロ・クロニー",
+        "generation": "EN_2",
+        "channel_id": "UCmbs8T6MWqUHP1tIQvSgKrg",
+        "api_id": 2260366
+    },
+    {
+        "id": "mumei",
+        "name": "七詩ムメイ",
+        "generation": "EN_2",
+        "channel_id": "UC3n5uGu18FoCy23ggWWp8tA",
+        "api_id": 2260367
+    },
+    {
+        "id": "baelz",
+        "name": "ハコス・ベールズ",
+        "generation": "EN_2",
+        "channel_id": "UCgmPnx-EEeOrZSg5Tiw7ZRQ",
+        "api_id": 2260368
     },
 ]

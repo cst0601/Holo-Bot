@@ -40,6 +40,8 @@ public class HoloMemberListModel {
 		
 		EmbedBuilder builder = getEmbedPrototype();
 		builder.addField("EN Generation 1", memberByGeneration.get("EN"), false);
+		builder.addField("Project Hope", memberByGeneration.get("HOPE"), false);
+		builder.addField("EN Generation 2", memberByGeneration.get("EN_2"), false);
 		
 		return builder.build();
 	}
