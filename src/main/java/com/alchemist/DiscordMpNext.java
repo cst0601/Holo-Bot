@@ -49,7 +49,7 @@ public class DiscordMpNext {
 		
 		try {
 			JDABuilder builder = JDABuilder.createDefault(token)
-					.addEventListeners(new PingListener())
+					.addEventListeners(new PingListener())	// system commands
 					.addEventListeners(new RollListener())
 					.addEventListeners(new ManualListener())
 					.addEventListeners(new VtubeListener())

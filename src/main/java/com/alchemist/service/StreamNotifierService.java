@@ -59,6 +59,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 			if (parser.getCommand().equals(">sudo") && member.hasPermission(Permission.ADMINISTRATOR)) {
 				try { parser.parse(); } 
 				catch (ArgumentParseException e1) { e1.printStackTrace(); }
+				
 				if (parser.getCommandSize() > 1) {
 					if (parser.getCommand().equals(">sudo") &&
 						parser.getCommand(1).equals("stream_flush")) {
@@ -99,7 +100,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 			streamNotifierRunner.interrupt();
 			streamNotifierRunner.join();
 		} catch (InterruptedException e) {
-			logger.warn("Interrupt occured when stopping runner.");
+			logger.warn("Interrupt occured when stopping StreamNotifierRunner. Failed to terminate stream notifier.");
 			e.printStackTrace();
 		}
 	}

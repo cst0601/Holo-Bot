@@ -25,7 +25,7 @@ class TestUpcomingStream {
 		try {
 			liveStream = new LiveStream("さくらみこ", "9_oc4fi_VJQ",
 					"【 マリオカート8DX 】耐久１位を取るまで終われまてん開幕🏆！！！！！！！【ホロライブ/さくらみこ】",
-					getTime(4), "Miko Ch. さくらみこ");
+					getTime(bias), "Miko Ch. さくらみこ");
 		} catch (ParseException e) {
 			e.printStackTrace();
 			fail("time parse failed when creating liveStream");
@@ -61,8 +61,17 @@ class TestUpcomingStream {
 				upcomingStream.broadcast().getContentRaw());
 		assertEquals("再過五分鐘配信開始！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
 				upcomingStream.broadcast().getContentRaw());
-		assertEquals("にゃっはろ～！配信開始了！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
+		assertEquals("nullにゃっはろ～！配信開始了！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
 				upcomingStream.broadcast().getContentRaw());
 		assertNull(upcomingStream.broadcast());
+	}
+	
+	@Test
+	void testExceedTTL() {
+		UpcomingStream startedStream = createTestStream(-60);
+		UpcomingStream upcomingStream = createTestStream(-50);
+		
+		assertTrue(startedStream.exceedTTL());
+		assertFalse(upcomingStream.exceedTTL());
 	}
 }

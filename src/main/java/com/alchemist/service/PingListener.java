@@ -82,6 +82,12 @@ public class PingListener extends ListenerAdapter implements Service {
 		}
 	}
 	
+	/**
+	 * DOES NOT START SERVICE CORRECTLY
+	 * @param event
+	 * @param parser
+	 * @param channel
+	 */
 	private void processServiceCommmand(Event event, ArgParser parser, MessageChannel channel) {
 		if (parser.getCommand(2).equals("list")) {
 			channel.sendMessage(getServiceList(event)).queue();
@@ -96,11 +102,11 @@ public class PingListener extends ListenerAdapter implements Service {
 					logger.info("Starting service " + serviceName);
 					
 					try { 
-						event.getJDA().addEventListener(createEventListenerByName(serviceName)); 
+						EventListener listener = createEventListenerByName(serviceName);
+						event.getJDA().addEventListener(listener); 
 						logger.info("Service " + serviceName + " started.");
 						channel.sendMessage("Service " + serviceName + " started.").queue();
-					}
-					catch(IllegalArgumentException e) {
+					} catch(IllegalArgumentException e) {
 						logger.warn("Cannot start service " + serviceName +
 								    ". Either service does not exist or was not made available.");
 						channel.sendMessage(
@@ -111,8 +117,10 @@ public class PingListener extends ListenerAdapter implements Service {
 			}
 			else if (parser.getCommand(2).equals("stop")) {
 				try {
-					event.getJDA().removeEventListener(
-							getRunningEventListenerByName(serviceName, event.getJDA()));
+					Service service = (Service) getRunningEventListenerByName(serviceName, event.getJDA());
+					service.terminate();
+					event.getJDA().removeEventListener(service);
+					
 					logger.info("Service " + serviceName + " stopped.");
 					channel.sendMessage("Service " + serviceName + " stopped.").queue();
 				} catch (IllegalArgumentException e) {

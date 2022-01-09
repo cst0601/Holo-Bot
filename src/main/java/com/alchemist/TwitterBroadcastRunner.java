@@ -28,6 +28,7 @@ public class TwitterBroadcastRunner extends Thread {
 	public TwitterBroadcastRunner(
 			JDA jda, Twitter twitter,
 			ArrayList<TwitterSubscription> subscriptions) {
+		Thread.currentThread().setName("TwitterBroadcastRunner");
 		logger = LoggerFactory.getLogger(TwitterBroadcastRunner.class);
 		this.jda = jda;
 		this.twitter = twitter;
@@ -50,7 +51,7 @@ public class TwitterBroadcastRunner extends Thread {
 					break;
 				}
 			}
-			else {				// if no message to handle
+			else {					// if no message to handle
 				try {
 					sleep(30000);	// 30 sec
 				} catch (InterruptedException e) {
@@ -59,6 +60,8 @@ public class TwitterBroadcastRunner extends Thread {
 				sendTwitterUpdate();
 			}
 		}
+		
+		logger.info("TwitterBroadcastRunner exit run.");
 	}
 	
 	public void sendTwitterUpdate() {
@@ -66,21 +69,17 @@ public class TwitterBroadcastRunner extends Thread {
 		for (TwitterSubscription subscription: subscriptions) {
 			
 			// search and construct message to send
-			String newTweetMessage = "";
 			Queue<String> searchResult = search(subscription.getSearchQuery());
-			
-			for (String newTweet: searchResult)
-				newTweetMessage += newTweet + "\n";
 			
 			for (Long channelId: subscription.getTargetChannels()) {
 				MessageChannel channel = jda.getTextChannelById(channelId);
-				if (!newTweetMessage.equals("")) {
-					try {
-						channel.sendMessage(newTweetMessage).queue();
-					} catch (InsufficientPermissionException e) {
-						logger.warn("Lacks permission to send message to "
-								  + "target text channel: " + channel.getId());
+				try {
+					for (String newTweet: searchResult) {
+						channel.sendMessage(newTweet).queue();
 					}
+				} catch (InsufficientPermissionException e) {
+					logger.warn("Lacks permission to send message to "
+							  + "target text channel: " + channel.getId());
 				}
 			}
 		}

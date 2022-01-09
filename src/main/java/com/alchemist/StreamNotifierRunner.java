@@ -24,6 +24,7 @@ import net.dv8tion.jda.api.entities.Role;
 public class StreamNotifierRunner extends Thread {
 	public StreamNotifierRunner(JDA jda, String memberName,
 			long messageChannelId, long pingId) {
+		Thread.currentThread().setName("StreamNotifierRunner");
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
 		api = new HoloToolsApi();
 		upcomingStreams = new LinkedList<UpcomingStream>();
@@ -38,9 +39,10 @@ public class StreamNotifierRunner extends Thread {
 		
 		while (true) {
 			String message;
+			
 			if ((message = messageBox.poll()) != null) {
 				if (message.equals("stop")) {
-					logger.info("Terminaing stream notifier runner...");
+					logger.info("StreamNotifierRunner terminating...");
 					break;
 				}
 				else if (message.equals("flush")) {
@@ -60,10 +62,12 @@ public class StreamNotifierRunner extends Thread {
 				try {
 					sleep(60000);	// 1 min
 				} catch (InterruptedException e) {
-					logger.info("Runner sleep interrupted");
+					logger.info("StreamNotifierRunner sleep interrupted");
 				}
 			}
 		}
+		
+		logger.info("StreamNotifierRunner exit run.");
 	}
 	
 	public void sendMessage(String message) throws InterruptedException {
@@ -117,7 +121,7 @@ public class StreamNotifierRunner extends Thread {
 				targetChannel.sendMessage(message).queue();
 				logger.info("Notified stream: " + stream.getStreamUrl());	
 			}
-			if (stream.hasStarted()) {
+			if (stream.hasStarted() && stream.exceedTTL()) {	// :( check remove condition
 				logger.info("Remove started stream: " + stream.getStreamUrl());
 				iter.remove();
 			}
@@ -139,5 +143,4 @@ public class StreamNotifierRunner extends Thread {
 	private MessageChannel targetChannel;
 	private Role pingRole;
 	private List<UpcomingStream> upcomingStreams;	// Welp, upcoming stream usually does not have a lot, so...
-
 }
