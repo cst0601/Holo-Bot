@@ -1,5 +1,5 @@
 src/main/resources/config.properties
-config/credentials/twitter4j.properties
+config/credentials/*
 target/
 logs
 

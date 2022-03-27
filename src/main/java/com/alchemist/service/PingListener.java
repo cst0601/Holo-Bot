@@ -73,12 +73,14 @@ public class PingListener extends ListenerAdapter implements Service {
 						System.exit(0);
 					}
 				}
+				/* DOES NOT FUNCTION CORRECTLY, DISABLED FOR NOW */
+				/*
 				else if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("service")) {
 					if (!member.hasPermission(Permission.ADMINISTRATOR)) {
 						channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
 					}
 					else { processServiceCommmand(event, parser, channel); }
-				}
+				} */
 		}
 	}
 	

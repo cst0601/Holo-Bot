@@ -57,6 +57,7 @@ public class DiscordMpNext {
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
+					.addEventListeners(new MemberVerificationService())
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));
 			

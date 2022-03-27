@@ -23,5 +23,5 @@ public abstract interface Service {
 	 * @return the service name (class name) for su
 	 */
 	public default String getServiceName() { return getClass().getName(); }
-	
+		
 }

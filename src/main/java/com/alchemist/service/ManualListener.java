@@ -90,7 +90,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 		for (int i = 0; i < services.size(); ++i) {
 			if (services.get(i).getServiceManualName() != null) { // preclude non backend listeners
 				buffer.append(" - ");
-				buffer.append(((Service)services.get(i)).getServiceName());
+				buffer.append(((Service)services.get(i)).getServiceManualName());
 				buffer.append("\n");
 			}
 		}

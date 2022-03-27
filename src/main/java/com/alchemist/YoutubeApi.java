@@ -1,91 +1,60 @@
 package com.alchemist;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpResponse.*;
-import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
-import org.json.JSONArray;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import com.alchemist.jsonResponse.JsonResponse;
+import com.alchemist.jsonResponse.youtube.LiveStreamChatMessageList;
+import com.alchemist.exceptions.ApiQuotaExceededException;
+import com.alchemist.exceptions.HttpException;
 
-// DEPRECATED
-public class YoutubeApi extends Api{
-	public YoutubeApi(String key) {
+public class YoutubeApi extends Api {
+	private static final String CREDENTIALS =
+		"config/credentials/youtube_api.json";
+	private static final String requestLiveStreamChat =
+		"https://youtube.googleapis.com/youtube/v3/liveChat/messages?liveChatId"
+		+ "=Cg0KC3c0ZGdxbF81UnprKicKGFVDLWhNNllKdU5ZVkFtVVd4ZUlyOUZlQRILdzRkZ3F"
+		+ "sXzVSems&part=authorDetails&maxResults=15&key=%s";
+	private final String apiKey;
+	private HttpRequest request;
+
+	private Logger logger;
+
+	public YoutubeApi() throws IOException {
 		super();
-		
-		apiKey = key;
-		initChannelId();
+		logger = LoggerFactory.getLogger(YoutubeApi.class);
+		apiKey = readCredentials();
 	}
 	
-	/**
-	 * Make a request to Youtube API by name of vtuber.
-	 * If the name is not found avaulable, return null (debt)
-	 * @param vtubeName
-	 * @return JsonResponse of youtube api
-	 * @throws IOException
-	 * @throws InterruptedException
-	 */
-	public JsonResponse request(String vtubeName) throws IOException, InterruptedException
-	{
-		if(members.get(vtubeName) == null) {	// vtuber not found
-			return null;
-		}
-	    
+	public LiveStreamChatMessageList requestLiveStreamChat () 
+			throws IOException, InterruptedException, ApiQuotaExceededException, HttpException {
 		request = HttpRequest.newBuilder()
-				.uri(URI.create(String.format(
-						defaultUrl, members.get(vtubeName).getYoutubeId(), apiKey)))
+				.uri(URI.create(String.format(requestLiveStreamChat, apiKey)))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
-		return new JsonResponse(response.statusCode(), response.body());
-	}
-	
-	/**
-	 * Get available member names that is linked with a channel id.
-	 * @return list of member names
-	 */
-	public ArrayList<HoloMember> getAvailableMembers() {
-		ArrayList<HoloMember> memberNames = new ArrayList<HoloMember>();
-		for (Enumeration<String> e = members.keys(); e.hasMoreElements();)
-			memberNames.add(members.get((String) e.nextElement()));
-		return memberNames;
-	}
-	
-	private void initChannelId() {
-		Logger logger = Logger.getLogger(YoutubeApi.class.getName());
-		try {
-			Scanner scanner = new Scanner(new File("config/member.json"));
-			scanner.useDelimiter("\\Z");
-			JSONArray json = new JSONArray(scanner.next());
-			scanner.close();
-			
-			for (int i = 0; i < json.length(); ++i) {
-				HoloMember member = new HoloMember(
-						json.getJSONObject(i).getString("id"),
-						json.getJSONObject(i).getString("name"),
-						json.getJSONObject(i).getString("generation"),
-						json.getJSONObject(i).getString("channel_id"),
-						json.getJSONObject(i).getInt("api_id"));
-				members.put(member.getId(), member);
-			}
-			
-		} catch (FileNotFoundException e) {
-			logger.severe("Cannot read member file.");
+		if (response.statusCode() == 200) {
+			return new LiveStreamChatMessageList(response.body());
 		}
+		else if (response.statusCode() == 403) {
+			throw new ApiQuotaExceededException("Youtube api quota exceeded.");
+		}
+		throw new HttpException("Error occured when sending request to youtube api.", response.statusCode());
 	}
-		
-	private final String apiKey;
-	private final String defaultUrl = "https://www.googleapis.com/youtube/v3/se"
-			+ "arch?part=snippet&channelId=%s&eventType=live&type=video&key=%s";
-	private Dictionary<String, HoloMember> members = new Hashtable<String, HoloMember>();
-	private HttpRequest request;
+
+	private String readCredentials() throws IOException {
+		Scanner scanner = new Scanner(new File(CREDENTIALS));
+		scanner.useDelimiter("\\Z");
+		JSONObject json = new JSONObject(scanner.next());
+		scanner.close();
+
+		return json.getString("youtube-api-key");
+	}
 }
