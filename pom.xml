@@ -1,74 +1,81 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.alchemist</groupId>
-  <artifactId>Discord_MP_Next</artifactId>
-  <version>1.4.6</version>
-  
-  <properties>
-	    <maven.compiler.release>7</maven.compiler.release>
-  </properties>
-  
-  <repositories>
-	<repository>
-  		<id>jcenter</id>
-  		<name>jcenter-bintray</name>
-  		<url>https://jcenter.bintray.com</url>
-	</repository>
-  </repositories>
-  
-  <dependencies>
-  	<dependency>
-	    <groupId>org.junit.jupiter</groupId>
-	    <artifactId>junit-jupiter-api</artifactId>
-	    <version>5.5.2</version>
-	    <scope>test</scope>
-	</dependency>
-  	
-	<dependency>
-		<groupId>net.dv8tion</groupId>
-		<artifactId>JDA</artifactId>
-		<version>4.1.1_137</version>
-	</dependency>
-	
-	<dependency>
-		<groupId>ch.qos.logback</groupId>
-		<artifactId>logback-classic</artifactId>
-		<version>1.2.3</version>
-	</dependency>
-	
-	<dependency>
-    	<groupId>org.json</groupId>
-    	<artifactId>json</artifactId>
-    	<version>20200518</version>
-    </dependency>
-    
-    <dependency>
-  		<groupId>org.twitter4j</groupId>
-    	<artifactId>twitter4j-core</artifactId>
-    	<version>[4.0,)</version>
-    </dependency>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.alchemist</groupId>
+	<artifactId>Discord_MP_Next</artifactId>
+	<version>1.4.6</version>
 
-	<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube -->
-	<dependency>
-	    <groupId>com.google.apis</groupId>
-	    <artifactId>google-api-services-youtube</artifactId>
-	    <version>v3-rev222-1.25.0</version>
-	</dependency>
+	<properties>
+		<maven.compiler.release>7</maven.compiler.release>
+	</properties>
 
-	<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-java6 -->
-	<dependency>
-	    <groupId>com.google.oauth-client</groupId>
-	    <artifactId>google-oauth-client-java6</artifactId>
-	    <version>1.33.1</version>
-	</dependency>
+	<repositories>
+		<repository>
+			<id>jcenter</id>
+			<name>jcenter-bintray</name>
+			<url>https://jcenter.bintray.com</url>
+		</repository>
+	</repositories>
 
-	<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
-	<dependency>
-	    <groupId>com.google.oauth-client</groupId>
-	    <artifactId>google-oauth-client-jetty</artifactId>
-	    <version>1.33.1</version>
-	</dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<version>5.5.2</version>
+			<scope>test</scope>
+		</dependency>
 
-    
-  </dependencies>
+		<dependency>
+			<groupId>net.dv8tion</groupId>
+			<artifactId>JDA</artifactId>
+			<version>4.1.1_137</version>
+		</dependency>
+
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20200518</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.twitter4j</groupId>
+			<artifactId>twitter4j-core</artifactId>
+			<version>[4.0,)</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube -->
+		<dependency>
+			<groupId>com.google.apis</groupId>
+			<artifactId>google-api-services-youtube</artifactId>
+			<version>v3-rev222-1.25.0</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-java6 -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-java6</artifactId>
+			<version>1.33.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
+		<dependency>
+			<groupId>com.google.oauth-client</groupId>
+			<artifactId>google-oauth-client-jetty</artifactId>
+			<version>1.33.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>3.12.10</version>
+		</dependency>
+
+
+	</dependencies>
 </project>

@@ -44,6 +44,7 @@ public class YoutubeApi extends Api {
 			return new LiveStreamChatMessageList(response.body());
 		}
 		else if (response.statusCode() == 403) {
+			logger.warn("Youtube API quota exceeded.");
 			throw new ApiQuotaExceededException("Youtube api quota exceeded.");
 		}
 		throw new HttpException("Error occured when sending request to youtube api.", response.statusCode());
@@ -56,5 +57,24 @@ public class YoutubeApi extends Api {
 		scanner.close();
 
 		return json.getString("youtube-api-key");
+	}
+
+	public boolean verify(String youtubeId) {
+		LiveStreamChatMessageList list;
+		try {
+			list = requestLiveStreamChat();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		for (int i = 0; i < list.getSize(); i++) {
+			if (list.getMessage(i).getChannelId().equals(youtubeId) &&
+				list.getMessage(i).isChatSponsor()) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

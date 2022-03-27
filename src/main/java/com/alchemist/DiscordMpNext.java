@@ -50,13 +50,13 @@ public class DiscordMpNext {
 		try {
 			JDABuilder builder = JDABuilder.createDefault(token)
 					.addEventListeners(new PingListener())	// system commands
-					.addEventListeners(new RollListener())
-					.addEventListeners(new ManualListener())
-					.addEventListeners(new VtubeListener())
-					.addEventListeners(new AboutListener())
-					.addEventListeners(new BonkListener())
-					.addEventListeners(new CountDownListener())	// special event
-					.addEventListeners(new StreamNotifierService())
+//					.addEventListeners(new RollListener())
+//					.addEventListeners(new ManualListener())
+//					.addEventListeners(new VtubeListener())
+//					.addEventListeners(new AboutListener())
+//					.addEventListeners(new BonkListener())
+//					.addEventListeners(new CountDownListener())	// special event
+//					.addEventListeners(new StreamNotifierService())
 					.addEventListeners(new MemberVerificationService())
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));
