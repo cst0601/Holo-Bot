@@ -48,27 +48,6 @@
 			<version>[4.0,)</version>
 		</dependency>
 
-		<!-- https://mvnrepository.com/artifact/com.google.apis/google-api-services-youtube -->
-		<dependency>
-			<groupId>com.google.apis</groupId>
-			<artifactId>google-api-services-youtube</artifactId>
-			<version>v3-rev222-1.25.0</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-java6 -->
-		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-java6</artifactId>
-			<version>1.33.1</version>
-		</dependency>
-
-		<!-- https://mvnrepository.com/artifact/com.google.oauth-client/google-oauth-client-jetty -->
-		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.33.1</version>
-		</dependency>
-
 		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
 		<dependency>
 			<groupId>org.mongodb</groupId>
