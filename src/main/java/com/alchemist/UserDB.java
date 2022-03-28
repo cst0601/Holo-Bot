@@ -2,6 +2,10 @@ package com.alchemist;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 import javax.annotation.Nullable;
 
 import org.bson.Document;
@@ -10,18 +14,18 @@ import org.bson.conversions.Bson;
 import com.alchemist.exceptions.EntryExistException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
 
 public class UserDB {
+	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
 	private MongoClient client;
 	private MongoDatabase database;
 	
-	public UserDB () {
-		client = MongoClients.create("mongodb://localhost:27017");
-		database = client.getDatabase("test_db");
+	public UserDB (String dbConnection, String dbName) {
+		client = MongoClients.create(dbConnection);
+		database = client.getDatabase(dbName);
 	}
 	
 	public void register(String discordId, String youtubeId) throws EntryExistException {
@@ -48,30 +52,25 @@ public class UserDB {
 		if (result == null) return null;
 		return result.getString("yt_id");
 	}
-	
-	public void test() {
-		client = MongoClients.create("mongodb://localhost:27017");
-		database = client.getDatabase("test_db");
-		
-		Document newDoc = new Document("dc_id", "198340280146067456")
-				.append("yt_id", "UCPAPC9V8oLmJ41nUkvbNwDQ")
-				.append("is_member", true)
-				.append("verify_timestamp", "2022-03-05T13:49:51.141Z");
-		
-		database.getCollection("users").insertOne(newDoc);
-		
-		Document result = database.getCollection("users").find(eq("dc_id", "198340280146067456")).first();
-		System.out.println(result.get("verify_timestamp"));
-	}
 
-	public void verifyUser(String discordId) {
+	/**
+	 * writes verification record to DB
+	 * @param discordId
+	 * @return verification valid date (next time the user will want to re verify membership)
+	 */
+	public String verifyUser(String discordId) {
+		ZonedDateTime timestamp = ZonedDateTime.now(ZoneId.of("UTC"));
+		String expireTime = timestamp.plusMonths(1).format(DateTimeFormatter.ISO_LOCAL_DATE);
+		
 		Bson updates = Updates.combine(
 				Updates.set("is_member", true),
-				Updates.set("verify_timestamp", "2022-03-05T13:49:51.141Z"));
+				Updates.set("verify_timestamp", timestamp.format(formatter)));
 		
 		database.getCollection("users").updateOne(
 				new Document().append("dc_id", discordId),
 				updates,
 				new UpdateOptions().upsert(true));
+		
+		return expireTime;
 	}
 }

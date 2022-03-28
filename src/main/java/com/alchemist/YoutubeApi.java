@@ -19,25 +19,26 @@ import com.alchemist.exceptions.HttpException;
 public class YoutubeApi extends Api {
 	private static final String CREDENTIALS =
 		"config/credentials/youtube_api.json";
-	private static final String requestLiveStreamChat =
+	private final String requestLiveStreamChat =
 		"https://youtube.googleapis.com/youtube/v3/liveChat/messages?liveChatId"
-		+ "=Cg0KC3c0ZGdxbF81UnprKicKGFVDLWhNNllKdU5ZVkFtVVd4ZUlyOUZlQRILdzRkZ3F"
-		+ "sXzVSems&part=authorDetails&maxResults=15&key=%s";
+		+ "=%s&part=authorDetails&maxResults=15&key=%s";
 	private final String apiKey;
+	private String ytLiveChatId;
 	private HttpRequest request;
 
 	private Logger logger;
 
-	public YoutubeApi() throws IOException {
+	public YoutubeApi(String liveChatId) throws IOException {
 		super();
 		logger = LoggerFactory.getLogger(YoutubeApi.class);
 		apiKey = readCredentials();
+		ytLiveChatId = liveChatId;
 	}
 	
 	public LiveStreamChatMessageList requestLiveStreamChat () 
 			throws IOException, InterruptedException, ApiQuotaExceededException, HttpException {
 		request = HttpRequest.newBuilder()
-				.uri(URI.create(String.format(requestLiveStreamChat, apiKey)))
+				.uri(URI.create(String.format(requestLiveStreamChat, ytLiveChatId, apiKey)))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 		if (response.statusCode() == 200) {
