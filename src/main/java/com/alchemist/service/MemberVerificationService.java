@@ -71,15 +71,15 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 
 		if (event.isFromType(ChannelType.TEXT)) {
 			parser = new ArgParser(msg);
-			
-			try {
-				parser.parse();
-			} catch (ArgumentParseException e) {
-				e.printStackTrace();
-				return;
-			}
 
 			if (parser.getCommand().equals(">register")) {
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e) {
+					e.printStackTrace();
+					return;
+				}
+				
 				if (parser.getCommandSize() < 1) {
 					channel.sendMessage(new MessageBuilder().append("Error: Usage: ")
 							.append(">register <youtube_id>", MessageBuilder.Formatting.BLOCK).build()).queue();
@@ -95,9 +95,23 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 				}
 			}
 			else if (parser.getCommand().equals(">verify_member")) {
-				verifyMember(channel, message.getAuthor(), event.getGuild());
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e) {
+					e.printStackTrace();
+					return;
+				}
+				
+				verifyMember(channel, message.getAuthor(), event.getMember(), event.getGuild());
 			}
 			else if (parser.getCommand().equals(">sudo")) {
+				try {
+					parser.parse();
+				} catch (ArgumentParseException e) {
+					e.printStackTrace();
+					return;
+				}
+				
 				if (!member.hasPermission(Permission.ADMINISTRATOR)) {
 					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
 				}
@@ -117,13 +131,13 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 		return json;
 	}
 
-	private void verifyMember(MessageChannel channel, User author, Guild guild) {
+	private void verifyMember(MessageChannel channel, User author, Member member, Guild guild) {
 		String youtubeId = userDb.getYoutubeIdByUserId(author.getId());
 		if (youtubeId != null) {
 			if (api.verify(youtubeId)) {
 				String expireTime = userDb.verifyUser(author.getId());
 				Role role = guild.getRoleById(discordRoleId);
-				guild.addRoleToMember(guild.getMember(author), role).queue();
+				guild.addRoleToMember(member, role).queue();
 				channel.sendMessage(new MessageBuilder()
 						.append(author.getAsMention() + " 會員認證成功！下次認證時間為：")
 						.append(expireTime, MessageBuilder.Formatting.BLOCK)
@@ -152,6 +166,14 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 	@Override
 	public String getServiceMan() {
 		return "# NAME\n" +
-				"    member_verify - About the bot!\n\n";
+				"    member_verify - さくらみこ Youtube Channel Membership Verificaiton\n\n"
+				+ "# SYNOPSIS\n"
+				+ "    register <user_youtube_channel_id>\n"
+				+ "    verify_member\n\n"
+				+ "# DESCRIPTION\n"
+				+ "    To get the membership role in this discord server, you will need to complete the verification process.\n"
+				+ "    First do >register <user_youtube_channel_id> to bind your discord account id to your youtube channel id.\n"
+				+ "    Note that once your account is binded, you could not change it without help from admin.\n"
+				+ "    Do >verify_member to verify your membership via miko's free chat.";
 	}
 }

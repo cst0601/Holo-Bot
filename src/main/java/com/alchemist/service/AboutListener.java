@@ -27,12 +27,12 @@ public class AboutListener extends ListenerAdapter implements Service {
 						+ "Type `>man` to get manual of this bot.\n\n"
 						+ "Created by Chikuma, 2020", false)
 				.addBlankField(false)
-				.addField("Changes of v1.4.6",
-						" - Added EN Generation 2\n"
-						+ " - Added some system commands.\n"
+				.addField("Changes of v1.5.0a",
+						" - Added みこメンバーシップ verification.\n"
+						+ " - Removed some system command.\n"
 						+ " - Updates for issuing command in discord threads be will postpond\n"
 						+ "   until JDA v5 beta released.\n"
-						+ " - みっころね２４！\n", false)
+						+ " - みっこより！ hope to see more collabs in the near future :D\n", false)
 				.addField("Subscribe to さくらみこ and become a 35P!",
 						"[Youtube](https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA)\n"
 						+ "[Twitter](https://twitter.com/sakuramiko35)", false)
