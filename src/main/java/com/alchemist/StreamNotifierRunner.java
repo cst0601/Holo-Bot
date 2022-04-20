@@ -23,9 +23,10 @@ import net.dv8tion.jda.api.entities.Role;
  */
 public class StreamNotifierRunner extends Thread {
 	public StreamNotifierRunner(JDA jda, String memberName,
-			long messageChannelId, long pingId) {
+			long messageChannelId, long pingId, BlockingQueue<String> messageBox) {
 		Thread.currentThread().setName("StreamNotifierRunner");
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
+		serviceMessageBox = messageBox;
 		api = new HoloToolsApi();
 		upcomingStreams = new LinkedList<UpcomingStream>();
 		targetChannel = jda.getTextChannelById(messageChannelId);
@@ -39,32 +40,33 @@ public class StreamNotifierRunner extends Thread {
 		
 		while (true) {
 			String message;
-			
-			if ((message = messageBox.poll()) != null) {
-				if (message.equals("stop")) {
-					logger.info("StreamNotifierRunner terminating...");
-					break;
+			try {
+				if ((message = messageBox.poll()) != null) {
+					if (message.equals("stop")) {
+						logger.info("StreamNotifierRunner terminating...");
+						break;
+					}
+					else if (message.equals("flush")) {
+						upcomingStreams.clear();
+						updateUpcomingStreams();
+						notifyUpcomingStreams(false);
+						serviceMessageBox.put("Flushed all cached streams.");
+						logger.info("Flushed all cached streams.");
+					}
+					else if (message.equals("list")) {
+						listAllUpcomingStreams();
+						logger.info("listed all upcoming stream");
+					}
 				}
-				else if (message.equals("flush")) {
-					upcomingStreams.clear();
+				else {
 					updateUpcomingStreams();
-					notifyUpcomingStreams(false);
-					logger.info("flushed all cached streams.");
-				}
-				else if (message.equals("list")) {
-					listAllUpcomingStreams();
-					logger.info("listed all upcoming stream");
-				}
-			}
-			else {
-				updateUpcomingStreams();
-				notifyUpcomingStreams(true);
-				try {
+					notifyUpcomingStreams(true);
 					sleep(60000);	// 1 min
-				} catch (InterruptedException e) {
-					logger.info("StreamNotifierRunner sleep interrupted");
 				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
+			
 		}
 		
 		logger.info("StreamNotifierRunner exit run.");
@@ -103,7 +105,9 @@ public class StreamNotifierRunner extends Thread {
 					
 				} catch (NoSuchElementException e) {
 					upcomingStreams.add(stream);
-					logger.info("New upcocmming stream " + stream.toString());
+					if (!stream.hasStarted()) {
+						logger.info("New upcocmming stream " + stream.toString());
+					}
 				}
 			}	
 		} catch (Exception e) {
@@ -128,16 +132,19 @@ public class StreamNotifierRunner extends Thread {
 		}
 	}
 	
-	private void listAllUpcomingStreams() {
+	private void listAllUpcomingStreams() throws InterruptedException {
+		
 		String message = "# Upcoming streams\n";
 		for (UpcomingStream stream: upcomingStreams) {
 			message += stream.toString() + "\n";
 		}
+		serviceMessageBox.put(message);
 		logger.info(message);
 	}
 	
 	private Logger logger;
 	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
+	private BlockingQueue<String> serviceMessageBox;
 	private HoloToolsApi api;
 	private String memberName;
 	private MessageChannel targetChannel;

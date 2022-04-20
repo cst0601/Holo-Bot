@@ -12,6 +12,8 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.naming.ConfigurationException;
 
@@ -38,7 +40,8 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 					event.getJDA(),
 					config.memberName,
 					config.targetChannel,
-					config.roleId);
+					config.roleId,
+					serviceMessageBox);
 			streamNotifierRunner.start();
 			logger.info("StreamNotifierService ready!");
 		} catch (Exception e) {
@@ -147,4 +150,5 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 	private Logger logger;
 	private StreamNotifierRunner streamNotifierRunner = null;
 	private ArgParser parser = null;
+	private BlockingQueue<String> serviceMessageBox = new LinkedBlockingQueue<String>();
 }

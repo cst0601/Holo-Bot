@@ -17,6 +17,11 @@ public class UpcomingStream {
 		this.liveStream = liveStream;
 		this.mentionRole = mentionRole;
 		upcomingNotificationTime = liveStream.getStreamStartTime().minusMinutes(5);
+		
+		// quick patch for api not updating the state of the stream to ended / started
+		if (liveStream.getStreamStartTime().toInstant().isBefore(Instant.now())) {
+			state = StreamState.STARTED;
+		}
 	}
 	
 	public Message broadcast() {
@@ -76,7 +81,8 @@ public class UpcomingStream {
 	 * @return
 	 */
 	public boolean exceedTTL() {
-		return upcomingNotificationTime.plusHours(1).toInstant().isBefore(Instant.now());
+		return true;
+		// return upcomingNotificationTime.plusHours(1).toInstant().isBefore(Instant.now());
 	}
 	
 	public String getStreamUrl() {

@@ -37,7 +37,7 @@ public class DiscordMpNext {
 		// load token from config
 		Properties properties = new Properties();
 		try {
-			properties.load(DiscordMpNext.class.getResourceAsStream("/config.properties"));
+			properties.load(DiscordMpNext.class.getClassLoader().getResourceAsStream("config.properties"));
 		} catch (IOException e) {
 			e.printStackTrace();
 			logger.error("Failed to read from config.properties, please" +

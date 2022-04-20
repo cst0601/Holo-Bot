@@ -22,7 +22,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -102,7 +101,7 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 					return;
 				}
 				
-				verifyMember(channel, message.getAuthor(), event.getMember(), event.getGuild());
+				verifyMember(channel, event.getMember(), event.getGuild());
 			}
 			else if (parser.getCommand().equals(">sudo")) {
 				try {
@@ -131,27 +130,28 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 		return json;
 	}
 
-	private void verifyMember(MessageChannel channel, User author, Member member, Guild guild) {
-		String youtubeId = userDb.getYoutubeIdByUserId(author.getId());
+	private void verifyMember(MessageChannel channel, Member member, Guild guild) {
+		String youtubeId = userDb.getYoutubeIdByUserId(member.getId());
+		logger.info("User " + member.getId() + " attempted to verify with yt_id " + youtubeId);
 		if (youtubeId != null) {
 			if (api.verify(youtubeId)) {
-				String expireTime = userDb.verifyUser(author.getId());
+				String expireTime = userDb.verifyUser(member.getId());
 				Role role = guild.getRoleById(discordRoleId);
 				guild.addRoleToMember(member, role).queue();
 				channel.sendMessage(new MessageBuilder()
-						.append(author.getAsMention() + " 會員認證成功！下次認證時間為：")
+						.append(member.getAsMention() + " 會員認證成功！下次認證時間為：")
 						.append(expireTime, MessageBuilder.Formatting.BLOCK)
 						.build()).queue();
 			} else {
 				channel.sendMessage(new MessageBuilder()
-						.append(author.getAsMention() + " 認證失敗！\n")
+						.append(member.getAsMention() + " 認證失敗！\n")
 						.append("請確認是否在みこ的FreeChat中送出訊息，或是等數分鐘後使用")
 						.append(">verify_member", MessageBuilder.Formatting.BLOCK)
 						.append("重試。\n如果依然無法完成認證，請聯絡管理員協助處理。")
 						.build()).queue();
 			}
 		} else {
-			channel.sendMessage(new MessageBuilder().append(author.getAsMention() + " 請先使用")
+			channel.sendMessage(new MessageBuilder().append(member.getAsMention() + " 請先使用")
 					.append(">register", MessageBuilder.Formatting.BLOCK)
 					.append("綁定Youtube ID以及Discord ID").build())
 					.queue();

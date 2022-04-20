@@ -70,12 +70,14 @@ public class YoutubeApi extends Api {
 		}
 		
 		for (int i = 0; i < list.getSize(); i++) {
+			logger.info(list.getMessage(i).getDisplayName());
 			if (list.getMessage(i).getChannelId().equals(youtubeId) &&
 				list.getMessage(i).isChatSponsor()) {
 				return true;
 			}
 		}
 		
+		logger.warn("User with YoutubeId: " + youtubeId + " not found in LiveStreamChat." );
 		return false;
 	}
 }
