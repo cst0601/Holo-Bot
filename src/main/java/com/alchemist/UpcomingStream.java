@@ -76,15 +76,6 @@ public class UpcomingStream {
 		return state == StreamState.STARTED;
 	}
 	
-	/**
-	 * If the stream has started after 1 hour, Runner should delete upcomingstream if this is true.
-	 * @return
-	 */
-	public boolean exceedTTL() {
-		return true;
-		// return upcomingNotificationTime.plusHours(1).toInstant().isBefore(Instant.now());
-	}
-	
 	public String getStreamUrl() {
 		return liveStream.toString();
 	}

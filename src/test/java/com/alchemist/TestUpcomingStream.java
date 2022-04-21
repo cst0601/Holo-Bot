@@ -35,7 +35,7 @@ class TestUpcomingStream {
 
 	@Test
 	void testBroadcastToNotified() {
-		UpcomingStream upcomingStream = createTestStream(0);
+		UpcomingStream upcomingStream = createTestStream(1);
 		Message message = upcomingStream.broadcast();
 		
 		assertEquals("頻道有新動靜！快去看看！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
@@ -56,22 +56,7 @@ class TestUpcomingStream {
 	@Test
 	void testBroadcastToStarted() {
 		UpcomingStream upcomingStream = createTestStream(-1);
-		
-		assertEquals("頻道有新動靜！快去看看！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				upcomingStream.broadcast().getContentRaw());
-		assertEquals("再過五分鐘配信開始！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				upcomingStream.broadcast().getContentRaw());
-		assertEquals("nullにゃっはろ～！配信開始了！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				upcomingStream.broadcast().getContentRaw());
+		assertTrue(upcomingStream.hasStarted());
 		assertNull(upcomingStream.broadcast());
-	}
-	
-	@Test
-	void testExceedTTL() {
-		UpcomingStream startedStream = createTestStream(-60);
-		UpcomingStream upcomingStream = createTestStream(-50);
-		
-		assertTrue(startedStream.exceedTTL());
-		assertFalse(upcomingStream.exceedTTL());
 	}
 }

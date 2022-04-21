@@ -87,8 +87,12 @@ public class StreamNotifierRunner extends Thread {
 	private void updateUpcomingStreams() {
 		try {
 			List<UpcomingStream> updateStream = new ArrayList<UpcomingStream>();
-			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming"))
-				updateStream.add(new UpcomingStream(stream, pingRole));
+			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
+				UpcomingStream upcomingStream = new UpcomingStream(stream, pingRole);
+				if (!upcomingStream.hasStarted()) {	// api might give stream started but state = upcoming
+					updateStream.add(upcomingStream);
+				}
+			}
 			
 			for (UpcomingStream stream: updateStream) {
 				// if stream does not exist, add it to list
@@ -125,7 +129,7 @@ public class StreamNotifierRunner extends Thread {
 				targetChannel.sendMessage(message).queue();
 				logger.info("Notified stream: " + stream.getStreamUrl());	
 			}
-			if (stream.hasStarted() && stream.exceedTTL()) {	// :( check remove condition
+			if (stream.hasStarted()) {
 				logger.info("Remove started stream: " + stream.getStreamUrl());
 				iter.remove();
 			}
