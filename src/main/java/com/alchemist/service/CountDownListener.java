@@ -124,12 +124,10 @@ public class CountDownListener extends ListenerAdapter implements Service {
 	@Override
 	public String getServiceMan() {
 		return
-			"# NAME\n"
-			+ "    miko - Miko return timer\n\n"
-			+ "# SYNOPSIS\n"
-			+ "    miko \n\n"
-			+ "# COMMANDS\n"
-			+ "    (None)\n";
+			"NAME\n"
+			+ "        miko - Miko return timer\n\n"
+			+ "SYNOPSIS\n"
+			+ "        miko";
 	}
 
 }

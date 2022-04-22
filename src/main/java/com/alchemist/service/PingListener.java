@@ -193,7 +193,7 @@ public class PingListener extends ListenerAdapter implements Service {
 		if (parser.getCommandSize() > 1) {
 			if (parser.getCommand(1).equals("sl")) {
 				channel.sendMessage(new MessageBuilder()
-					.append("STEAM LOCOMOTIVE !!!", MessageBuilder.Formatting.BOLD)
+					.append("YOU HAVE PINGED A STEAM LOCOMOTIVE !!!", MessageBuilder.Formatting.BOLD)
 					.appendCodeBlock(
 							"                        (  ) (@@) ( )  (@)  ()    @@    O     @     O     @      O\n" + 
 							"                 (@@@)  \n" + 
@@ -234,12 +234,13 @@ public class PingListener extends ListenerAdapter implements Service {
 	@Override
 	public String getServiceMan() {
 		return
-			"# NAME\n"
-			+ "    ping - pong!\n\n"
-			+ "# SYNOPSIS\n"
-			+ "    ping [ls]\n\n"
-			+ "# COMMANDS\n"
-			+ "    * ls: A listed version of ping\n";
+			"NAME\n"
+			+ "        ping - pong!\n\n"
+			+ "SYNOPSIS\n"
+			+ "        ping [options]\n\n"
+			+ "OPTIONS\n"
+			+ "        ls: A listed version of ping\n"
+			+ "        sl: Steam Locomotive";
 	}
 
 	private Logger logger;

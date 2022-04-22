@@ -69,7 +69,9 @@ public class AboutListener extends ListenerAdapter implements Service {
 	public String getServiceMan() {
 		return
 				"# NAME\n"
-				+ "    about - About the bot!\n\n";
+				+ "        about - About the bot!\n\n"
+				+ "SYNOPSIS\n"
+				+ "        about: Show messages about the bot.";
 	}
 
 }

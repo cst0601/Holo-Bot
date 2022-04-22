@@ -165,15 +165,15 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 
 	@Override
 	public String getServiceMan() {
-		return "# NAME\n" +
-				"    member_verify - さくらみこ Youtube Channel Membership Verificaiton\n\n"
-				+ "# SYNOPSIS\n"
-				+ "    register <user_youtube_channel_id>\n"
-				+ "    verify_member\n\n"
-				+ "# DESCRIPTION\n"
-				+ "    To get the membership role in this discord server, you will need to complete the verification process.\n"
-				+ "    First do >register <user_youtube_channel_id> to bind your discord account id to your youtube channel id.\n"
-				+ "    Note that once your account is binded, you could not change it without help from admin.\n"
-				+ "    Do >verify_member to verify your membership via miko's free chat.";
+		return "NAME\n" +
+				"        member_verify - さくらみこ Youtube Channel Membership Verificaiton\n\n"
+				+ "SYNOPSIS\n"
+				+ "        register <user_youtube_channel_id>\n"
+				+ "        verify_member\n\n"
+				+ "DESCRIPTION\n"
+				+ "        To get the membership role in this discord server, you will need to complete the verification process.\n"
+				+ "        First do >register <user_youtube_channel_id> to bind your discord account id to your youtube channel id.\n"
+				+ "        Note that once your account is binded, you could not change it without help from admin.\n"
+				+ "        Do >verify_member to verify your membership via miko's free chat.";
 	}
 }

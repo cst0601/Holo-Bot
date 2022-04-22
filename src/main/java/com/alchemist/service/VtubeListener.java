@@ -182,14 +182,14 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	@Override
 	public String getServiceMan() {
 		return
-			"# NAME\n"
-			+ "    holo - Hololive event tracker\n\n"
-			+ "# SYNOPSIS\n"
-			+ "    holo <command> [args]\n\n"
-			+ "# COMMANDS\n"
-			+ "    * list: List all available hololive members.\n"
-			+ "    * live: Get all streams that are currently live.\n"
-			+ "    * <member_name>: Fetch streams currently going on.\n"
-			+ "    * schedules: Get all schedules of today (JST).\n";
+			"NAME\n"
+			+ "        holo - Hololive event tracker\n\n"
+			+ "SYNOPSIS\n"
+			+ "        holo <command> [args]\n\n"
+			+ "COMMANDS\n"
+			+ "        list: List all available hololive members.\n"
+			+ "        live: Get all streams that are currently live.\n"
+			+ "        <member_name>: Fetch streams currently going on.\n"
+			+ "        schedules: Get all schedules of today (JST).\n";
 	}
 }

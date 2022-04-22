@@ -122,12 +122,12 @@ public class RollListener extends ListenerAdapter implements Service {
 
 	@Override
 	public String getServiceMan() {
-		return "# NAME\n"
-		+ "    roll - Roll some dice\n\n"
-		+ "# SYNOPSIS\n"
-		+ "    roll <dice_size> <roll_number>\n\n"
-		+ "# COMMANDS\n"
-		+ "    * <dice_size>: Dice size, should be a number < 2e31-1.\n"
-		+ "    * <roll_number>: Times you want to toss the dice, maximum 20.\n";
+		return "NAME\n"
+		+ "        roll - Roll some dice\n\n"
+		+ "SYNOPSIS\n"
+		+ "        roll dice_size roll_number\n\n"
+		+ "COMMANDS\n"
+		+ "        dice_size: Dice size, should be in ranage of: 0 < dice_size <= 2e31-1.\n"
+		+ "        roll_number: Times you want to toss the dice, maximum 20.\n";
 	}
 }

@@ -114,10 +114,10 @@ public class BonkListener extends ListenerAdapter implements Service {
 	@Override
 	public String getServiceMan() {
 		return 
-			"# NAME\n"
-			+ "    bonk - bonk a member!\n\n"
-			+ "# SYNOPSIS\n"
-			+ "    bonk @member\n";
+			"NAME\n"
+			+ "        bonk - bonk a member!\n\n"
+			+ "SYNOPSIS\n"
+			+ "        bonk @member: Bonk a member, member argument should be in mention format.";
 	}
 
 }

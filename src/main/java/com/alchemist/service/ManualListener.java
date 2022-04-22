@@ -53,7 +53,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 				}
 				
 				for (int i = 0; i < listeners.size(); ++i) {
-					if (parser.getCommand(1).equals(((Service) listeners.get(i)).getServiceName())) {
+					if (parser.getCommand(1).equals(((Service) listeners.get(i)).getServiceManualName())) {
 						channel.sendMessage(new MessageBuilder()
 							.appendCodeBlock(listeners.get(i).getServiceMan(), "md")
 							.build()).queue();
@@ -72,11 +72,11 @@ public class ManualListener extends ListenerAdapter implements Service {
 
 	@Override
 	public String getServiceMan() {
-		return "# NAME\n"
-				+ "    man - Manual, read the doc! :)\n\n"
-				+ "# SYNOPSIS\n"
-				+ "    * man: Get some informations about manual\n"
-				+ "    * man [manual_page]: Get the manual page of a specific service";
+		return "NAME\n"
+				+ "        man - Manual, read the doc! :)\n\n"
+				+ "SYNOPSIS\n"
+				+ "        man: Get some informations about manual\n"
+				+ "        man [manual_page]: Get the manual page of a specific service";
 	}
 	
 	/**
