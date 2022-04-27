@@ -1,6 +1,5 @@
 package com.alchemist;
 
-import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Hashtable;
 import java.util.LinkedList;
@@ -27,14 +26,14 @@ import twitter4j.TwitterException;
 public class TwitterBroadcastRunner extends Thread {
 	public TwitterBroadcastRunner(
 			JDA jda, Twitter twitter,
-			ArrayList<TwitterSubscription> subscriptions) {
+			TwitterBroadcastConfig config) {
 		Thread.currentThread().setName("TwitterBroadcastRunner");
 		logger = LoggerFactory.getLogger(TwitterBroadcastRunner.class);
 		this.jda = jda;
 		this.twitter = twitter;
-		this.subscriptions = subscriptions;
+		this.config = config;
 		
-		for (TwitterSubscription sub: subscriptions) {
+		for (TwitterSubscription sub: config.getTwitterSubscriptions()) {
 			caches.put(sub.getSearchQuery(), new TweetCache(sub.getSearchQuery()));
 			logger.info("Create cache for: " + sub.getSearchQuery());
 			// update cache for init to avoid sending old message
@@ -44,11 +43,28 @@ public class TwitterBroadcastRunner extends Thread {
 	
 	public void run() {
 		while (true) {
-			String message;		// stop if received stop message
+			SyncMessage message;		// stop if received stop message
 			if ((message = messageBox.poll()) != null) {
-				if (message.equals("stop")) {
+				if (message.getMessageHead().equals("stop")) {
 					logger.info("Terminating twitter broascater runner...");
 					break;
+				}
+				else if (message.getMessageHead().equals("add")) {
+					
+					config.addBlacklistUser(Long.parseLong(message.getMessageBody()));
+					logger.info("Added twitter user " + message.getMessageBody()
+						+ " to blacklist.");
+				}
+				else if (message.getMessageHead().equals("remove")) {
+					if (!config.removeBlacklistUser(Long.parseLong(message.getMessageBody()))) {
+						logger.warn("Attempted to remove twitter user " +
+							message.getMessageBody() + " from blacklist which"
+							+ " does not exist.");
+					}
+					else {
+						logger.info("Removed twitter user " + 
+							message.getMessageBody() + " from blacklist.");
+					}
 				}
 			}
 			else {					// if no message to handle
@@ -66,16 +82,23 @@ public class TwitterBroadcastRunner extends Thread {
 	
 	public void sendTwitterUpdate() {
 		// send messages
-		for (TwitterSubscription subscription: subscriptions) {
+		for (TwitterSubscription subscription: config.getTwitterSubscriptions()) {
 			
 			// search and construct message to send
-			Queue<String> searchResult = search(subscription.getSearchQuery());
+			Queue<Tweet> searchResult = search(subscription.getSearchQuery());
 			
 			for (Long channelId: subscription.getTargetChannels()) {
 				MessageChannel channel = jda.getTextChannelById(channelId);
 				try {
-					for (String newTweet: searchResult) {
-						channel.sendMessage(newTweet).queue();
+					for (Tweet newTweet: searchResult) {
+						if (config.isInBlacklist(newTweet.getUserId())) {
+							if (config.isUncensoredTargetId(channelId)) {
+								channel.sendMessage("**TWEET FROM BLACKLIST USER**: " + newTweet.toUrl()).queue();
+							}
+						}
+						else {
+							channel.sendMessage(newTweet.toUrl()).queue();
+						}
 					}
 				} catch (InsufficientPermissionException e) {
 					logger.warn("Lacks permission to send message to "
@@ -90,17 +113,17 @@ public class TwitterBroadcastRunner extends Thread {
 	 * @param message
 	 * @throws InterruptedException
 	 */
-	public void sendMessage(String message) throws InterruptedException {
+	public void sendMessage(SyncMessage message) throws InterruptedException {
 		messageBox.put(message);
 	}
 	
-	public Queue<String> search(String search) {
+	public Queue<Tweet> search(String search) {
 		Query query = new Query(search);
 		query.setResultType(Query.RECENT);
 		
-	    QueryResult result;
-	    Queue<String> newTweets = null;
-	    try {
+		QueryResult result;
+		Queue<Tweet> newTweets = null;
+		try {
 			result = twitter.search(query);
 			newTweets = caches.get(search).updateTweets(result.getTweets(), result.getMaxId());
 
@@ -108,7 +131,7 @@ public class TwitterBroadcastRunner extends Thread {
 				logger.info(newTweets.size() + " new tweets from " + search);
 			
 		} catch (TwitterException e) {				// connection error, rate limit exceeded...
-			newTweets = new LinkedList<String>();	// no new tweets if exception occurred
+			newTweets = new LinkedList<Tweet>();	// no new tweets if exception occurred
 			
 			logger.warn("Failed searching");
 			if (e.exceededRateLimitation())
@@ -116,13 +139,13 @@ public class TwitterBroadcastRunner extends Thread {
 			else
 				logger.warn("Failed with reason other that rate limitation\n" + e.getMessage());
 		}
-	    return newTweets;
+		return newTweets;
 	}
 	
 	private JDA jda;
 	private Twitter twitter;
 	private Logger logger;
-	private ArrayList<TwitterSubscription> subscriptions;
+	private TwitterBroadcastConfig config;
 	private Dictionary<String, TweetCache> caches = new Hashtable<String, TweetCache>();
-	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
+	private BlockingQueue<SyncMessage> messageBox = new LinkedBlockingQueue<SyncMessage>();
 }

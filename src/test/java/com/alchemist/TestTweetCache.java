@@ -41,14 +41,14 @@ public class TestTweetCache {
 	void testUpdateTweets() {
 		TweetCache cache = new TweetCache("test_query");
 		cache.updateTweets(statusList, 14);
-		Queue<String> newTweets = cache.updateTweets(updatedStatusList, 19);
+		Queue<Tweet> newTweets = cache.updateTweets(updatedStatusList, 19);
 		
 		assertEquals(5, newTweets.size());
-		assertEquals("https://twitter.com/Name_15/status/15", newTweets.poll());
-		assertEquals("https://twitter.com/Name_16/status/16", newTweets.poll());
-		assertEquals("https://twitter.com/Name_17/status/17", newTweets.poll());
-		assertEquals("https://twitter.com/Name_18/status/18", newTweets.poll());
-		assertEquals("https://twitter.com/Name_19/status/19", newTweets.poll());
+		assertEquals("https://twitter.com/Name_15/status/15", newTweets.poll().toUrl());
+		assertEquals("https://twitter.com/Name_16/status/16", newTweets.poll().toUrl());
+		assertEquals("https://twitter.com/Name_17/status/17", newTweets.poll().toUrl());
+		assertEquals("https://twitter.com/Name_18/status/18", newTweets.poll().toUrl());
+		assertEquals("https://twitter.com/Name_19/status/19", newTweets.poll().toUrl());
 	}
 	
 	@Test
@@ -57,8 +57,8 @@ public class TestTweetCache {
 		for (int i = 0; i < 15; ++i) {
 			ArrayList<Status> newTweet = new ArrayList<Status>();
 			newTweet.add(new TestStatus(i + 15, "Name_" + (i + 15)));
-			Queue<String> temp = cache.updateTweets(newTweet, 0);
-			assertEquals("https://twitter.com/Name_" + (i + 15) + "/status/" + (i + 15), temp.poll());
+			Queue<Tweet> temp = cache.updateTweets(newTweet, 0);
+			assertEquals("https://twitter.com/Name_" + (i + 15) + "/status/" + (i + 15), temp.poll().toUrl());
 		}
 		
 		ArrayList<Status> newTweet = new ArrayList<Status>();
