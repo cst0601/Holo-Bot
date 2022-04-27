@@ -15,15 +15,17 @@ public class TweetCache {
 		return searchQuery;
 	}
 	
-	public Queue<String> updateTweets(List<Status> statusList, long maxId) {
-		Queue<String> differentTweets = new LinkedList<String>();
+	public Queue<Tweet> updateTweets(List<Status> statusList, long maxId) {
+		Queue<Tweet> differentTweets = new LinkedList<Tweet>();
 		
 		for (int i = statusList.size() - 1; i >= 0; --i) {	// check status from old to new
 			if (statusList.get(i).getId() > this.maxId) {
-				String url = 
-						"https://twitter.com/" + statusList.get(i).getUser().getScreenName() +
-						"/status/" + statusList.get(i).getId();
-				differentTweets.add(url);
+				Tweet tweet = new Tweet(
+					statusList.get(i).getUser().getId(),
+					statusList.get(i).getUser().getScreenName(),
+					statusList.get(i).getId());
+
+				differentTweets.add(tweet);
 			}
 		}
 		

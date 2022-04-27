@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * @author chikuma
  *
  */
-public class TwitterSubscription {
+public class TwitterSubscription {	
 	public TwitterSubscription(String searchQuery, ArrayList<Long> targetChannels) {
 		this.searchQuery = searchQuery;
 		this.targetChannels = targetChannels;

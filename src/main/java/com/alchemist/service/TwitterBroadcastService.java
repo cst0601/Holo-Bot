@@ -1,22 +1,26 @@
 package com.alchemist.service;
 
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Properties;
-import java.util.Scanner;
 
-import javax.naming.ConfigurationException;
-
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.alchemist.ArgParser;
+import com.alchemist.SyncMessage;
+import com.alchemist.TwitterBroadcastConfig;
 import com.alchemist.TwitterBroadcastRunner;
 import com.alchemist.TwitterSubscription;
+import com.alchemist.exceptions.ArgumentParseException;
 
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.MessageBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import twitter4j.Twitter;
 import twitter4j.TwitterFactory;
@@ -29,22 +33,87 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 	
 	@Override
 	public void onReady(ReadyEvent event) {
-		ArrayList<TwitterSubscription> config = readBroadcastConfig();
+		TwitterBroadcastConfig config;
 		try {
-			isTwitterBroadcastConfigVaild(event.getJDA(), config);
-		} catch (Exception e) {
+			config = new TwitterBroadcastConfig();
+			isTwitterBroadcastConfigVaild(event.getJDA(), config.getTwitterSubscriptions());
+			broadcastRunner = new TwitterBroadcastRunner(
+					event.getJDA(), initTwitterApi(), config);
+			broadcastRunner.start();
+			logger.info("TwitterBroadcastService ready!");
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+			logger.warn("Failed to read twitter service configuration file.");
+			return;
 		}
-		broadcastRunner = new TwitterBroadcastRunner(
-				event.getJDA(), initTwitterApi(), config);
-		broadcastRunner.start();
-		logger.info("TwitterBroadcastService ready!");
+	}
+	
+	@Override
+	public void onMessageReceived(MessageReceivedEvent event) {
+		MessageChannel channel = event.getChannel();
+		ArgParser parser = new ArgParser(event.getMessage().getContentDisplay());
+		
+		if (parser.getCommand().equals(">sudo")) {
+			try {
+				parser.parse();
+			} catch (ArgumentParseException e) {
+				e.printStackTrace();
+				return;
+			}
+		}
+		
+		try {
+			if (parser.getCommandSize() >= 1)
+			if (parser.getCommand(1).equals("twitter")) {
+				if (parser.getCommandSize() < 5) {
+					throw new IllegalArgumentException("Command missing argument");
+				}
+				else if (!event.getMember().hasPermission(Permission.ADMINISTRATOR)) {
+					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
+					return;
+				}
+				else if (parser.getCommand(2).equals("blacklist")) {
+					broadcastRunner.interrupt();
+					try {
+						Long.parseLong(parser.getCommand(4));	// try to parse parameter
+						if (parser.getCommand(3).equals("add")) {
+							broadcastRunner.sendMessage(new SyncMessage("add", parser.getCommand(4)));
+							channel.sendMessage("Add " + parser.getCommand(4) + " to twitter broadcast blacklist.").queue();
+						}
+						else if (parser.getCommand(3).equals("remove")) {
+							broadcastRunner.sendMessage(new SyncMessage("remove", parser.getCommand(4)));
+							channel.sendMessage("Remove " + parser.getCommand(4) + " from twitter broadcast blacklist.").queue();
+						}
+						else {
+							throw new IllegalArgumentException("Blacklist argument must be add or remove.");
+						}
+					} catch (InterruptedException e) {
+						logger.warn("Interrupted occured when sending message to runner.");
+						e.printStackTrace();
+					} catch (NumberFormatException e) {
+						channel.sendMessage("Error: Parameter format").queue();
+					}
+				}
+				else {
+					throw new IllegalArgumentException("Invalid argument for twitter broadcast service.");
+				}
+			}
+		}
+		catch (IllegalArgumentException e) {
+			MessageBuilder messageBuilder = new MessageBuilder()
+					.append("Error: ")
+					.append(e.getMessage())
+					.append("\nUsage: ")
+					.appendCodeLine("twitter [blacklist] [add | remove] args");
+			channel.sendMessage(messageBuilder.build()).queue();
+		}
+		
 	}
 	
 	public void terminate() {
 		logger.info("Terminating TwitterBroadcastService...");
 		try {
-			broadcastRunner.sendMessage("stop");
+			broadcastRunner.sendMessage(new SyncMessage("stop"));
 			broadcastRunner.interrupt();
 			broadcastRunner.join();
 		} catch (InterruptedException e) {
@@ -53,7 +122,9 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 		}
 	}
 	
-	private void isTwitterBroadcastConfigVaild(JDA jda, ArrayList<TwitterSubscription> subscriptions) throws ConfigurationException {
+	private void isTwitterBroadcastConfigVaild(
+			JDA jda,
+			ArrayList<TwitterSubscription> subscriptions) {
 		logger.info("TwitterBroadcastService configuration verification start ...");
 		boolean isVaild = true;
 		for (TwitterSubscription subscription: subscriptions) {
@@ -65,38 +136,10 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 			}
 		}
 		
-		if (!isVaild) {
-			throw new ConfigurationException("TwitterBroadcastService configuraiton verification failed.");
-		}
-		logger.info("TwitterBroadcastService configuration ... OK");
-	}
-	
-	private ArrayList<TwitterSubscription> readBroadcastConfig() {
-		ArrayList<TwitterSubscription> subscriptions = new ArrayList<TwitterSubscription>();
-		
-		try {
-			Scanner scanner = new Scanner(new File("config/broadcast.json"));
-			scanner.useDelimiter("\\Z");
-			JSONArray json = new JSONArray(scanner.next());
-			scanner.close();
-			
-			for (int i = 0; i < json.length(); ++i) {
-				JSONArray targetJson = json.getJSONObject(i).getJSONArray("target");
-				ArrayList<Long> targetChannels = new ArrayList<Long>();
-				
-				for (int j = 0; j < targetJson.length(); ++j)
-					targetChannels.add(targetJson.getLong(j));
-
-				subscriptions.add(
-					new TwitterSubscription(
-						json.getJSONObject(i).getString("query"), targetChannels));
-			}
-			
-		} catch (Exception e) {
-			logger.error("Failed to read broadcast config file.");
-		}
-		
-		return subscriptions;
+		if (!isVaild)
+			logger.warn("TwitterBroadcastService configuraiton verification failed.");
+		else
+			logger.info("TwitterBroadcastService configuration ... OK");
 	}
 	
 	/**
