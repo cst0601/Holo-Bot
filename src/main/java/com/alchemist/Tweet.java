@@ -19,5 +19,5 @@ public class Tweet {
 	private long userId;
 	private long tweetId;
 	private String userScreenName;
-	private final static String url = "https://twitter.com/{}/status/{}";
+	private final static String url = "https://twitter.com/%s/status/%s";
 }
