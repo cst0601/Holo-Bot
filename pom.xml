@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.alchemist</groupId>
 	<artifactId>Discord_MP_Next</artifactId>
-	<version>1.5.1_a1</version>
+	<version>1.5.1_a2</version>
 
 	<properties>
 		<maven.compiler.release>7</maven.compiler.release>

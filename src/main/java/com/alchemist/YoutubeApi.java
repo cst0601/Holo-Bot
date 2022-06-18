@@ -28,6 +28,7 @@ public class YoutubeApi extends Api {
 
 	private Logger logger;
 
+
 	public YoutubeApi(String liveChatId) throws IOException {
 		super();
 		logger = LoggerFactory.getLogger(YoutubeApi.class);
@@ -71,9 +72,11 @@ public class YoutubeApi extends Api {
 		
 		for (int i = 0; i < list.getSize(); i++) {
 			logger.info(list.getMessage(i).getDisplayName());
-			if (list.getMessage(i).getChannelId().equals(youtubeId) &&
-				list.getMessage(i).isChatSponsor()) {
-				return true;
+			if (list.getMessage(i).getChannelId().equals(youtubeId)) {
+				if (list.getMessage(i).isChatSponsor()) {
+					return true;
+				} 
+				else return false;
 			}
 		}
 		

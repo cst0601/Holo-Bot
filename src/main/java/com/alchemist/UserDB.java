@@ -10,20 +10,26 @@ import javax.annotation.Nullable;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.alchemist.exceptions.EntryExistException;
+import com.mongodb.MongoException;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
+import com.mongodb.client.result.DeleteResult;
 
 public class UserDB {
 	private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
+	private Logger logger;
 	private MongoClient client;
 	private MongoDatabase database;
 	
 	public UserDB (String dbConnection, String dbName) {
+		logger = LoggerFactory.getLogger(YoutubeApi.class);
 		client = MongoClients.create(dbConnection);
 		database = client.getDatabase(dbName);
 	}
@@ -72,5 +78,17 @@ public class UserDB {
 				new UpdateOptions().upsert(true));
 		
 		return expireTime;
+	}
+	
+	public long removeUserByDcId(String discordId) {
+		Bson query = eq("dc_id", discordId);
+		try {
+			DeleteResult result = database.getCollection("users").deleteOne(query);
+			logger.info("Removed user: " + discordId + ", Deleted document count: " + result.getDeletedCount());
+			return result.getDeletedCount();
+		} catch (MongoException me) {
+			logger.warn("Unable to delete due to an error: " + me);
+			return 0;
+		}
 	}
 }

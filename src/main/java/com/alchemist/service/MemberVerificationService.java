@@ -116,6 +116,7 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 				}
 				else {
 					// admin command goes here
+					handleAdminCommands(parser, channel, event.getGuild());
 				}
 			}
 		}
@@ -128,6 +129,65 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 		scanner.close();
 
 		return json;
+	}
+	
+	private void handleAdminCommands(ArgParser parser, MessageChannel channel, Guild guild) {
+		if (parser.getCommandSize() > 2) {
+			String commandName = parser.getCommand(1);
+			if (commandName.equals("manual_verify")) {
+				if (parser.getCommandSize() >= 3) {
+					manualVerifyMember(parser.getCommand(2), channel, guild);
+				}
+				else {
+					channel.sendMessage("Error: Command needs to contain target member discord id.").queue();
+				}
+			}
+			else if (commandName.equals("manual_register")) {
+				if (parser.getCommandSize() >= 4) {
+					try {
+						register(parser.getCommand(2), parser.getCommand(3));
+						channel.sendMessage("Registered user: " + parser.getCommand(2) +
+											" with youtube channel: " + parser.getCommand(3)).queue();
+					} catch (EntryExistException e) {
+						channel.sendMessage(" Discord ID或是Youtube ID已經註冊過").queue();
+					}
+				}
+				else {
+					channel.sendMessage("Error: Command requires member discord ID and Youtube channel ID.").queue();
+				}
+			}
+			else if (commandName.equals("remove")) {
+				if (parser.getCommandSize() >= 3) {
+					long removedEntityCount = userDb.removeUserByDcId(parser.getCommand(2));
+					channel.sendMessage("Removed " + removedEntityCount + " entries related to disocrd ID: " + parser.getCommand(2)).queue();
+				}
+				else {
+					channel.sendMessage("Error: Command requires member discord ID.").queue();
+				}
+			}
+			else if (commandName.equals("update_state")) {
+				channel.sendMessage("Not yet implemeted.").queue();
+				// next time
+			}
+		}
+	}
+	
+	private void manualVerifyMember(String dcId, MessageChannel channel, Guild guild) {
+		Member member = guild.retrieveMemberById(dcId).complete();
+		String youtubeId = userDb.getYoutubeIdByUserId(member.getId());
+		
+		if (youtubeId == null) {
+			channel.sendMessage("Error: user needs to be registered before verification.").queue();
+			return;
+		}
+		
+		String expireTime = userDb.verifyUser(member.getId());
+		Role role = guild.getRoleById(discordRoleId);
+		guild.addRoleToMember(member, role).queue();
+		channel.sendMessage(new MessageBuilder()
+				.append(member.getAsMention() + " 會員認證成功！下次認證時間為：")
+				.append(expireTime, MessageBuilder.Formatting.BLOCK)
+				.build()).queue();
 	}
 
 	private void verifyMember(MessageChannel channel, Member member, Guild guild) {
