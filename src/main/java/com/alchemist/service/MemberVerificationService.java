@@ -2,8 +2,13 @@ package com.alchemist.service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.Scanner;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +37,7 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 	private YoutubeApi api;
 	private ArgParser parser;
 	private String discordRoleId;
+	private final static String CONFIG_FILE_PWD = "config/membership_verification.json";
 
 	public MemberVerificationService() {
 		logger = LoggerFactory.getLogger(MemberVerificationService.class);
@@ -79,7 +85,7 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 					return;
 				}
 				
-				if (parser.getCommandSize() < 1) {
+				if (parser.getCommandSize() < 2) {
 					channel.sendMessage(new MessageBuilder().append("Error: Usage: ")
 							.append(">register <youtube_id>", MessageBuilder.Formatting.BLOCK).build()).queue();
 				} else {
@@ -123,7 +129,7 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 	}
 
 	private JSONObject readConfig() throws FileNotFoundException {
-		Scanner scanner = new Scanner(new File("config/membership_verification.json"));
+		Scanner scanner = new Scanner(new File(CONFIG_FILE_PWD));
 		scanner.useDelimiter("\\Z");
 		JSONObject json = new JSONObject(scanner.next());
 		scanner.close();
@@ -168,6 +174,24 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 			else if (commandName.equals("update_state")) {
 				channel.sendMessage("Not yet implemeted.").queue();
 				// next time
+				// ^^^^^^^^^ What is this suppose to be???
+			}
+			else if (commandName.equals("update_role")) {
+				if (parser.getCommandSize() >= 3) {
+					try {
+						updateConfigFile(parser.getCommand(2));
+						discordRoleId = parser.getCommand(2);
+						channel.sendMessage("Updated role id to " + parser.getCommand(2)).queue();
+						logger.info("Member role id updated to " + parser.getCommand(2));
+					} catch (Exception e) {
+						channel.sendMessage("Error: config file not found.").queue();
+						logger.warn("Failed to update config file, stack trace as follow:");
+						logger.warn(e.toString());
+					}
+				}
+				else {
+					channel.sendMessage("Error: Command requires new role ID.").queue();
+				}
 			}
 		}
 	}
@@ -216,6 +240,17 @@ public class MemberVerificationService extends ListenerAdapter implements Servic
 					.append("綁定Youtube ID以及Discord ID").build())
 					.queue();
 		}
+	}
+	
+	// duplication code in com.alchemist.TwitterBroadcastConfig
+	// update config file member role id
+	private void updateConfigFile(String newRoleId) throws JSONException, IOException {
+		JSONObject config = readConfig();
+		config.put("discord_role_id", newRoleId);
+		Writer writer = config.write(
+			new FileWriter(CONFIG_FILE_PWD, Charset.forName("UTF-8")),
+			4, 0);
+		writer.close();
 	}
 
 	@Override

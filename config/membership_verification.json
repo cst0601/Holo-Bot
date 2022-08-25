@@ -1,6 +1,6 @@
 {
-	"yt_live_stream_chat_id": "Cg0KC3c0ZGdxbF81UnprKicKGFVDLWhNNllKdU5ZVkFtVVd4ZUlyOUZlQRILdzRkZ3FsXzVSems",
-	"db_connection": "mongodb://localhost:27017",
-	"db_name": "test_db",
-	"discord_role_id": "885266762915004416",
+    "db_name": "test_db",
+    "discord_role_id": "1012286719162331146",
+    "yt_live_stream_chat_id": "Cg0KC3c0ZGdxbF81UnprKicKGFVDLWhNNllKdU5ZVkFtVVd4ZUlyOUZlQRILdzRkZ3FsXzVSems",
+    "db_connection": "mongodb://localhost:27017"
 }
