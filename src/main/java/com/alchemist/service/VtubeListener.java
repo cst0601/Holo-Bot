@@ -3,12 +3,12 @@ package com.alchemist.service;
 import java.awt.Color;
 
 import com.alchemist.ArgParser;
+import com.alchemist.HoloDexApi;
 import com.alchemist.LiveStream;
 import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.holoModel.HoloMemberListModel;
 import com.alchemist.holoModel.HoloScheduleModel;
 import com.alchemist.HoloMemberData;
-import com.alchemist.HoloToolsApi;
 
 import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -28,14 +28,14 @@ import org.slf4j.LoggerFactory;
  */
 public class VtubeListener extends ListenerAdapter implements Service {
 	private HoloScheduleModel holoScheduleModel;
-	private HoloToolsApi holoToolsApi;
+	private HoloDexApi holoDexApi;
 	private Logger logger;
 	private ArgParser parser = null;
 
 	
 	public VtubeListener() {
 		holoScheduleModel = new HoloScheduleModel();
-		holoToolsApi = new HoloToolsApi();
+		holoDexApi = new HoloDexApi();
 		logger = LoggerFactory.getLogger(VtubeListener.class.getName());
 	}
 	
@@ -83,7 +83,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 					}
 					// get stream
 					else if (HoloMemberData.getInstance().getMemberByName(parser.getCommand(1)) != null) {	// if arg member name not avaliable
-						LiveStream liveStream = holoToolsApi.getLiveStreamOfMember(parser.getCommand(1));
+						LiveStream liveStream = holoDexApi.getLiveStreamOfMember(parser.getCommand(1));
 					
 						if (liveStream == null) 
 							channel.sendMessage("目前並沒有直播 :(").queue();
@@ -143,7 +143,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				.setFooter("Holo Bot", "https://i.imgur.com/DOb1GZ1.png");
 		
 		try {
-			for (LiveStream stream: holoToolsApi.getLiveStreams()) {
+			for (LiveStream stream: holoDexApi.getLiveStreams()) {
 				builder.addField(stream.getMemberName(), stream.toMarkdownLink(), false);
 			}
 			

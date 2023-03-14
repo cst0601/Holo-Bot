@@ -21,7 +21,7 @@ public class AboutListener extends ListenerAdapter implements Service {
 		EmbedBuilder embedBuilder = new EmbedBuilder()
 				.setTitle("Holo Bot", "https://github.com/cst0601/Discord-MP-Bot")
 				.setColor(Color.red)
-				.setDescription("Discord MP-NeXT 1.5.1 alpha 4\"みっこより！！\"")
+				.setDescription("Discord MP-NeXT 1.5.2 alpha 1 \"Our Bright Parade\"")
 				.addField("About Holo Bot", "A simple discord bot that help "
 						+ "tracks events of hololive.\n"
 						+ "Type `>man` to get manual of this bot.\n\n"
@@ -41,6 +41,9 @@ public class AboutListener extends ListenerAdapter implements Service {
 						 " - Added tweet filter function.\n"
 						 + " - Fixed member verification function.\n"
 						 + " - みこめっと！ ( ⸝⸝•ᴗ•⸝⸝ )", false)
+				.addField("1.5.2 patch notes",
+						" - Upgrade Twitter API to v2.\n"
+						+ " - HoloToolsApi deprecated, switch to other service.", false)
 				.addField("Subscribe to さくらみこ and become a 35P!",
 						"[Youtube](https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA)\n"
 						+ "[Twitter](https://twitter.com/sakuramiko35)", false)
