@@ -27,7 +27,7 @@ public class StreamNotifierRunner extends Thread {
 		Thread.currentThread().setName("StreamNotifierRunner");
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
 		serviceMessageBox = messageBox;
-		api = new HoloToolsApi();
+		api = new HoloDexApi();
 		upcomingStreams = new LinkedList<UpcomingStream>();
 		targetChannel = jda.getTextChannelById(messageChannelId);
 		pingRole = jda.getRoleById(pingId);
@@ -149,7 +149,7 @@ public class StreamNotifierRunner extends Thread {
 	private Logger logger;
 	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
 	private BlockingQueue<String> serviceMessageBox;
-	private HoloToolsApi api;
+	private HoloDexApi api;
 	private String memberName;
 	private MessageChannel targetChannel;
 	private Role pingRole;

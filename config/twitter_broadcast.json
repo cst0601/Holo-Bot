@@ -13,6 +13,6 @@
             "target": [757941157421645924]
         }
     ],
-    "blacklist": [],
+    "blacklist": [123],
     "uncensored_targets": [757941157421645924]
 }

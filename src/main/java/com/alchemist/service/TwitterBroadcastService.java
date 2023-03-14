@@ -23,8 +23,7 @@ import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import twitter4j.Twitter;
-import twitter4j.TwitterFactory;
-import twitter4j.conf.ConfigurationBuilder;
+
 
 public class TwitterBroadcastService extends ListenerAdapter implements Service {
 	public TwitterBroadcastService() {
@@ -61,7 +60,7 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 				return;
 			}
 		}
-		
+
 		try {
 			if (parser.getCommandSize() >= 1)
 			if (parser.getCommand(1).equals("twitter")) {
@@ -155,14 +154,14 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 			return null;
 		}
 		
-		ConfigurationBuilder configBuilder = new ConfigurationBuilder();
-		configBuilder.setDebugEnabled(Boolean.parseBoolean(properties.getProperty("debug")))
-			.setOAuthConsumerKey(properties.getProperty("oauth.consumerKey"))
-			.setOAuthConsumerSecret(properties.getProperty("oauth.consumerSecret"))
-			.setOAuthAccessToken(properties.getProperty("oauth.accessToken"))
-			.setOAuthAccessTokenSecret(properties.getProperty("oauth.accessTokenSecret"));
-		TwitterFactory tf = new TwitterFactory(configBuilder.build());
-		return tf.getInstance();
+		return Twitter.newBuilder()
+				.oAuthConsumer(
+						properties.getProperty("oauth.consumerKey"),
+						properties.getProperty("oauth.consumerSecret"))
+				.oAuthAccessToken(
+						properties.getProperty("oauth.accessToken"),
+						properties.getProperty("oauth.accessTokenSecret"))
+				.build();
 	}
 	
 	private TwitterBroadcastRunner broadcastRunner;

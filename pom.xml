@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.alchemist</groupId>
 	<artifactId>Discord_MP_Next</artifactId>
-	<version>1.5.1_a2</version>
+	<version>1.5.2_a1</version>
 
 	<properties>
 		<maven.compiler.release>7</maven.compiler.release>
@@ -45,7 +45,7 @@
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j-core</artifactId>
-			<version>[4.0,)</version>
+			<version>4.1.2</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/org.mongodb/mongo-java-driver -->
