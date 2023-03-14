@@ -4,7 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import twitter4j.Status;
+import twitter4j.v1.Status;
 
 public class TweetCache {
 	public TweetCache(String searchQuery) {

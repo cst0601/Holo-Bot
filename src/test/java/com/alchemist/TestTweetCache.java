@@ -2,6 +2,7 @@ package com.alchemist;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Queue;
@@ -9,17 +10,17 @@ import java.util.Queue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import twitter4j.GeoLocation;
-import twitter4j.HashtagEntity;
-import twitter4j.MediaEntity;
-import twitter4j.Place;
-import twitter4j.RateLimitStatus;
-import twitter4j.Scopes;
-import twitter4j.Status;
-import twitter4j.SymbolEntity;
-import twitter4j.URLEntity;
-import twitter4j.User;
-import twitter4j.UserMentionEntity;
+import twitter4j.v1.GeoLocation;
+import twitter4j.v1.HashtagEntity;
+import twitter4j.v1.MediaEntity;
+import twitter4j.v1.Place;
+import twitter4j.v1.RateLimitStatus;
+import twitter4j.v1.Scopes;
+import twitter4j.v1.Status;
+import twitter4j.v1.SymbolEntity;
+import twitter4j.v1.URLEntity;
+import twitter4j.v1.User;
+import twitter4j.v1.UserMentionEntity;
 
 public class TestTweetCache {
 	
@@ -256,8 +257,7 @@ class TestUser implements User {
 	}
 
 	@Override
-	public Date getCreatedAt() {
-		 
+	public LocalDateTime getCreatedAt() {
 		return null;
 	}
 
@@ -426,9 +426,9 @@ class TestUser implements User {
 
 
 	@Override
-	public int getAccessLevel() {
+	public AccessLevel getAccessLevel() {
 		// TODO Auto-generated method stub
-		return 0;
+		return null;
 	}
 
 
@@ -452,13 +452,11 @@ class TestStatus implements Status {
 
 	@Override
 	public SymbolEntity[] getSymbolEntities() {
-		 
 		return null;
 	}
 
 	@Override
-	public Date getCreatedAt() {
-		 
+	public LocalDateTime getCreatedAt() {
 		return null;
 	}
 
@@ -643,9 +641,8 @@ class TestStatus implements Status {
 
 
 	@Override
-	public int getAccessLevel() {
-		// TODO Auto-generated method stub
-		return 0;
+	public AccessLevel getAccessLevel() {
+		return null;
 	}
 
 

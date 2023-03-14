@@ -57,11 +57,10 @@ public class DiscordMpNext {
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
-					.addEventListeners(new MemberVerificationService())
 					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
 								 			 "Say >man to seek help!"));
 			
-			builder = buildTwitterBroadcaster(builder, args);				
+			builder = buildOptionalService(builder, properties);
 			
 			jda = builder.build();
 			jda.awaitReady();
@@ -77,24 +76,25 @@ public class DiscordMpNext {
 	}
 	
 	/**
-	 * Checks twitter mode and add twitter listener to JDA if mode is true
+	 * Builds optional service if specified in .properties file. Currently
+	 * includes twitter broadcast service and member verification service.
 	 * @param builder
-	 * @param args
+	 * @param properties
 	 * @return
 	 */
-	private JDABuilder buildTwitterBroadcaster(JDABuilder builder, String args[]) {
-		boolean twitterMode = true;
-		
-		for (String arg: args) {
-			if (arg.equals("noTwitter")) {
-				logger.info("Twitter mode is false");
-				twitterMode = false;
-				break;
-			}
+	private JDABuilder buildOptionalService(JDABuilder builder, Properties properties) {
+		if (Boolean.parseBoolean(properties.getProperty("twitter"))) {
+			builder.addEventListeners(new TwitterBroadcastService());
+		}
+		else {
+			logger.info("Twitter mode is disabled.");
 		}
 		
-		if (twitterMode) {
-			builder.addEventListeners(new TwitterBroadcastService());
+		if (Boolean.parseBoolean(properties.getProperty("member_verification"))) {
+			builder.addEventListeners(new MemberVerificationService());
+		}
+		else {
+			logger.info("Member verification service is disabled.");
 		}
 		
 		return builder;

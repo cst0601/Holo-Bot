@@ -13,8 +13,9 @@ import org.slf4j.LoggerFactory;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
-import twitter4j.Query;
-import twitter4j.QueryResult;
+import twitter4j.v1.Query;
+import twitter4j.v1.QueryResult;
+import twitter4j.v1.SearchResource;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
@@ -30,7 +31,7 @@ public class TwitterBroadcastRunner extends Thread {
 		Thread.currentThread().setName("TwitterBroadcastRunner");
 		logger = LoggerFactory.getLogger(TwitterBroadcastRunner.class);
 		this.jda = jda;
-		this.twitter = twitter;
+		this.twitter = twitter.v1().search();
 		this.config = config;
 		
 		for (TwitterSubscription sub: config.getTwitterSubscriptions()) {
@@ -118,8 +119,8 @@ public class TwitterBroadcastRunner extends Thread {
 	}
 	
 	public Queue<Tweet> search(String search) {
-		Query query = new Query(search);
-		query.setResultType(Query.RECENT);
+		Query query = Query.of(search);
+		query.resultType(Query.RECENT);
 		
 		QueryResult result;
 		Queue<Tweet> newTweets = null;
@@ -143,7 +144,7 @@ public class TwitterBroadcastRunner extends Thread {
 	}
 	
 	private JDA jda;
-	private Twitter twitter;
+	private SearchResource twitter;
 	private Logger logger;
 	private TwitterBroadcastConfig config;
 	private Dictionary<String, TweetCache> caches = new Hashtable<String, TweetCache>();
