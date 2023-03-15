@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import twitter4j.v1.Query;
 import twitter4j.v1.QueryResult;
@@ -89,7 +89,7 @@ public class TwitterBroadcastRunner extends Thread {
 			Queue<Tweet> searchResult = search(subscription.getSearchQuery());
 			
 			for (Long channelId: subscription.getTargetChannels()) {
-				MessageChannel channel = jda.getTextChannelById(channelId);
+				TextChannel channel = jda.getTextChannelById(channelId);
 				try {
 					for (Tweet newTweet: searchResult) {
 						if (config.isInBlacklist(newTweet.getUserId())) {

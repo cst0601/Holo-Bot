@@ -9,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 import org.junit.jupiter.api.Test;
 
-import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 
 class TestUpcomingStream {
@@ -36,10 +36,10 @@ class TestUpcomingStream {
 	@Test
 	void testBroadcastToNotified() {
 		UpcomingStream upcomingStream = createTestStream(1);
-		Message message = upcomingStream.broadcast();
+		MessageCreateData message = upcomingStream.broadcast();
 		
 		assertEquals("頻道有新動靜！快去看看！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				     message.getContentRaw());
+				     message.getContent());
 	}
 	
 	@Test
@@ -47,9 +47,9 @@ class TestUpcomingStream {
 		UpcomingStream upcomingStream = createTestStream(4);
 		
 		assertEquals("頻道有新動靜！快去看看！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				upcomingStream.broadcast().getContentRaw());
+				upcomingStream.broadcast().getContent());
 		assertEquals("再過五分鐘配信開始！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				upcomingStream.broadcast().getContentRaw());
+				upcomingStream.broadcast().getContent());
 		assertNull(upcomingStream.broadcast());
 	}
 	

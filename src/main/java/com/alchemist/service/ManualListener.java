@@ -8,12 +8,12 @@ import com.alchemist.exceptions.ArgumentParseException;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 public class ManualListener extends ListenerAdapter implements Service {
 	
@@ -24,11 +24,11 @@ public class ManualListener extends ListenerAdapter implements Service {
 		List<Service> listeners = (List<Service>)(Object)jda.getRegisteredListeners(); 	// triggers unchecked warning
 		
 		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 	
 		String msg = message.getContentDisplay();	// get readable version of the message
 		
-		if (event.isFromType(ChannelType.TEXT) && !event.getAuthor().isBot()) {
+		if (!event.getAuthor().isBot()) {
 			
 			ArgParser parser = new ArgParser(msg);
 			
@@ -42,7 +42,7 @@ public class ManualListener extends ListenerAdapter implements Service {
 				}
 				
 				if (parser.getCommandSize() < 2) {
-					channel.sendMessage(new EmbedBuilder()
+					channel.sendMessageEmbeds(new EmbedBuilder()
 						.setTitle("Manual (help)")
 						.setColor(Color.red)
 						.setDescription("What manual page do you want?")
@@ -54,8 +54,8 @@ public class ManualListener extends ListenerAdapter implements Service {
 				
 				for (int i = 0; i < listeners.size(); ++i) {
 					if (parser.getCommand(1).equals(((Service) listeners.get(i)).getServiceManualName())) {
-						channel.sendMessage(new MessageBuilder()
-							.appendCodeBlock(listeners.get(i).getServiceMan(), "md")
+						channel.sendMessage(new MessageCreateBuilder()
+							.addContent(MarkdownUtil.codeblock(listeners.get(i).getServiceMan(), "md"))
 							.build()).queue();
 						return;	// man page found
 					}

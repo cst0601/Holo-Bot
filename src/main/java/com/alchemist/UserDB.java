@@ -6,8 +6,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.annotation.Nullable;
-
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.slf4j.Logger;
@@ -52,7 +50,7 @@ public class UserDB {
 		return database.getCollection("users").find(eq("dc_id", discordId)).first() != null;
 	}
 	
-	@Nullable
+	@com.mongodb.lang.Nullable
 	public String getYoutubeIdByUserId(String discordId) {
 		Document result = database.getCollection("users").find(eq("dc_id", discordId)).first();
 		if (result == null) return null;

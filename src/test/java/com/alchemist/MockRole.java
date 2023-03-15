@@ -7,8 +7,9 @@ import java.util.EnumSet;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.RoleIcon;
+import net.dv8tion.jda.api.entities.channel.attribute.IPermissionContainer;
 import net.dv8tion.jda.api.managers.RoleManager;
 import net.dv8tion.jda.api.requests.restaction.AuditableRestAction;
 import net.dv8tion.jda.api.requests.restaction.RoleAction;
@@ -34,19 +35,7 @@ public class MockRole implements Role {
 	}
 
 	@Override
-	public EnumSet<Permission> getPermissions(GuildChannel channel) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public EnumSet<Permission> getPermissionsExplicit() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public EnumSet<Permission> getPermissionsExplicit(GuildChannel channel) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -59,18 +48,6 @@ public class MockRole implements Role {
 
 	@Override
 	public boolean hasPermission(Collection<Permission> permissions) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean hasPermission(GuildChannel channel, Permission... permissions) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean hasPermission(GuildChannel channel, Collection<Permission> permissions) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -173,6 +150,57 @@ public class MockRole implements Role {
 
 	@Override
 	public JDA getJDA() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EnumSet<Permission> getPermissions(net.dv8tion.jda.api.entities.channel.middleman.GuildChannel channel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public EnumSet<Permission> getPermissionsExplicit(
+			net.dv8tion.jda.api.entities.channel.middleman.GuildChannel channel) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean hasPermission(net.dv8tion.jda.api.entities.channel.middleman.GuildChannel channel,
+			Permission... permissions) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean hasPermission(net.dv8tion.jda.api.entities.channel.middleman.GuildChannel channel,
+			Collection<Permission> permissions) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canSync(IPermissionContainer targetChannel, IPermissionContainer syncSource) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean canSync(IPermissionContainer channel) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public RoleTags getTags() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public RoleIcon getIcon() {
 		// TODO Auto-generated method stub
 		return null;
 	}

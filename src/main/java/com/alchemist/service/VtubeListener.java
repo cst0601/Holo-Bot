@@ -10,11 +10,14 @@ import com.alchemist.holoModel.HoloMemberListModel;
 import com.alchemist.holoModel.HoloScheduleModel;
 import com.alchemist.HoloMemberData;
 
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,72 +49,69 @@ public class VtubeListener extends ListenerAdapter implements Service {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 		
 		String msg = message.getContentDisplay();
 		
-		if (event.isFromType(ChannelType.TEXT)) {
-			parser = new ArgParser(msg);
+		parser = new ArgParser(msg);
 
-			if (parser.getCommand().equals(">holo")) {
-				
-				// actual parse the command if sure this is a command
-				try {
-					parser.parse();
-				} catch (ArgumentParseException e1) {
-					channel.sendMessage("Command format error.\n" + e1.getMessage()).queue();
-					return;
-				}
-				
-
-				if (parser.getParamSize() < 2) {
-					channel.sendMessage(getMemberNotFoundMessage()).queue();
-					return;
-				}
-				
-				try {
-					if (parser.containsArgs("list")) {
-						getHoloMemberList(channel, parser);
-					}
-					
-					else if (parser.containsArgs("schedules")) {
-						getSchedules(channel, parser);
-					}
-					
-					else if (parser.containsArgs("live")) {
-						getLive(channel);
-					}
-					// get stream
-					else if (HoloMemberData.getInstance().getMemberByName(parser.getCommand(1)) != null) {	// if arg member name not avaliable
-						LiveStream liveStream = holoDexApi.getLiveStreamOfMember(parser.getCommand(1));
-					
-						if (liveStream == null) 
-							channel.sendMessage("目前並沒有直播 :(").queue();
-						
-						else
-							channel.sendMessage("目前的直播：\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
-					}
-					// no member found
-					else {
-						channel.sendMessage(getErrorMessage()).queue();
-					}
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				
+		if (parser.getCommand().equals(">holo")) {
+			
+			// actual parse the command if sure this is a command
+			try {
+				parser.parse();
+			} catch (ArgumentParseException e1) {
+				channel.sendMessage("Command format error.\n" + e1.getMessage()).queue();
+				return;
 			}
+
+			if (parser.getParamSize() < 2) {
+				channel.sendMessage(getMemberNotFoundMessage()).queue();
+				return;
+			}
+			
+			try {
+				if (parser.containsArgs("list")) {
+					getHoloMemberList(channel, parser);
+				}
+				
+				else if (parser.containsArgs("schedules")) {
+					getSchedules(channel, parser);
+				}
+				
+				else if (parser.containsArgs("live")) {
+					getLive(channel);
+				}
+				// get stream
+				else if (HoloMemberData.getInstance().getMemberByName(parser.getCommand(1)) != null) {	// if arg member name not avaliable
+					LiveStream liveStream = holoDexApi.getLiveStreamOfMember(parser.getCommand(1));
+				
+					if (liveStream == null) 
+						channel.sendMessage("目前並沒有直播 :(").queue();
+					
+					else
+						channel.sendMessage("目前的直播：\n" + liveStream.getTitle() + "\n" + liveStream.toString()).queue();
+				}
+				// no member found
+				else {
+					channel.sendMessage(getErrorMessage()).queue();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 	
 	// does not bother to test these methods :)
-	private void getSchedules(MessageChannel channel, ArgParser parser) {
+	private void getSchedules(MessageChannelUnion channel, ArgParser parser) {
 		try {
 			if (parser.containsArgs("jp") || parser.getCommandSize() == 2)		
-				channel.sendMessage(holoScheduleModel.getHoloSchedule()).queue();
+				channel.sendMessageEmbeds(holoScheduleModel.getHoloSchedule()).queue();
 			else if (parser.containsArgs("en"))
-				channel.sendMessage(holoScheduleModel.getHoloEnSchedule()).queue();
+				channel.sendMessageEmbeds(holoScheduleModel.getHoloEnSchedule()).queue();
 			else if (parser.containsArgs("id"))
-				channel.sendMessage(holoScheduleModel.getHoloIdSchedule()).queue();
+				channel.sendMessageEmbeds(holoScheduleModel.getHoloIdSchedule()).queue();
 			else
 				channel.sendMessage("Error: Unknown group of Hololive").queue();
 		} catch (Exception e) {		// schedule api exceptions
@@ -122,20 +122,20 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		}
 	}
 	
-	private void getHoloMemberList(MessageChannel channel, ArgParser parser) {
+	private void getHoloMemberList(MessageChannelUnion channel, ArgParser parser) {
 		HoloMemberListModel holoMemberList = new HoloMemberListModel();
 		
 		if (parser.containsArgs("jp") || parser.getCommandSize() == 2)
-			channel.sendMessage(holoMemberList.getHoloMemberList()).queue();
+			channel.sendMessageEmbeds(holoMemberList.getHoloMemberList()).queue();
 		else if (parser.containsArgs("en"))
-			channel.sendMessage(holoMemberList.getHoloEnMemberList()).queue();
+			channel.sendMessageEmbeds(holoMemberList.getHoloEnMemberList()).queue();
 		else if (parser.containsArgs("id"))
-			channel.sendMessage(holoMemberList.getHoloIdMemberList()).queue();
+			channel.sendMessageEmbeds(holoMemberList.getHoloIdMemberList()).queue();
 		else
 			channel.sendMessage("Error: Unknown group of Hololive").queue();
 	}
 	
-	private void getLive(MessageChannel channel) {
+	private void getLive(MessageChannelUnion channel) {
 		EmbedBuilder builder = new EmbedBuilder()
 				.setTitle(">holo live")
 				.setColor(Color.red)
@@ -147,7 +147,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
 				builder.addField(stream.getMemberName(), stream.toMarkdownLink(), false);
 			}
 			
-			channel.sendMessage(builder.build()).queue();
+			channel.sendMessageEmbeds(builder.build()).queue();
 			
 		} catch (Exception e) {
 			logger.warn("Failed to get request from holoToolsApi.");
@@ -155,22 +155,24 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		}
 	}
 	
-	private Message getErrorMessage() {
-		return new MessageBuilder("Error: member not found.\n")
-			.append("Use ")
-			.append(">holo list", MessageBuilder.Formatting.BLOCK)
-			.append(" to get a full list of available members.")
+	private MessageCreateData getErrorMessage() {
+		return new MessageCreateBuilder()
+			.addContent("Error: member not found.\n")
+			.addContent("Use ")
+			.addContent(MarkdownUtil.codeblock(">holo list"))
+			.addContent(" to get a full list of available members.")
 			.build();
 	}
 	
-	private Message getMemberNotFoundMessage() {
-		MessageBuilder builder = new MessageBuilder("Error: Usage: ")
-			.append(">holo <member>", MessageBuilder.Formatting.BLOCK)
-			.append(".\nUse ")
-			.append(">holo list", MessageBuilder.Formatting.BLOCK)
-			.append(" to get a full list of available members.\n")
-			.append(">holo schedules", MessageBuilder.Formatting.BLOCK)
-			.append(" to get schedules of today.");
+	private MessageCreateData getMemberNotFoundMessage() {
+		MessageCreateBuilder builder = new MessageCreateBuilder()
+			.addContent("Error: Usage: ")
+			.addContent(MarkdownUtil.codeblock(">holo <member>"))
+			.addContent(".\nUse ")
+			.addContent(MarkdownUtil.codeblock(">holo list"))
+			.addContent(" to get a full list of available members.\n")
+			.addContent(MarkdownUtil.codeblock(">holo schedules"))
+			.addContent(" to get schedules of today.");
 		return builder.build();
 	}
 	
