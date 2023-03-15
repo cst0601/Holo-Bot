@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.utils.TimeFormat;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
@@ -27,9 +28,11 @@ public class UpcomingStream {
 	public MessageCreateData broadcast() {
 		if (state == StreamState.INIT) {
 			nextState();
+			Instant startTimeInstant = liveStream.getStreamStartTime().toInstant();
 			return new MessageCreateBuilder()
 					.addContent("頻道有新動靜！快去看看！\n")
-					//.append("Start time: " + TimeFormat.atInstant())
+					.addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
+					.addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
 					.addContent(getStreamUrl())
 					.build();
 		}
@@ -67,8 +70,12 @@ public class UpcomingStream {
 				msg = broadcast();
 			}
 		
+			Instant startTimeInstant = liveStream.getStreamStartTime().toInstant();
+			
 			return new MessageCreateBuilder()
 					.addContent("直播開始時間更新了！")
+					.addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
+					.addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
 					.addContent(getStreamUrl())
 					.build();
 		}
