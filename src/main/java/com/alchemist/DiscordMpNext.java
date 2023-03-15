@@ -13,6 +13,7 @@ import com.alchemist.service.*;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 
 public class DiscordMpNext {
@@ -49,6 +50,7 @@ public class DiscordMpNext {
 		
 		try {
 			JDABuilder builder = JDABuilder.createDefault(token)
+					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
 					.addEventListeners(new PingListener())	// system commands
 					.addEventListeners(new RollListener())
 					.addEventListeners(new ManualListener())
@@ -57,7 +59,7 @@ public class DiscordMpNext {
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
-					.setActivity(Activity.of(Activity.ActivityType.DEFAULT,
+					.setActivity(Activity.of(Activity.ActivityType.PLAYING,
 								 			 "Say >man to seek help!"));
 			
 			builder = buildOptionalService(builder, properties);
@@ -68,9 +70,6 @@ public class DiscordMpNext {
 			logger.info("Finish building JDA!");
 		} catch (InterruptedException e) {
 			// await is a blocking method, if interrupted
-			e.printStackTrace();
-		} catch (LoginException e) {
-			// things go wrong in authentication
 			e.printStackTrace();
 		}
 	}

@@ -2,13 +2,15 @@ package com.alchemist.service;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 import java.awt.Color;
 import java.util.List;
@@ -35,53 +37,50 @@ public class PingListener extends ListenerAdapter implements Service {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 	
 		String msg = message.getContentDisplay();	// get readable version of the message
 		
-		if (event.isFromType(ChannelType.TEXT)) {
-			
-			Member member = event.getMember();
-			parser = new ArgParser(msg);
-			
-			// :((
-			if (parser.getCommand().equals(">ping") || parser.getCommand().equals(">sudo"))
-				try {
-					parser.parse();
-				} catch (ArgumentParseException e) {
-					e.printStackTrace();
-					return;
-				}
-			
-			if (parser.getCommand().equals(">ping")) {
-				ping(channel);
-			}
-			
-			else if (parser.getCommandSize() > 1) 
-				if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("exit")) {
-					if (!member.hasPermission(Permission.ADMINISTRATOR)) {
-						channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
-					}
-					else {
-						channel.sendMessage("Exiting...").queue();
-						logger.info("Received exit command, terminating...");
-						
-						for (Object listener: event.getJDA().getRegisteredListeners()) {
-							((Service)listener).terminate();
-						}
+		Member member = event.getMember();
+		parser = new ArgParser(msg);
 		
-						System.exit(0);
-					}
-				}
-				/* DOES NOT FUNCTION CORRECTLY, DISABLED FOR NOW */
-				/*
-				else if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("service")) {
-					if (!member.hasPermission(Permission.ADMINISTRATOR)) {
-						channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
-					}
-					else { processServiceCommmand(event, parser, channel); }
-				} */
+		// :((
+		if (parser.getCommand().equals(">ping") || parser.getCommand().equals(">sudo"))
+			try {
+				parser.parse();
+			} catch (ArgumentParseException e) {
+				e.printStackTrace();
+				return;
+			}
+		
+		if (parser.getCommand().equals(">ping")) {
+			ping(channel);
 		}
+		
+		else if (parser.getCommandSize() > 1) 
+			if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("exit")) {
+				if (!member.hasPermission(Permission.ADMINISTRATOR)) {
+					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
+				}
+				else {
+					channel.sendMessage("Exiting...").queue();
+					logger.info("Received exit command, terminating...");
+					
+					for (Object listener: event.getJDA().getRegisteredListeners()) {
+						((Service)listener).terminate();
+					}
+	
+					System.exit(0);
+				}
+			}
+			/* DOES NOT FUNCTION CORRECTLY, DISABLED FOR NOW */
+			/*
+			else if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("service")) {
+				if (!member.hasPermission(Permission.ADMINISTRATOR)) {
+					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
+				}
+				else { processServiceCommmand(event, parser, channel); }
+			} */
 	}
 	
 	/**
@@ -90,9 +89,9 @@ public class PingListener extends ListenerAdapter implements Service {
 	 * @param parser
 	 * @param channel
 	 */
-	private void processServiceCommmand(Event event, ArgParser parser, MessageChannel channel) {
+	private void processServiceCommmand(Event event, ArgParser parser, MessageChannelUnion channel) {
 		if (parser.getCommand(2).equals("list")) {
-			channel.sendMessage(getServiceList(event)).queue();
+			channel.sendMessageEmbeds(getServiceList(event)).queue();
 		}
 		if (parser.getCommandSize() > 3) {
 			String serviceName = parser.getCommand(3);
@@ -189,12 +188,12 @@ public class PingListener extends ListenerAdapter implements Service {
 		return (List<Service>)(Object)jda.getRegisteredListeners();
 	}
 	
-	private void ping(MessageChannel channel) {
+	private void ping(MessageChannelUnion channel) {
 		if (parser.getCommandSize() > 1) {
 			if (parser.getCommand(1).equals("sl")) {
-				channel.sendMessage(new MessageBuilder()
-					.append("YOU HAVE PINGED A STEAM LOCOMOTIVE !!!", MessageBuilder.Formatting.BOLD)
-					.appendCodeBlock(
+				channel.sendMessage(new MessageCreateBuilder()
+					.addContent(MarkdownUtil.bold("YOU HAVE PINGED A STEAM LOCOMOTIVE !!!"))
+					.addContent(MarkdownUtil.codeblock(
 							"                        (  ) (@@) ( )  (@)  ()    @@    O     @     O     @      O\n" + 
 							"                 (@@@)  \n" + 
 							"              (    )\n" + 
@@ -210,13 +209,12 @@ public class PingListener extends ListenerAdapter implements Service {
 							"__/ =| o |=-~O=====O=====O=====O\\ ____Y___________|__|__________________________|_\n" + 
 							" |/-=|___|=    ||    ||    ||    |_____/~\\___/          |_D__D__D_|  |_D__D__D_|\n" + 
 							"  \\_/      \\__/  \\__/  \\__/  \\__/      \\_/               \\_/   \\_/    \\_/   \\_/\n"
-							+ "*Full screen to see better :)*",
-							null)
+							+ "*Full screen to see better :)*"))
 					.build()).queue();
 			}
 			else if (parser.getCommand(1).equals("ls")) {
-				channel.sendMessage(new MessageBuilder()
-					.append("P\nO\nN\nG", MessageBuilder.Formatting.BOLD)
+				channel.sendMessage(new MessageCreateBuilder()
+					.addContent(MarkdownUtil.bold("P\nO\nN\nG"))
 					.build()).queue();
 			}				
 		}

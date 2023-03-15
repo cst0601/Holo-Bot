@@ -16,12 +16,13 @@ import com.alchemist.TwitterSubscription;
 import com.alchemist.exceptions.ArgumentParseException;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.MarkdownUtil;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import twitter4j.Twitter;
 
 
@@ -49,7 +50,7 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 		ArgParser parser = new ArgParser(event.getMessage().getContentDisplay());
 		
 		if (parser.getCommand().equals(">sudo")) {
@@ -99,11 +100,11 @@ public class TwitterBroadcastService extends ListenerAdapter implements Service 
 			}
 		}
 		catch (IllegalArgumentException e) {
-			MessageBuilder messageBuilder = new MessageBuilder()
-					.append("Error: ")
-					.append(e.getMessage())
-					.append("\nUsage: ")
-					.appendCodeLine("twitter [blacklist] [add | remove] args");
+			MessageCreateBuilder messageBuilder = new MessageCreateBuilder()
+					.addContent("Error: ")
+					.addContent(e.getMessage())
+					.addContent("\nUsage: ")
+					.addContent(MarkdownUtil.codeblock("twitter [blacklist] [add | remove] args"));
 			channel.sendMessage(messageBuilder.build()).queue();
 		}
 		

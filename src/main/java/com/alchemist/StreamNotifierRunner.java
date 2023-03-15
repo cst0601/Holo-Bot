@@ -12,9 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
 /**
  * Workhorse of stream notification
@@ -100,7 +100,7 @@ public class StreamNotifierRunner extends Thread {
 				// TODO: if stream exist in cache but no longer in yt, delete it
 				try {
 					int streamIndex = containsUpcomingStream(stream);
-					Message updateMessage = upcomingStreams.get(streamIndex).checkStreamStartTime(stream);
+					MessageCreateData updateMessage = upcomingStreams.get(streamIndex).checkStreamStartTime(stream);
 					
 					if (updateMessage != null) {
 						targetChannel.sendMessage(updateMessage).queue();
@@ -124,7 +124,7 @@ public class StreamNotifierRunner extends Thread {
 		ListIterator<UpcomingStream> iter = upcomingStreams.listIterator();
 		while(iter.hasNext()) {
 			UpcomingStream stream = iter.next();
-			Message message = stream.broadcast();
+			MessageCreateData message = stream.broadcast();
 			if (message != null && sendMessage) {
 				targetChannel.sendMessage(message).queue();
 				logger.info("Notified stream: " + stream.getStreamUrl());	

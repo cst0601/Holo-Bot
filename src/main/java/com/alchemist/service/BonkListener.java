@@ -1,13 +1,12 @@
 package com.alchemist.service;
 
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -25,7 +24,7 @@ import com.alchemist.ArgParser;
 public class BonkListener extends ListenerAdapter implements Service {
 	
 	private Logger logger = LoggerFactory.getLogger(BonkListener.class);
-	private final String BONK_EMOTE_ID[] = {
+	private final String BONK_EMOJI_ID[] = {
 			"756142081864630343",
 			"819050266078740480",
 			"781204705765752882",
@@ -35,48 +34,46 @@ public class BonkListener extends ListenerAdapter implements Service {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 		
 		String msg = message.getContentDisplay();
 		
-		if (event.isFromType(ChannelType.TEXT)) {
-			ArgParser parser = new ArgParser(msg);
+		ArgParser parser = new ArgParser(msg);
+		
+		if (parser.getCommand().equals(">bonk")) {
 			
-			if (parser.getCommand().equals(">bonk")) {
+			try {
+				List<Emoji> emojis = getEmotes(message.getGuild());
+				List<Member> mentionedMember = new LinkedList<>(message.getMentions().getMembers());
 				
-				try {
-					List<Emote> emotes = getEmotes(message.getGuild());
-					List<Member> mentionedMember = new LinkedList<>(message.getMentionedMembers());
-					
-					getTargetMessage(channel, message.getId(), mentionedMember, emotes);
-					
-				} catch (NoSuchElementException e) {
-					logger.warn(String.format(
-							"Requested from guild: %s, does not contain designated emote.",
-							message.getGuild().getId()));
-					channel.sendMessage("Error: This sever does not contain the designated bonk emote.").queue();
-				}
+				getTargetMessage(channel, message.getId(), mentionedMember, emojis);
 				
+			} catch (NoSuchElementException e) {
+				logger.warn(String.format(
+						"Requested from guild: %s, does not contain designated emote.",
+						message.getGuild().getId()));
+				channel.sendMessage("Error: This sever does not contain the designated bonk emote.").queue();
 			}
 		}
+
 	}
 	
-	private List<Emote> getEmotes(Guild guild) throws NoSuchElementException {
-		List<Emote> emotes = new ArrayList<Emote>();
-		for (String id: BONK_EMOTE_ID) {
-			Emote emote = guild.getEmoteById(id);
-			if (emote == null)
+	private List<Emoji> getEmotes(Guild guild) throws NoSuchElementException {
+		List<Emoji> emojis = new ArrayList<Emoji>();
+		for (String id: BONK_EMOJI_ID) {
+			Emoji emoji = guild.getEmojiById(id);
+			if (emoji == null)
 				throw new NoSuchElementException("");
-			emotes.add(emote);
+			emojis.add(emoji);
 		}
-		return emotes;
+		return emojis;
 	}
 	
 	private void getTargetMessage(
-			MessageChannel channel,
+			MessageChannelUnion channel,
 			String messageId,
 			List<Member> targetMember,
-			List<Emote> emotes)
+			List<Emoji> emojis)
 	{	
 		// this is a rest action that waits for completion, might make this method to thread
 		MessageHistory history = MessageHistory.getHistoryBefore(channel, messageId)
@@ -86,8 +83,8 @@ public class BonkListener extends ListenerAdapter implements Service {
 				int index = containsMember(targetMember, message.getAuthor());
 				targetMember.remove(index);
 				
-				for (Emote emote: emotes)
-					message.addReaction(emote).queue();
+				for (Emoji emoji: emojis)
+					message.addReaction(emoji).queue();
 			} catch (NoSuchElementException e) { }
 		}
 	}

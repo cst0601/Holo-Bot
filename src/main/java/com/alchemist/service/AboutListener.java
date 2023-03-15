@@ -5,10 +5,9 @@ import java.awt.Color;
 import com.alchemist.ArgParser;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
@@ -17,7 +16,7 @@ public class AboutListener extends ListenerAdapter implements Service {
 	private ArgParser parser = null;
 	private final MessageEmbed aboutMessage;
 	
-	public AboutListener() {
+	public AboutListener() {		
 		EmbedBuilder embedBuilder = new EmbedBuilder()
 				.setTitle("Holo Bot", "https://github.com/cst0601/Discord-MP-Bot")
 				.setColor(Color.red)
@@ -56,16 +55,14 @@ public class AboutListener extends ListenerAdapter implements Service {
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 	
 		String msg = message.getContentDisplay();	// get readable version of the message
+				
+		parser = new ArgParser(msg);
 		
-		if (event.isFromType(ChannelType.TEXT)) {
-			parser = new ArgParser(msg);
-			
-			if (parser.getCommand().equals(">about")) {
-				channel.sendMessage(aboutMessage).queue();
-			}
+		if (parser.getCommand().equals(">about")) {
+			channel.sendMessageEmbeds(aboutMessage).queue();
 		}
 	}
 

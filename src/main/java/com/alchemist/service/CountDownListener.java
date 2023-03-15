@@ -10,69 +10,66 @@ import com.alchemist.ArgParser;
 import com.alchemist.exceptions.ArgumentParseException;
 
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class CountDownListener extends ListenerAdapter implements Service {
-	private final static String targetTime = "2022-03-05 00:00:00 +09:00";
+	private final static String targetTime = "2023-08-01 00:00:00 +09:00";
 	
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
-		MessageChannel channel = event.getChannel();
+		MessageChannelUnion channel = event.getChannel();
 	
 		String msg = message.getContentDisplay();
 		
-		if (event.isFromType(ChannelType.TEXT)) {
-			ArgParser parser = new ArgParser(msg);
-			Mode countDownMode = Mode.NORM;
-			
-			if (parser.getCommand().equals(">miko")) {
-				try {
-					parser.parse();
-					if (parser.containsParam("mode"))	// debt
-						switch (parser.getString("mode")) {
-						case "hr":
-							countDownMode = Mode.HOUR;
-							break;
-						case "min":
-							countDownMode = Mode.MINUTE;
-							break;
-						case "sec":
-							countDownMode = Mode.SECOND;
-							break;
-						default:
-							break;
-						}
-				} 
-				catch (ArgumentParseException e1) {
-					channel.sendMessage("Command format error.\n" + e1.getMessage()).queue();
-					return;
-				}
-				
-				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
-				ZonedDateTime eventTime = ZonedDateTime.parse(targetTime, formatter);
-				ZonedDateTime timeNow = ZonedDateTime.now(ZoneId.of("UTC+9"));
-				Duration difference = Duration.between(eventTime, timeNow);
-				
-				String differenceString = setCountDownFormat(difference, countDownMode);
-				
-				EmbedBuilder builder = new EmbedBuilder()
-						.setTitle(">miko 距離生日倒數")
-						.setColor(Color.red)
-						.addField("現在時刻",
-								DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(timeNow), false)
-						.addField("預定時刻",
-								DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(eventTime), false)
-						.addField("距離生日還有", differenceString, false)
-						.addBlankField(false)
-						.setFooter("All time shown are in JST | Might have latency in seconds");
-				
-				channel.sendMessage(builder.build()).queue();
+		ArgParser parser = new ArgParser(msg);
+		Mode countDownMode = Mode.NORM;
+		
+		if (parser.getCommand().equals(">miko")) {
+			try {
+				parser.parse();
+				if (parser.containsParam("mode"))	// debt
+					switch (parser.getString("mode")) {
+					case "hr":
+						countDownMode = Mode.HOUR;
+						break;
+					case "min":
+						countDownMode = Mode.MINUTE;
+						break;
+					case "sec":
+						countDownMode = Mode.SECOND;
+						break;
+					default:
+						break;
+					}
+			} 
+			catch (ArgumentParseException e1) {
+				channel.sendMessage("Command format error.\n" + e1.getMessage()).queue();
+				return;
 			}
+			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss z");
+			ZonedDateTime eventTime = ZonedDateTime.parse(targetTime, formatter);
+			ZonedDateTime timeNow = ZonedDateTime.now(ZoneId.of("UTC+9"));
+			Duration difference = Duration.between(eventTime, timeNow);
+			
+			String differenceString = setCountDownFormat(difference, countDownMode);
+			
+			EmbedBuilder builder = new EmbedBuilder()
+					.setTitle(">miko 距離周年倒數")
+					.setColor(Color.red)
+					.addField("現在時刻",
+							DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(timeNow), false)
+					.addField("預定時刻",
+							DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").format(eventTime), false)
+					.addField("距離生日還有", differenceString, false)
+					.addBlankField(false)
+					.setFooter("All time shown are in JST | Might have latency in seconds");
+			
+			channel.sendMessageEmbeds(builder.build()).queue();
 		}
 	}
 	
