@@ -49,7 +49,7 @@ public class UpcomingStream {
 			if (liveStream.getStreamStartTime().toInstant().isBefore(Instant.now())) {
 				nextState();
 				return new MessageCreateBuilder()
-						.addContent(mentionRole + "にゃっはろ～！配信開始了！\n")
+						.addContent(mentionRole.getAsMention() + "にゃっはろ～！配信開始了！\n")
 						.addContent(getStreamUrl())
 						.build();
 			}
