@@ -22,16 +22,18 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
  *
  */
 public class StreamNotifierRunner extends Thread {
-	public StreamNotifierRunner(JDA jda, String memberName,
-			long messageChannelId, long pingId, BlockingQueue<String> messageBox) {
+	
+	public StreamNotifierRunner(JDA jda, StreamNotifierConfig config, BlockingQueue<String> messageBox) {
 		Thread.currentThread().setName("StreamNotifierRunner");
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
+		
 		serviceMessageBox = messageBox;
 		api = new HoloDexApi();
 		upcomingStreams = new LinkedList<UpcomingStream>();
-		targetChannel = jda.getTextChannelById(messageChannelId);
-		pingRole = jda.getRoleById(pingId);
-		this.memberName = memberName;
+		
+		targetChannel = jda.getTextChannelById(config.targetChannelId);
+		pingRole = jda.getRoleById(config.pingRoleId);
+		this.memberName = config.memberName;
 	}
 	
 	public void run() {

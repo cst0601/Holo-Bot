@@ -1,5 +1,6 @@
 package com.alchemist;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -8,9 +9,10 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
+import java.util.Scanner;
 import java.util.Set;
 
-
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,6 +23,12 @@ public class HoloDexApi extends Api {
 	public HoloDexApi () {
 		super();
 		logger = LoggerFactory.getLogger(HoloDexApi.class);
+		try {
+			if (API_KEY != null) { API_KEY = readCredentials(); }
+		} catch (IOException e) {
+			logger.warn("failed to read api key.");
+			e.printStackTrace();
+		}
 		readMemberFilter();
 	}
 	
@@ -74,6 +82,7 @@ public class HoloDexApi extends Api {
 	
 	private HoloDexLiveJsonResponse request(String uri) throws IOException, InterruptedException {
 		request = HttpRequest.newBuilder()
+				.header("X-APIKEY", "56a98719-6e53-41f4-b6e8-e807d478ab94")	
 				.uri(URI.create(uri))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -104,6 +113,16 @@ public class HoloDexApi extends Api {
 		
 	}
 	
+	private String readCredentials() throws IOException {
+		Scanner scanner = new Scanner(new File("config/credentials/holodex.json"));
+		scanner.useDelimiter("\\Z");
+		JSONObject json = new JSONObject(scanner.next());
+		scanner.close();
+
+		return json.getString("key");
+	}
+	
 	private Logger logger;
 	private static Set<String> MEMBER_FILTER = null;
+	private static String API_KEY = null;
 }

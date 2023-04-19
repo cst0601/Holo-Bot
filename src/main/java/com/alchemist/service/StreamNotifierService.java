@@ -8,19 +8,16 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.naming.ConfigurationException;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alchemist.ArgParser;
+import com.alchemist.StreamNotifierConfig;
 import com.alchemist.StreamNotifierRunner;
 import com.alchemist.exceptions.ArgumentParseException;
 
@@ -33,14 +30,9 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 	@Override
 	public void onReady(ReadyEvent event) {
 		try {
-			StreamNotifierConfig config = readConfig();
-			isNotifierConfigVaild(event.getJDA(), config.targetChannel, config.roleId);
-			streamNotifierRunner = new StreamNotifierRunner(
-					event.getJDA(),
-					config.memberName,
-					config.targetChannel,
-					config.roleId,
-					serviceMessageBox);
+			StreamNotifierConfig config = new StreamNotifierConfig();
+			isNotifierConfigVaild(event.getJDA(), config);
+			streamNotifierRunner = new StreamNotifierRunner(event.getJDA(), config, serviceMessageBox);
 			streamNotifierRunner.start();
 			logger.info("StreamNotifierService ready!");
 		} catch (Exception e) {
@@ -109,41 +101,26 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 	 * Validates configuration for notifier runner. Check if text channel and role exist.
 	 * @throws ConfigurationException
 	 */
-	private void isNotifierConfigVaild(JDA jda, long channelId, long roleId) throws ConfigurationException {
+	private void isNotifierConfigVaild(JDA jda, StreamNotifierConfig config) throws ConfigurationException {
 		logger.info("StreamNotifierService configuration verification start ...");
-		if (jda.getTextChannelById(channelId) == null) {
-			logger.error("Text channel with ID: " + channelId + " does not exist.");
+		if (jda.getTextChannelById(config.targetChannelId) == null) {
+			logger.error("Text channel with ID: " + config.targetChannelId + " does not exist.");
 			throw new ConfigurationException("StreamNotifierService configuraiton verification failed.");
 		}
-		else if (jda.getRoleById(roleId) == null) {
-			logger.error("Role with ID: " + roleId + " does not exist.");
+		if (jda.getRoleById(config.pingRoleId) == null) {
+			logger.error("Role with ID: " + config.pingRoleId + " does not exist.");
 			throw new ConfigurationException("StreamNotifierService configuraiton verification failed.");
+		}
+		if (config.isMembershipMode()) {
+			if (jda.getTextChannelById(config.membershipTargetChannel) == null) {
+				logger.error("Text channel with ID: " + config.membershipTargetChannel + " does not exist.");
+				throw new ConfigurationException("StreamNotifierService configuration verification failed.");
+			}
+			
 		}
 		logger.info("StreamNotifierService configuration ... OK");
 	}
 	
-	private StreamNotifierConfig readConfig() throws FileNotFoundException {		
-		Scanner scanner = new Scanner(new File("config/stream_notification.json"));
-		scanner.useDelimiter("\\Z");
-		JSONObject json = new JSONObject(scanner.next());
-		scanner.close();
-		
-		return new StreamNotifierConfig(json.getString("member_name"),
-								        json.getLong("target_channel"),
-								        json.getLong("ping_role_id"));
-	}
-	
-	private class StreamNotifierConfig {
-		private final String memberName;
-		private final long targetChannel;
-		private final long roleId;
-		public StreamNotifierConfig(String memberName, long targetChannel, long roleId) {
-			this.memberName = memberName;
-			this.targetChannel = targetChannel;
-			this.roleId = roleId;
-		}
-	}
-
 	private Logger logger;
 	private StreamNotifierRunner streamNotifierRunner = null;
 	private ArgParser parser = null;

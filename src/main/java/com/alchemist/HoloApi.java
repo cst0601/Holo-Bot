@@ -6,6 +6,7 @@ import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import com.alchemist.jsonResponse.HoloApiJsonResponse;
@@ -35,14 +36,15 @@ public class HoloApi extends Api {
 		return jsonResponse.getSchedules();
 	}
 
-	public String getUpdateTime() {
-		return updateTime;
+	public Instant getUpdateTime() {
+		return Instant.parse(updateTime);
 	}
 	
 	public String getDateOfSchedule() {
 		return date;
 	}
-		
+	
+	//2023-03-20 00:06:09
 	private final String defaultUrl = "http://127.0.0.1:5000/%s/schedules/today";
 	private HttpRequest request;
 	private String updateTime = "";

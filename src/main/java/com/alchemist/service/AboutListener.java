@@ -42,7 +42,8 @@ public class AboutListener extends ListenerAdapter implements Service {
 						 + " - みこめっと！ ( ⸝⸝•ᴗ•⸝⸝ )", false)
 				.addField("1.5.2 patch notes",
 						" - Upgrade Twitter API to v2.\n"
-						+ " - HoloToolsApi deprecated, switch to other service.", false)
+						+ " - HoloToolsApi deprecated, switch to other service.\n"
+						+ " - Now stream notification displays start time!", false)
 				.addField("Subscribe to さくらみこ and become a 35P!",
 						"[Youtube](https://www.youtube.com/channel/UC-hM6YJuNYVAmUWxeIr9FeA)\n"
 						+ "[Twitter](https://twitter.com/sakuramiko35)", false)

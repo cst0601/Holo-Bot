@@ -2,6 +2,7 @@ package com.alchemist;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -46,8 +47,9 @@ public class ScheduleEmbedBuilder {
 		return this;
 	}
 
-	public ScheduleEmbedBuilder addTimeStamp(String timeStamp) {
-		builder.setFooter("updated@" + timeStamp + " | All showed time are in JST");
+	public ScheduleEmbedBuilder addTimeStamp(Instant timeStamp) {
+		builder.setFooter("All showed time are in JST")
+			.setTimestamp(timeStamp);
 		return this;
 	}
 	
