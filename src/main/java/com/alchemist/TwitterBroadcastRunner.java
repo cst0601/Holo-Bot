@@ -70,7 +70,7 @@ public class TwitterBroadcastRunner extends Thread {
 			}
 			else {					// if no message to handle
 				try {
-					sleep(30000);	// 30 sec
+					sleep(300000);	// 5 min, twitter API free tier limits to 1500 tweet pulls
 				} catch (InterruptedException e) {
 					logger.info("Runner sleep interrupted");
 				}
