@@ -26,12 +26,18 @@ public class LiveStream {
 	public String toMarkdownLink() {
 		return String.format("[%s](%s)", title, getYtUrl(videoId));
 	}
-	
+		
 	public String getMemberName() { return memberName; }
 	public String getVideoId() { return videoId; }
 	public String getTitle() { return title; }
 	public String getChannelName() { return channelTitle; }
 	public ZonedDateTime getStreamStartTime() { return liveSchedule; }
+	
+	// This is only a possibility of the stream being member only or not
+	public boolean isPossibleMemberOnly() {
+		String keyword = Config.getConfig().speculateName;
+		return title.contains(keyword);
+	}
 	
 	private String getYtUrl(String id) {
 		return String.format(URL_PREFIX, id);

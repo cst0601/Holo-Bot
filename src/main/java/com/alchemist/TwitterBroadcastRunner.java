@@ -33,7 +33,7 @@ public class TwitterBroadcastRunner extends Thread {
 		this.jda = jda;
 		this.twitter = twitter.v1().search();
 		this.config = config;
-		
+
 		for (TwitterSubscription sub: config.getTwitterSubscriptions()) {
 			caches.put(sub.getSearchQuery(), new TweetCache(sub.getSearchQuery()));
 			logger.info("Create cache for: " + sub.getSearchQuery());
@@ -41,7 +41,7 @@ public class TwitterBroadcastRunner extends Thread {
 			search(sub.getSearchQuery());
 		}
 	}
-	
+
 	public void run() {
 		while (true) {
 			SyncMessage message;		// stop if received stop message
@@ -51,7 +51,7 @@ public class TwitterBroadcastRunner extends Thread {
 					break;
 				}
 				else if (message.getMessageHead().equals("add")) {
-					
+
 					config.addBlacklistUser(Long.parseLong(message.getMessageBody()));
 					logger.info("Added twitter user " + message.getMessageBody()
 						+ " to blacklist.");
@@ -63,7 +63,7 @@ public class TwitterBroadcastRunner extends Thread {
 							+ " does not exist.");
 					}
 					else {
-						logger.info("Removed twitter user " + 
+						logger.info("Removed twitter user " +
 							message.getMessageBody() + " from blacklist.");
 					}
 				}
@@ -77,17 +77,17 @@ public class TwitterBroadcastRunner extends Thread {
 				sendTwitterUpdate();
 			}
 		}
-		
+
 		logger.info("TwitterBroadcastRunner exit run.");
 	}
-	
+
 	public void sendTwitterUpdate() {
 		// send messages
 		for (TwitterSubscription subscription: config.getTwitterSubscriptions()) {
-			
+
 			// search and construct message to send
 			Queue<Tweet> searchResult = search(subscription.getSearchQuery());
-			
+
 			for (Long channelId: subscription.getTargetChannels()) {
 				TextChannel channel = jda.getTextChannelById(channelId);
 				try {
@@ -108,7 +108,7 @@ public class TwitterBroadcastRunner extends Thread {
 			}
 		}
 	}
-	
+
 	/**
 	 * Thread synchronization
 	 * @param message
@@ -117,11 +117,11 @@ public class TwitterBroadcastRunner extends Thread {
 	public void sendMessage(SyncMessage message) throws InterruptedException {
 		messageBox.put(message);
 	}
-	
+
 	public Queue<Tweet> search(String search) {
 		Query query = Query.of(search);
 		query.resultType(Query.RECENT);
-		
+
 		QueryResult result;
 		Queue<Tweet> newTweets = null;
 		try {
@@ -130,10 +130,10 @@ public class TwitterBroadcastRunner extends Thread {
 
 			if (newTweets.size() != 0)
 				logger.info(newTweets.size() + " new tweets from " + search);
-			
+
 		} catch (TwitterException e) {				// connection error, rate limit exceeded...
 			newTweets = new LinkedList<Tweet>();	// no new tweets if exception occurred
-			
+
 			logger.warn("Failed searching");
 			if (e.exceededRateLimitation())
 				logger.warn("Exceeded rate limitation");
@@ -142,7 +142,7 @@ public class TwitterBroadcastRunner extends Thread {
 		}
 		return newTweets;
 	}
-	
+
 	private JDA jda;
 	private SearchResource twitter;
 	private Logger logger;

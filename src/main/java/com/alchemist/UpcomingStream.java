@@ -29,12 +29,15 @@ public class UpcomingStream {
 		if (state == StreamState.INIT) {
 			nextState();
 			Instant startTimeInstant = liveStream.getStreamStartTime().toInstant();
-			return new MessageCreateBuilder()
-					.addContent("頻道有新動靜！快去看看！\n")
-					.addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
-					.addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
-					.addContent(getStreamUrl())
-					.build();
+			MessageCreateBuilder builder = new MessageCreateBuilder()
+				.addContent("頻道有新動靜！快去看看！\n")
+				.addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
+				.addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
+				.addContent(getStreamUrl());
+			
+			if (liveStream.isPossibleMemberOnly()) builder = appendMemberOnlyMessage(builder);
+			
+			return builder.build();
 		}
 		else if (state == StreamState.NOTIFIED) {
 			if (upcomingNotificationTime.toInstant().isBefore(Instant.now())) {
@@ -94,6 +97,14 @@ public class UpcomingStream {
 		return "* state: " + state + 
 			   ",\n start_time:" + upcomingNotificationTime.toString() +
 			   ",\n url: " + liveStream.toString();
+	}
+	
+	private MessageCreateBuilder appendMemberOnlyMessage(MessageCreateBuilder builder) {
+		Config config = Config.getConfig();
+		builder
+			.addContent("嗶嗶...從直播標題判斷，這個可能是會員限定直播...\n")
+			.addContent("如果是的話，請到<#" + config.membershipTargetChannelId + ">頻道同時視聽討論\n");
+		return builder;
 	}
 	
 	private void nextState() {

@@ -23,15 +23,18 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateData;
  */
 public class StreamNotifierRunner extends Thread {
 	
-	public StreamNotifierRunner(JDA jda, StreamNotifierConfig config, BlockingQueue<String> messageBox) {
+	public StreamNotifierRunner(JDA jda, BlockingQueue<String> messageBox) {
 		Thread.currentThread().setName("StreamNotifierRunner");
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
+		config = Config.getConfig();
 		
 		serviceMessageBox = messageBox;
 		api = new HoloDexApi();
 		upcomingStreams = new LinkedList<UpcomingStream>();
 		
 		targetChannel = jda.getTextChannelById(config.targetChannelId);
+		// TODO: add some more message in member target channel
+		// memberTargetChannel = jda.getTextChannelById(config.membershipTargetChannelId);
 		pingRole = jda.getRoleById(config.pingRoleId);
 		this.memberName = config.memberName;
 	}
@@ -149,11 +152,12 @@ public class StreamNotifierRunner extends Thread {
 	}
 	
 	private Logger logger;
+	private Config config;
 	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
 	private BlockingQueue<String> serviceMessageBox;
 	private HoloDexApi api;
 	private String memberName;
-	private MessageChannel targetChannel;
+	private MessageChannel targetChannel; //, memberTargetChannel;
 	private Role pingRole;
 	private List<UpcomingStream> upcomingStreams;	// Welp, upcoming stream usually does not have a lot, so...
 }

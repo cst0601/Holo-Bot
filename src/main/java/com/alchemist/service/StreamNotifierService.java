@@ -1,6 +1,5 @@
 package com.alchemist.service;
 
-import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
@@ -11,13 +10,10 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import javax.naming.ConfigurationException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alchemist.ArgParser;
-import com.alchemist.StreamNotifierConfig;
 import com.alchemist.StreamNotifierRunner;
 import com.alchemist.exceptions.ArgumentParseException;
 
@@ -30,9 +26,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 	@Override
 	public void onReady(ReadyEvent event) {
 		try {
-			StreamNotifierConfig config = new StreamNotifierConfig();
-			isNotifierConfigVaild(event.getJDA(), config);
-			streamNotifierRunner = new StreamNotifierRunner(event.getJDA(), config, serviceMessageBox);
+			streamNotifierRunner = new StreamNotifierRunner(event.getJDA(), serviceMessageBox);
 			streamNotifierRunner.start();
 			logger.info("StreamNotifierService ready!");
 		} catch (Exception e) {
@@ -95,30 +89,6 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 			logger.warn("Interrupt occured when stopping StreamNotifierRunner. Failed to terminate stream notifier.");
 			e.printStackTrace();
 		}
-	}
-	
-	/**
-	 * Validates configuration for notifier runner. Check if text channel and role exist.
-	 * @throws ConfigurationException
-	 */
-	private void isNotifierConfigVaild(JDA jda, StreamNotifierConfig config) throws ConfigurationException {
-		logger.info("StreamNotifierService configuration verification start ...");
-		if (jda.getTextChannelById(config.targetChannelId) == null) {
-			logger.error("Text channel with ID: " + config.targetChannelId + " does not exist.");
-			throw new ConfigurationException("StreamNotifierService configuraiton verification failed.");
-		}
-		if (jda.getRoleById(config.pingRoleId) == null) {
-			logger.error("Role with ID: " + config.pingRoleId + " does not exist.");
-			throw new ConfigurationException("StreamNotifierService configuraiton verification failed.");
-		}
-		if (config.isMembershipMode()) {
-			if (jda.getTextChannelById(config.membershipTargetChannel) == null) {
-				logger.error("Text channel with ID: " + config.membershipTargetChannel + " does not exist.");
-				throw new ConfigurationException("StreamNotifierService configuration verification failed.");
-			}
-			
-		}
-		logger.info("StreamNotifierService configuration ... OK");
 	}
 	
 	private Logger logger;

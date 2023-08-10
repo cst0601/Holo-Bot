@@ -66,7 +66,7 @@ public class DiscordMpNext {
 			
 			jda = builder.build();
 			jda.awaitReady();
-			
+						
 			logger.info("Finish building JDA!");
 		} catch (InterruptedException e) {
 			// await is a blocking method, if interrupted
@@ -98,5 +98,4 @@ public class DiscordMpNext {
 		
 		return builder;
 	}
-	
 }
