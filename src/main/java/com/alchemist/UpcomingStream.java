@@ -33,7 +33,7 @@ public class UpcomingStream {
 				.addContent("頻道有新動靜！快去看看！\n")
 				.addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
 				.addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
-				.addContent(getStreamUrl());
+				.addContent(getStreamUrl() + "\n");
 			
 			if (liveStream.isPossibleMemberOnly()) builder = appendMemberOnlyMessage(builder);
 			
@@ -44,7 +44,7 @@ public class UpcomingStream {
 				nextState();
 				return new MessageCreateBuilder()
 						.addContent("再過五分鐘配信開始！\n")
-						.addContent(getStreamUrl())
+						.addContent(getStreamUrl() + "\n")
 						.build();
 			}
 		}
@@ -53,7 +53,7 @@ public class UpcomingStream {
 				nextState();
 				return new MessageCreateBuilder()
 						.addContent(mentionRole.getAsMention() + "にゃっはろ～！配信開始了！\n")
-						.addContent(getStreamUrl())
+						.addContent(getStreamUrl() + "\n")
 						.build();
 			}
 		}
@@ -79,7 +79,7 @@ public class UpcomingStream {
 					.addContent("直播開始時間更新了！")
 					.addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
 					.addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
-					.addContent(getStreamUrl())
+					.addContent(getStreamUrl() + "\n")
 					.build();
 		}
 		return null;
