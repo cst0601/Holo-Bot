@@ -10,9 +10,8 @@ import org.slf4j.Logger;
 
 
 /**
- * Config class for storing bot configurations, excluding credentials (keys).
+ * Config class for storing bot configurations, and API keys.
  * @author chikuma
- *
  */
 public class Config {
 	
@@ -30,6 +29,14 @@ public class Config {
 		speculateName = membershipConfig.getString("speculate_name");
 		membershipTargetChannelId = membershipConfig.getLong("target_channel");
 		additionalMessage = membershipConfig.getString("additional_message");
+		
+		// HoloDex API key
+		scanner = new Scanner(new File("config/credentials/holodex.json"));
+		scanner.useDelimiter("\\Z");
+		json = new JSONObject(scanner.next());
+		scanner.close();
+		
+		KeyHoloDexApi = json.getString("key");
 	}
 	
 	public static synchronized Config getConfig() {
@@ -49,6 +56,8 @@ public class Config {
 	
 	public final String memberName, speculateName, additionalMessage;
 	public final long pingRoleId, targetChannelId, membershipTargetChannelId;
+	
+	public final String KeyHoloDexApi;
 		
 	private static Config instance = null;
 }

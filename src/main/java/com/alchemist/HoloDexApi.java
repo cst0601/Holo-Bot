@@ -1,6 +1,5 @@
 package com.alchemist;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -9,26 +8,23 @@ import java.net.http.HttpResponse.BodyHandlers;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.NoSuchElementException;
-import java.util.Scanner;
 import java.util.Set;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.alchemist.HoloMemberData.DIVISION;
 import com.alchemist.jsonResponse.HoloDexLiveJsonResponse;
 
+/**
+ * HoloDex API interface. Replaces old HoloToolsApi
+ * @author chikuma
+ *
+ */
 public class HoloDexApi extends Api {
 	public HoloDexApi () {
 		super();
 		logger = LoggerFactory.getLogger(HoloDexApi.class);
-		try {
-			if (API_KEY != null) { API_KEY = readCredentials(); }
-		} catch (IOException e) {
-			logger.warn("failed to read api key.");
-			e.printStackTrace();
-		}
 		readMemberFilter();
 	}
 	
@@ -69,8 +65,8 @@ public class HoloDexApi extends Api {
 	/**
 	 * Get "live" stream by member name.
 	 * (assumed there is only one stream on live at a time)
-	 * @param member name
-	 * @return a live stream. If there are no stream on live, return null
+	 * @param Member name
+	 * @return A live stream. If there are no stream on live, return null.
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
@@ -80,9 +76,16 @@ public class HoloDexApi extends Api {
 		return (streams.size() > 0)? streams.get(0): null;
 	}
 	
+	/**
+	 * Send Http request to HoloDex API.
+	 * @param uri
+	 * @return HoloDexLiveJsonResponse with formatted data.
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
 	private HoloDexLiveJsonResponse request(String uri) throws IOException, InterruptedException {
 		request = HttpRequest.newBuilder()
-				.header("X-APIKEY", "56a98719-6e53-41f4-b6e8-e807d478ab94")	
+				.header("X-APIKEY", Config.getConfig().KeyHoloDexApi)	
 				.uri(URI.create(uri))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
@@ -90,12 +93,23 @@ public class HoloDexApi extends Api {
 				response.statusCode(), response.body());
 	}
 	
-	// singleton memberFilter, read if data not exist
+	/**
+	 * HoloDex API returns data of not desired members (holostars etc.). This
+	 * method checks if the member is in hololive member specified in
+	 * HoloMemberData.
+	 * @param channelId
+	 * @return Is the member in HoloMemberData (desired).
+	 */
 	public static boolean isMemberDesired(String channelId) {
 		readMemberFilter();
 		return MEMBER_FILTER.contains(channelId);
 	}
 	
+	/**
+	 * Initialize a hash set containing hololive members that are specified in 
+	 * HoloMemberData. This method is a singleton, if the file is read and data 
+	 * saved in MEMBER_FILTER hash set, returns early.
+	 */
 	private static void readMemberFilter() {
 		if (MEMBER_FILTER != null) return;
 
@@ -112,17 +126,7 @@ public class HoloDexApi extends Api {
 		}
 		
 	}
-	
-	private String readCredentials() throws IOException {
-		Scanner scanner = new Scanner(new File("config/credentials/holodex.json"));
-		scanner.useDelimiter("\\Z");
-		JSONObject json = new JSONObject(scanner.next());
-		scanner.close();
 
-		return json.getString("key");
-	}
-	
 	private Logger logger;
 	private static Set<String> MEMBER_FILTER = null;
-	private static String API_KEY = null;
 }

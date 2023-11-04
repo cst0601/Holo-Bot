@@ -15,7 +15,11 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-
+/**
+ * Discord bot main.
+ * @author chikuma
+ *
+ */
 public class DiscordMpNext {
 	private JDA jda;
 	private Logger logger;
@@ -29,13 +33,12 @@ public class DiscordMpNext {
 	}
 	
 	/**
-	 * Loads some confidential informations [Discord bot token / youtube api
+	 * Load some confidential informations [Discord bot token / youtube api
 	 * key] and creates JDA
 	 * @throws LoginException
 	 */
 	private void startUp (String args[]) throws LoginException {
 		logger = LoggerFactory.getLogger(DiscordMpNext.class);
-		// load token from config
 		Properties properties = new Properties();
 		try {
 			properties.load(DiscordMpNext.class.getClassLoader().getResourceAsStream("config.properties"));
@@ -59,6 +62,7 @@ public class DiscordMpNext {
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
+					.addEventListeners(new TwitterUrlReplaceListener())
 					.setActivity(Activity.of(Activity.ActivityType.PLAYING,
 								 			 "Say >man to seek help!"));
 			

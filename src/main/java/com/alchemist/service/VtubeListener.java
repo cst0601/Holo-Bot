@@ -24,8 +24,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * VtubeListener
- * Message commands related to vtube
+ * Message command >holo.
  * @author greg8
  *
  */
@@ -46,6 +45,10 @@ public class VtubeListener extends ListenerAdapter implements Service {
 		return "";
 	}
 	
+	/**
+	 * Triggers when received message (MessageReceivedEvent).
+	 * Handles >holo command.
+	 */
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();

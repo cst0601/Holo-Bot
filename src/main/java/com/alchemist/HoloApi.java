@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import com.alchemist.jsonResponse.HoloApiJsonResponse;
 
 /**
- * HoloScheduleAPI
+ * HoloSchedule API interface.
  * @author greg8
  *
  */
@@ -21,6 +21,14 @@ public class HoloApi extends Api {
 		super();	
 	}
 	
+	/**
+	 * Sends request to API.
+	 * @param group
+	 * @return
+	 * @throws IOException
+	 * @throws InterruptedException
+	 * @throws ConnectException
+	 */
 	public ArrayList<Schedule> request(String group) throws IOException, InterruptedException, ConnectException {
 		request = HttpRequest.newBuilder()
 				.uri(URI.create(String.format(defaultUrl, group)))
@@ -36,10 +44,16 @@ public class HoloApi extends Api {
 		return jsonResponse.getSchedules();
 	}
 
+	/**
+	 * @return The updated time of the API.
+	 */
 	public Instant getUpdateTime() {
 		return Instant.parse(updateTime);
 	}
 	
+	/**
+	 * @return The date of the requested schedules.
+	 */
 	public String getDateOfSchedule() {
 		return date;
 	}

@@ -12,6 +12,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.json.JSONArray;
 
+/**
+ * Class for storing hololive member information.
+ * @author chikuma
+ *
+ */
 public class HoloMemberData {
 	
 	public static HoloMemberData getInstance() {
