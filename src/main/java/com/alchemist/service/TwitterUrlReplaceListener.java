@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 public class TwitterUrlReplaceListener extends ListenerAdapter implements Service {
 
 	public final static String TARGET_URL = "//twitter.com";
-	public final static String URL_REGEX = "http(?:s)?:\\/\\/(?:www.)?twitter\\.com\\/([a-zA-Z0-9_]+)(\\/[a-zA-Z0-9]+)(\\/[a-zA-Z0-9]+)";
+	public final static String URL_REGEX = "http(?:s)?:\\/\\/(?:www.)?(twitter|x)\\.com\\/([a-zA-Z0-9_]+)(\\/[a-zA-Z0-9]+)(\\/[a-zA-Z0-9]+)";
 	public final static Pattern PATTERN = Pattern.compile(URL_REGEX);
 	
 	public TwitterUrlReplaceListener() {}
@@ -32,6 +32,7 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 		while (matcher.find()) {
 			String twitterUrl = msg.substring(matcher.start(), matcher.end());
 			twitterUrl = twitterUrl.replace("twitter.com", "vxtwitter.com");
+			twitterUrl = twitterUrl.replace("x.com", "vxtwitter.com");	// welp...
 			twitterUrls.add(twitterUrl);
 		}
 		
