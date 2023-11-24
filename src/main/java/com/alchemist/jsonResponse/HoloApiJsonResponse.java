@@ -9,7 +9,7 @@ import com.alchemist.Schedule;
 
 /**
  * JsonResponse for holo schedule api response (schedules/today)
- * @author greg8
+ * @author chikuma
  *
  */
 public class HoloApiJsonResponse {
