@@ -3,5 +3,11 @@ config/credentials/*
 target/
 logs
 
+# Eclipse core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
 .DS_Store
 */.DS_Store

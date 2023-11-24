@@ -38,12 +38,12 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 		
 		if (!twitterUrls.isEmpty()) {
 			MessageCreateBuilder builder = new MessageCreateBuilder()
-					.addContent(message.getAuthor().getAsMention() + " sends some twitter url:\n");
+					.addContent("Sends some twitter url:\n");
 			for (String url: twitterUrls) {
 				builder.addContent(url + "\n");
 			}
 			
-			channel.sendMessage(builder.build()).queue();
+			message.reply(builder.build()).queue();
 		}
 	}
 	
