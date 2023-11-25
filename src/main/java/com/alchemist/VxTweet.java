@@ -23,7 +23,11 @@ public record VxTweet (
 		) {
 	
 	public String getTwitterUrl() {
-		return String.format("https://twitter.com/%s/status/%s", username, userScreenName);
+		return String.format("https://twitter.com/%s/status/%s", userScreenName, tweetId);
+	}
+	
+	public String getTweetAuthorUrl() {
+		return String.format("https://twitter.com/%s", userScreenName);
 	}
 	
 	public MessageEmbed toMessageEmbed() {
@@ -33,10 +37,11 @@ public record VxTweet (
 				// stoled twitter icon from wikipedia instead.
 				.setFooter("Twitter", "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Logo_of_Twitter.svg/2491px-Logo_of_Twitter.svg.png")
 				.setTimestamp(Instant.ofEpochSecond(dateEpoch))
-				.setAuthor(String.format("%s (@%s)", username, userScreenName), getTwitterUrl(), profileImageUrl)
+				.setAuthor(String.format("%s (@%s)", username, userScreenName), getTweetAuthorUrl(), profileImageUrl)
 				.setDescription(text)
 				.addField("Likes", String.valueOf(likes), true)
-				.addField("Retweets", String.valueOf(retweets), true);
+				.addField("Retweets", String.valueOf(retweets), true)
+				.addField("", String.format("[Twitter link](%s)", getTwitterUrl()), false);
 		
 		for (String url: mediaUrls) {
 			builder.setImage(url);

@@ -52,9 +52,9 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 				.reply(builder.build())
 				.addActionRow(
 						// component id format: delete/<member_id>/<original_message_id>
-						Button.danger(
+						Button.secondary(
 								"delete/" + event.getMember().getId() + "/" + message.getId() ,
-								"delete"))
+								"Delete"))
 				.queue();
 		}
 	}
@@ -69,9 +69,11 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 				event.getMessage().delete().queue();
 			}
 			else {
-				event.reply("Does not have permission to do this.").queue();
+				event
+					.reply("沒辦法刪除不是你貼的連結にぇ。")
+					.setEphemeral(true)
+					.queue();
 			}
 		}
-	}
-	
+	}	
 }
