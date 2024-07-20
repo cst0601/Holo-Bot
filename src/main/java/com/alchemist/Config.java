@@ -2,6 +2,8 @@ package com.alchemist;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Scanner;
 
 import org.json.JSONObject;
@@ -22,13 +24,12 @@ public class Config {
 		scanner.close();
 		
 		memberName = json.getString("member_name");
-		targetChannelId = json.getLong("target_channel");
-		pingRoleId = json.getLong("ping_role_id");
-		
-		JSONObject membershipConfig = json.getJSONObject("membership_config");
-		speculateName = membershipConfig.getString("speculate_name");
-		membershipTargetChannelId = membershipConfig.getLong("target_channel");
-		additionalMessage = membershipConfig.getString("additional_message");
+		speculateName = json.getString("speculate_name");
+		Iterator<Object> notificationJson = json.getJSONArray("notifications").iterator();
+		notifications = new ArrayList<ConfigNotification>();
+		while (notificationJson.hasNext()) {
+			notifications.add(new ConfigNotification((JSONObject)notificationJson.next()));
+		}
 		
 		// HoloDex API key
 		scanner = new Scanner(new File("config/credentials/holodex.json"));
@@ -54,10 +55,9 @@ public class Config {
 		return instance;
 	}
 	
-	public final String memberName, speculateName, additionalMessage;
-	public final long pingRoleId, targetChannelId, membershipTargetChannelId;
-	
+	public final String memberName, speculateName;
 	public final String KeyHoloDexApi;
+	public ArrayList<ConfigNotification> notifications;
 		
 	private static Config instance = null;
 }

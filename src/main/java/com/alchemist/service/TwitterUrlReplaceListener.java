@@ -17,18 +17,18 @@ import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 public class TwitterUrlReplaceListener extends ListenerAdapter implements Service {
 
 	private VxTwitterApi api = new VxTwitterApi();
-	
+
 	public final static String URL_REGEX = "http(?:s)?:\\/\\/(?:www.)?(twitter|x)\\.com\\/([a-zA-Z0-9_]+)(\\/[a-zA-Z0-9]+)(\\/[a-zA-Z0-9]+)";
 	public final static Pattern PATTERN = Pattern.compile(URL_REGEX);
-	
+
 	public TwitterUrlReplaceListener() {}
-	
+
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
 		Message message = event.getMessage();
-		
+
 		if (message.getAuthor().isBot()) return;
-		
+
 		String msg = message.getContentDisplay();
 		Matcher matcher = PATTERN.matcher(msg);
 		ArrayList<MessageEmbed> tweets = new ArrayList<MessageEmbed>();
@@ -43,11 +43,11 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		if (!tweets.isEmpty()) {
 			MessageCreateBuilder builder = new MessageCreateBuilder()
 				.addEmbeds(tweets);
-			
+
 			message
 				.reply(builder.build())
 				.addActionRow(
@@ -58,12 +58,12 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 				.queue();
 		}
 	}
-	
+
 	@Override
 	public void onButtonInteraction(ButtonInteractionEvent event) {
 		String[] parts = event.getComponentId().split("/");
 		if (parts.length != 3) return;
-		
+
 		if (parts[0].equals("delete")) {
 			if (parts[1].equals(event.getUser().getId())) {
 				event.getMessage().delete().queue();
@@ -75,5 +75,5 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 					.queue();
 			}
 		}
-	}	
+	}
 }

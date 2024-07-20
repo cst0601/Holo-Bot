@@ -27,7 +27,7 @@ class TestUpcomingStream {
 			e.printStackTrace();
 			fail("time parse failed when creating liveStream");
 		}
-		return new UpcomingStream(liveStream, new MockRole());
+		return new UpcomingStream(liveStream, null);
 	}
 	
 	@BeforeEach
@@ -38,7 +38,7 @@ class TestUpcomingStream {
 	@Test
 	void testBroadcastToNotified() {
 		UpcomingStream upcomingStream = createTestStream(now.plusMinutes(1));
-		MessageCreateData message = upcomingStream.broadcast();
+		MessageCreateData message = upcomingStream.broadcast().get(0).build();
 		
 		assertEquals(String.format(
 				"頻道有新動靜！快去看看！\n"
@@ -62,9 +62,9 @@ class TestUpcomingStream {
 				now.plusMinutes(4).toInstant().toEpochMilli() / 1000L);
 		
 		assertEquals(broadcastContent,
-				upcomingStream.broadcast().getContent());
+				upcomingStream.broadcast().get(0).build().getContent());
 		assertEquals("再過五分鐘配信開始！\nhttps://www.youtube.com/watch?v=9_oc4fi_VJQ",
-				upcomingStream.broadcast().getContent());
+				upcomingStream.broadcast().get(0).build().getContent());
 		assertNull(upcomingStream.broadcast());
 	}
 	

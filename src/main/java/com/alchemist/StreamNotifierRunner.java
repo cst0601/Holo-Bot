@@ -12,13 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 /**
  * Workhorse of stream notification
- * @author greg8
+ * @author chikuma
  *
  */
 public class StreamNotifierRunner extends Thread {
@@ -27,15 +26,14 @@ public class StreamNotifierRunner extends Thread {
 		Thread.currentThread().setName("StreamNotifierRunner");
 		logger = LoggerFactory.getLogger(StreamNotifierRunner.class);
 		config = Config.getConfig();
+		this.jda = jda;
 		
 		serviceMessageBox = messageBox;
 		api = new HoloDexApi();
 		upcomingStreams = new LinkedList<UpcomingStream>();
 		
-		targetChannel = jda.getTextChannelById(config.targetChannelId);
 		// TODO: add some more message in member target channel
 		// memberTargetChannel = jda.getTextChannelById(config.membershipTargetChannelId);
-		pingRole = jda.getRoleById(config.pingRoleId);
 		this.memberName = config.memberName;
 	}
 	
@@ -93,7 +91,7 @@ public class StreamNotifierRunner extends Thread {
 		try {
 			List<UpcomingStream> updateStream = new ArrayList<UpcomingStream>();
 			for (LiveStream stream: api.getStreamOfMember(memberName, "upcoming")) {
-				UpcomingStream upcomingStream = new UpcomingStream(stream, pingRole);
+				UpcomingStream upcomingStream = new UpcomingStream(stream, jda);
 				if (!upcomingStream.hasStarted()) {	// api might give stream started but state = upcoming
 					updateStream.add(upcomingStream);
 				}
@@ -105,10 +103,12 @@ public class StreamNotifierRunner extends Thread {
 				// TODO: if stream exist in cache but no longer in yt, delete it
 				try {
 					int streamIndex = containsUpcomingStream(stream);
-					MessageCreateData updateMessage = upcomingStreams.get(streamIndex).checkStreamStartTime(stream);
+					ArrayList<MessageCreateBuilder> updateMessages = upcomingStreams
+							.get(streamIndex)
+							.checkStreamStartTime(stream);
 					
-					if (updateMessage != null) {
-						targetChannel.sendMessage(updateMessage).queue();
+					if (updateMessages != null) {
+						sendMessageToChannels(updateMessages, upcomingStreams.get(streamIndex));
 						logger.info("Updated stream start time " + stream.toString());
 					}
 					
@@ -129,9 +129,10 @@ public class StreamNotifierRunner extends Thread {
 		ListIterator<UpcomingStream> iter = upcomingStreams.listIterator();
 		while(iter.hasNext()) {
 			UpcomingStream stream = iter.next();
-			MessageCreateData message = stream.broadcast();
-			if (message != null && sendMessage) {
-				targetChannel.sendMessage(message).queue();
+			ArrayList<MessageCreateBuilder> messageBuilders = stream.broadcast();
+
+			if (messageBuilders != null && sendMessage) {
+				sendMessageToChannels(messageBuilders, stream);
 				logger.info("Notified stream: " + stream.getStreamUrl());	
 			}
 			if (stream.hasStarted()) {
@@ -142,7 +143,6 @@ public class StreamNotifierRunner extends Thread {
 	}
 	
 	private void listAllUpcomingStreams() throws InterruptedException {
-		
 		String message = "# Upcoming streams\n";
 		for (UpcomingStream stream: upcomingStreams) {
 			message += stream.toString() + "\n";
@@ -151,13 +151,22 @@ public class StreamNotifierRunner extends Thread {
 		logger.info(message);
 	}
 	
+	private void sendMessageToChannels(ArrayList<MessageCreateBuilder> messageBuilders, UpcomingStream stream) {
+		messageBuilders = stream.appendMemberOnlyMessage(messageBuilders);
+		for (int i = 0; i < config.notifications.size(); i++) {
+			MessageChannel channel = jda.getTextChannelById(config.notifications.get(i).targetChannelId);
+			channel.sendMessage(messageBuilders.get(i).build()).queue();
+
+		}
+	}
+	
+	private JDA jda;
 	private Logger logger;
 	private Config config;
 	private BlockingQueue<String> messageBox = new LinkedBlockingQueue<String>();
 	private BlockingQueue<String> serviceMessageBox;
 	private HoloDexApi api;
 	private String memberName;
-	private MessageChannel targetChannel; //, memberTargetChannel;
-	private Role pingRole;
+	//private MessageChannel targetChannel; //, memberTargetChannel;
 	private List<UpcomingStream> upcomingStreams;	// Welp, upcoming stream usually does not have a lot, so...
 }

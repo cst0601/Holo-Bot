@@ -1,10 +1,19 @@
 {
-	"member_name": "miko",
-	"target_channel": 757941157421645924,
-	"ping_role_id": 297261645464600588,
-	"membership_config": {
-		"speculate_name": "メンバー",
-		"target_channel": 757941157421645924,
-		"additional_message": "喔？這個似乎是會限？",
-	}
+    "member_name": "miko",
+    "notifications":
+    [
+        {
+            "target_channel": 757941157421645924,
+            "ping_role_id": 297261645464600588,
+            "membership_config":
+            {
+                "target_channel": 757941157421645924,
+                "additional_message": "喔？這個似乎是會限？"
+            }
+        },
+        {
+            "target_channel": 280691749528272897
+        }
+    ],
+    "speculate_name": "メンバー"
 }
