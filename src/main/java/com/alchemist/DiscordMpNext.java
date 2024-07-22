@@ -62,7 +62,7 @@ public class DiscordMpNext {
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
-					.addEventListeners(new TwitterUrlReplaceListener())
+					//.addEventListeners(new TwitterUrlReplaceListener())
 					.setActivity(Activity.of(Activity.ActivityType.PLAYING,
 								 			 "Say >man to seek help!"));
 			

@@ -112,8 +112,14 @@ public class UpcomingStream {
 	
 	public String toString() {
 		return "* state: " + state + 
-			   ",\n start_time:" + upcomingNotificationTime.toString() +
-			   ",\n url: " + liveStream.toString();
+			   ", start_time:" + upcomingNotificationTime.toString() +
+			   ", url: " + liveStream.toString();
+	}
+	
+	public String toMarkdownString() {
+		return "* Start time: " + upcomingNotificationTime.toString() + 
+			   ", [url](" + liveStream.toString() + "), " + 
+			   " state: " + state + "\n";
 	}
 	
 	public ArrayList<MessageCreateBuilder> appendMemberOnlyMessage(ArrayList<MessageCreateBuilder> builders) {

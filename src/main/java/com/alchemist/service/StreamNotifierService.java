@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
+import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -52,7 +53,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 					parser.getCommand(1).equals("stream_flush")) {
 				
 					try {
-						streamNotifierRunner.sendMessage("flush");
+						streamNotifierRunner.sendMessage(Arrays.asList("flush"));
 						streamNotifierRunner.interrupt();
 						channel.sendMessage("upcoming stream cache cleared.").queue();
 					} catch (InterruptedException e) {
@@ -64,7 +65,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 					parser.getCommand(1).equals("stream_list")) {
 				
 					try {
-						streamNotifierRunner.sendMessage("list");
+						streamNotifierRunner.sendMessage(Arrays.asList("list", channel.getId()));
 						streamNotifierRunner.interrupt();
 					} catch (InterruptedException e) {
 						e.printStackTrace();
@@ -82,7 +83,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
 		
 		logger.info("Terminating stream notifier...");
 		try {
-			streamNotifierRunner.sendMessage("stop");
+			streamNotifierRunner.sendMessage(Arrays.asList("stop"));
 			streamNotifierRunner.interrupt();
 			streamNotifierRunner.join();
 		} catch (InterruptedException e) {
