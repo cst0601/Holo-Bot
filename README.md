@@ -15,7 +15,7 @@
   - [Member Verification](#member-verification)
   - [Broadcasting Twitter Content](#broadcasting-twitter-content)
   - [Holo Schedules](#holo-schedules)
-  - [Running The Bot](#running-the-bot)
+  - [Running, Test and Build](#running-test-and-build)
 - [Contributing](#contributing)
 
 ## About
@@ -24,12 +24,6 @@ A simple discord bot that help tracks events of Hololive, including YouTube
 stream notification, tweet updates and more.
 
 (Edit: Thanks to Elon Musk, the support of twitter basically died.)
-
-## Running, Test and Build
-
-* Run: `mvn exec:java`
-* Test: `mvn test`
-* Build: `mvn clean compile assembly:single`
 
 ## Usage
 
@@ -169,10 +163,12 @@ Example:
 `>holo schedules` requires Holo Schedule API to run in local. See more at [Holo
 Schedule API](https://github.com/cst0601/holo_schedule_api) repo.
 
-### Running the bot
-```
-java -jar holo_bot.jar
-```
+### Running, Test and Build
+
+* Run: `mvn exec:java`
+* Test: `mvn test`
+* Build: `mvn clean compile assembly:single`
+
 
 ## Contributing
 
