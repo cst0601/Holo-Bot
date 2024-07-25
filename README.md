@@ -25,6 +25,12 @@ stream notification, tweet updates and more.
 
 (Edit: Thanks to Elon Musk, the support of twitter basically died.)
 
+## Running, Test and Build
+
+* Run: `mvn exec:java`
+* Test: `mvn test`
+* Build: `mvn clean compile assembly:single`
+
 ## Usage
 
 ### Discord Text Message Commands

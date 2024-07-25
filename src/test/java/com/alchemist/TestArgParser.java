@@ -18,7 +18,7 @@ class TestArgParser {
 			fail();
 		}
 	}
-	
+
 	@Test
 	void testParserParamWithoutToken() {
 		ArgumentParseException thrown = assertThrows(
@@ -29,10 +29,10 @@ class TestArgParser {
 				},
 				"Excepted constructor to throw"
 		);
-		
+
 		assertTrue(thrown.getMessage().equals("Parameters needs token before \"=\""));
 	}
-	
+
 	@Test
 	void testParserParamWithoutValue() {
 		ArgumentParseException thrown = assertThrows(
@@ -43,10 +43,10 @@ class TestArgParser {
 				},
 				"Excepted constructor to throw"
 		);
-		
+
 		assertTrue(thrown.getMessage().equals("Parameters needs value after \"=\""));
 	}
-	
+
 	@Test
 	void testGetCommand() {
 		try {
@@ -57,7 +57,7 @@ class TestArgParser {
 			fail();
 		}
 	}
-	
+
 	@Test
 	void testCannotConvertToInteger() {
 		ArgumentParseException thrown = assertThrows(
@@ -65,13 +65,13 @@ class TestArgParser {
 				() -> {
 					ArgParser parser = new ArgParser("   >holo   schedules  -size=not_int ");
 					parser.parse();
-					parser.getInt("size"); 
+					parser.getInt("size");
 				},
 				"Excepted get int to throw"
 		);
 		assertTrue(thrown.getMessage().equals("Value not_int cannot be converted to integer."));
 	}
-	
+
 	@Test
 	void testGetIntTokenNotFound() {
 		ArgumentParseException thrown = assertThrows(
@@ -79,13 +79,13 @@ class TestArgParser {
 				() -> {
 					ArgParser parser = new ArgParser("   >holo   schedules  -size=100 ");
 					parser.parse();
-					parser.getInt("not_valid_token"); 
+					parser.getInt("not_valid_token");
 				},
 				"Excepted get int to throw"
 		);
 		assertTrue(thrown.getMessage().equals("Token \"not_valid_token\" does not exist."));
 	}
-	
+
 	@Test
 	void testGetStringTokenNotFound() {
 		ArgumentParseException thrown = assertThrows(
@@ -93,13 +93,13 @@ class TestArgParser {
 				() -> {
 					ArgParser parser = new ArgParser("   >holo   schedules  -size=100 ");
 					parser.parse();
-					parser.getString("not_valid_token"); 
+					parser.getString("not_valid_token");
 				},
 				"Excepted get int to throw"
 		);
 		assertTrue(thrown.getMessage().equals("Token \"not_valid_token\" does not exist."));
 	}
-	
+
 	@Test
 	void testNormalFlag() {
 		try {
