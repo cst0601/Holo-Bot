@@ -1,14 +1,11 @@
 package com.alchemist;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.Scanner;
 
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,8 +14,6 @@ import com.alchemist.exceptions.ApiQuotaExceededException;
 import com.alchemist.exceptions.HttpException;
 
 public class YoutubeApi extends Api {
-	private static final String CREDENTIALS =
-		"config/credentials/youtube_api.json";
 	private final String requestLiveStreamChat =
 		"https://youtube.googleapis.com/youtube/v3/liveChat/messages?liveChatId"
 		+ "=%s&part=authorDetails&maxResults=15&key=%s";
@@ -32,11 +27,11 @@ public class YoutubeApi extends Api {
 	public YoutubeApi(String liveChatId) throws IOException {
 		super();
 		logger = LoggerFactory.getLogger(YoutubeApi.class);
-		apiKey = readCredentials();
+		apiKey = Config.getConfig().youtubeKey;
 		ytLiveChatId = liveChatId;
 	}
-	
-	public LiveStreamChatMessageList requestLiveStreamChat () 
+
+	public LiveStreamChatMessageList requestLiveStreamChat ()
 			throws IOException, InterruptedException, ApiQuotaExceededException, HttpException {
 		request = HttpRequest.newBuilder()
 				.uri(URI.create(String.format(requestLiveStreamChat, ytLiveChatId, apiKey)))
@@ -52,15 +47,6 @@ public class YoutubeApi extends Api {
 		throw new HttpException("Error occured when sending request to youtube api.", response.statusCode());
 	}
 
-	private String readCredentials() throws IOException {
-		Scanner scanner = new Scanner(new File(CREDENTIALS));
-		scanner.useDelimiter("\\Z");
-		JSONObject json = new JSONObject(scanner.next());
-		scanner.close();
-
-		return json.getString("youtube-api-key");
-	}
-
 	public boolean verify(String youtubeId) {
 		LiveStreamChatMessageList list;
 		try {
@@ -69,17 +55,17 @@ public class YoutubeApi extends Api {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		for (int i = 0; i < list.getSize(); i++) {
 			logger.debug(list.getMessage(i).getDisplayName());
 			if (list.getMessage(i).getChannelId().equals(youtubeId)) {
 				if (list.getMessage(i).isChatSponsor()) {
 					return true;
-				} 
+				}
 				else return false;
 			}
 		}
-		
+
 		logger.warn("User with YoutubeId: " + youtubeId + " not found in LiveStreamChat." );
 		return false;
 	}

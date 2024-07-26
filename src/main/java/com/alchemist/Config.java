@@ -16,13 +16,13 @@ import org.slf4j.Logger;
  * @author chikuma
  */
 public class Config {
-	
+
 	private Config() throws FileNotFoundException {
 		Scanner scanner = new Scanner(new File("config/stream_notification.json"));
 		scanner.useDelimiter("\\Z");
 		JSONObject json = new JSONObject(scanner.next());
 		scanner.close();
-		
+
 		memberName = json.getString("member_name");
 		speculateName = json.getString("speculate_name");
 		Iterator<Object> notificationJson = json.getJSONArray("notifications").iterator();
@@ -30,23 +30,28 @@ public class Config {
 		while (notificationJson.hasNext()) {
 			notifications.add(new ConfigNotification((JSONObject)notificationJson.next()));
 		}
-		
-		// HoloDex API key
-		scanner = new Scanner(new File("config/credentials/holodex.json"));
+
+		// discord token and API keys
+		scanner = new Scanner(new File("config/credentials/credentials.json"));
 		scanner.useDelimiter("\\Z");
 		json = new JSONObject(scanner.next());
 		scanner.close();
-		
-		KeyHoloDexApi = json.getString("key");
+
+		discordToken = json.getString("discord_token");
+		youtubeKey = json.getString("yt_api_key");
+		holoDexApiKey = json.getString("holodex_api_key");
+		isTwitterBroadcastServiceOn = json.getBoolean("twitter_broadcast");
+		isTwitterUrlReplaceServiceOn = json.getBoolean("twitter_url_replace");
+		isMemberVerificationServiceOn = json.getBoolean("member_verification");
 	}
-	
+
 	public static synchronized Config getConfig() {
 		if (instance == null) {
 			try {
 				instance = new Config();
 			} catch (FileNotFoundException e) {
 				Logger logger = LoggerFactory.getLogger(Config.class);
-				logger.error("Error finding stream notification config file.");
+				logger.error("Error finding config files.");
 				e.printStackTrace();
 			}
 		}
@@ -54,10 +59,15 @@ public class Config {
 		// method in StreamNofitiferService
 		return instance;
 	}
-	
+
 	public final String memberName, speculateName;
-	public final String KeyHoloDexApi;
+	public final String discordToken;
+	public final String youtubeKey;
+	public final String holoDexApiKey;
+	public final boolean isTwitterBroadcastServiceOn;
+	public final boolean isTwitterUrlReplaceServiceOn;
+	public final boolean isMemberVerificationServiceOn;
 	public ArrayList<ConfigNotification> notifications;
-		
+
 	private static Config instance = null;
 }

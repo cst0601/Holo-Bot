@@ -27,7 +27,7 @@ public class HoloDexApi extends Api {
 		logger = LoggerFactory.getLogger(HoloDexApi.class);
 		readMemberFilter();
 	}
-	
+
 	/**
 	 * Get all live streams of all members
 	 * @return
@@ -39,7 +39,7 @@ public class HoloDexApi extends Api {
 		String apiRequest = "https://holodex.net/api/v2/live?max_upcoming_hours=48&org=Hololive";
 		return request(apiRequest).getStream("live");
 	}
-	
+
 	/**
 	 * Get stream by member name and stream type
 	 * @param member
@@ -48,20 +48,20 @@ public class HoloDexApi extends Api {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public ArrayList<LiveStream> getStreamOfMember(String member, String streamType) 
+	public ArrayList<LiveStream> getStreamOfMember(String member, String streamType)
 			throws IOException, InterruptedException {
 		try {
 			String channelId = HoloMemberData.getInstance().getMemberByName(member).getYoutubeId();
 			String apiRequest = String.format("https://holodex.net/api/v2/live?max_upcoming_hours=48&org=Hololive&channel_id=%s", channelId);
-			
+
 			return request(apiRequest).getStream(streamType);
 		} catch (NoSuchElementException e) {
 			logger.warn("Member with name " + member + " not found.");
 		}
-		
+
 		return new ArrayList<LiveStream>();
 	}
-	
+
 	/**
 	 * Get "live" stream by member name.
 	 * (assumed there is only one stream on live at a time)
@@ -70,12 +70,12 @@ public class HoloDexApi extends Api {
 	 * @throws IOException
 	 * @throws InterruptedException
 	 */
-	public LiveStream getLiveStreamOfMember(String member) 
+	public LiveStream getLiveStreamOfMember(String member)
 			throws IOException, InterruptedException {
 		ArrayList<LiveStream> streams = getStreamOfMember(member, "live");
 		return (streams.size() > 0)? streams.get(0): null;
 	}
-	
+
 	/**
 	 * Send Http request to HoloDex API.
 	 * @param uri
@@ -85,14 +85,14 @@ public class HoloDexApi extends Api {
 	 */
 	private HoloDexLiveJsonResponse request(String uri) throws IOException, InterruptedException {
 		request = HttpRequest.newBuilder()
-				.header("X-APIKEY", Config.getConfig().KeyHoloDexApi)	
+				.header("X-APIKEY", Config.getConfig().holoDexApiKey)
 				.uri(URI.create(uri))
 				.build();
 		HttpResponse<String> response = client.send(request, BodyHandlers.ofString());
 		return new HoloDexLiveJsonResponse (
 				response.statusCode(), response.body());
 	}
-	
+
 	/**
 	 * HoloDex API returns data of not desired members (holostars etc.). This
 	 * method checks if the member is in hololive member specified in
@@ -104,10 +104,10 @@ public class HoloDexApi extends Api {
 		readMemberFilter();
 		return MEMBER_FILTER.contains(channelId);
 	}
-	
+
 	/**
-	 * Initialize a hash set containing hololive members that are specified in 
-	 * HoloMemberData. This method is a singleton, if the file is read and data 
+	 * Initialize a hash set containing hololive members that are specified in
+	 * HoloMemberData. This method is a singleton, if the file is read and data
 	 * saved in MEMBER_FILTER hash set, returns early.
 	 */
 	private static void readMemberFilter() {
@@ -124,7 +124,7 @@ public class HoloDexApi extends Api {
 		for (HoloMember memberData: HoloMemberData.getInstance().getAvaliableMembers(DIVISION.ID)) {
 			MEMBER_FILTER.add(memberData.getYoutubeId());
 		}
-		
+
 	}
 
 	private Logger logger;

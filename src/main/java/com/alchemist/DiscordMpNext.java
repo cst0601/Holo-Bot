@@ -1,8 +1,5 @@
 package com.alchemist;
 
-import java.io.IOException;
-import java.util.Properties;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +20,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 public class DiscordMpNext {
 	private JDA jda;
 	private Logger logger;
-	
+
 	public static void main(String[] args) {
 		try {
 			new DiscordMpNext().startUp(args);
@@ -31,7 +28,7 @@ public class DiscordMpNext {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Load some confidential informations [Discord bot token / youtube api
 	 * key] and creates JDA
@@ -39,20 +36,9 @@ public class DiscordMpNext {
 	 */
 	private void startUp (String args[]) throws LoginException {
 		logger = LoggerFactory.getLogger(DiscordMpNext.class);
-		Properties properties = new Properties();
+
 		try {
-			properties.load(DiscordMpNext.class.getClassLoader().getResourceAsStream("config.properties"));
-		} catch (IOException e) {
-			e.printStackTrace();
-			logger.error("Failed to read from config.properties, please" +
-					     "check if the file exists.");
-			return;
-		}
-		
-		String token = properties.getProperty("token", null);
-		
-		try {
-			JDABuilder builder = JDABuilder.createDefault(token)
+			JDABuilder builder = JDABuilder.createDefault(Config.getConfig().discordToken)
 					.enableIntents(GatewayIntent.MESSAGE_CONTENT)
 					.addEventListeners(new PingListener())	// system commands
 					.addEventListeners(new RollListener())
@@ -62,22 +48,21 @@ public class DiscordMpNext {
 					.addEventListeners(new BonkListener())
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
-					//.addEventListeners(new TwitterUrlReplaceListener())
 					.setActivity(Activity.of(Activity.ActivityType.PLAYING,
 								 			 "Say >man to seek help!"));
-			
-			builder = buildOptionalService(builder, properties);
-			
+
+			builder = buildOptionalService(builder);
+
 			jda = builder.build();
 			jda.awaitReady();
-						
+
 			logger.info("Finish building JDA!");
 		} catch (InterruptedException e) {
 			// await is a blocking method, if interrupted
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Builds optional service if specified in .properties file. Currently
 	 * includes twitter broadcast service and member verification service.
@@ -85,21 +70,29 @@ public class DiscordMpNext {
 	 * @param properties
 	 * @return
 	 */
-	private JDABuilder buildOptionalService(JDABuilder builder, Properties properties) {
-		if (Boolean.parseBoolean(properties.getProperty("twitter"))) {
+	private JDABuilder buildOptionalService(JDABuilder builder) {
+		Config config = Config.getConfig();
+		if (config.isTwitterBroadcastServiceOn) {
 			builder.addEventListeners(new TwitterBroadcastService());
 		}
 		else {
-			logger.info("Twitter mode is disabled.");
+			logger.info("Build: Twitter broadcast service is disabled.");
 		}
-		
-		if (Boolean.parseBoolean(properties.getProperty("member_verification"))) {
+
+		if (config.isTwitterUrlReplaceServiceOn) {
+			builder.addEventListeners(new TwitterUrlReplaceListener());
+		}
+		else {
+			logger.info("Build: Twitter Url replace service is disabled.");
+		}
+
+		if (config.isMemberVerificationServiceOn) {
 			builder.addEventListeners(new MemberVerificationService());
 		}
 		else {
-			logger.info("Member verification service is disabled.");
+			logger.info("Build: Member verification service is disabled.");
 		}
-		
+
 		return builder;
 	}
 }
