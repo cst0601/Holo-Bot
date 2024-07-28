@@ -9,5 +9,9 @@ logs
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
+# maven related
+.factorypath
+.settings
+
 .DS_Store
 */.DS_Store

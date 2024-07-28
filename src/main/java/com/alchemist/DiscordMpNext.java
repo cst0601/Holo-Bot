@@ -49,7 +49,7 @@ public class DiscordMpNext {
 					.addEventListeners(new CountDownListener())	// special event
 					.addEventListeners(new StreamNotifierService())
 					.setActivity(Activity.of(Activity.ActivityType.PLAYING,
-								 			 "Say >man to seek help!"));
+											 "Say >man to seek help!"));
 
 			builder = buildOptionalService(builder);
 

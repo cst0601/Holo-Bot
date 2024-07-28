@@ -3,8 +3,10 @@ package com.alchemist;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Scanner;
+import java.util.Set;
 
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
@@ -43,6 +45,11 @@ public class Config {
 		isTwitterBroadcastServiceOn = json.getBoolean("twitter_broadcast");
 		isTwitterUrlReplaceServiceOn = json.getBoolean("twitter_url_replace");
 		isMemberVerificationServiceOn = json.getBoolean("member_verification");
+		Iterator<Object> adminJsonIter = json.getJSONArray("admin_ids").iterator();
+		adminIds = new HashSet<Long>();
+		while (adminJsonIter.hasNext()) {
+			adminIds.add((Long)adminJsonIter.next());
+		}
 	}
 
 	public static synchronized Config getConfig() {
@@ -60,6 +67,10 @@ public class Config {
 		return instance;
 	}
 
+	public boolean isAdmin(Long id) {
+		return adminIds.contains(id);
+	}
+
 	public final String memberName, speculateName;
 	public final String discordToken;
 	public final String youtubeKey;
@@ -70,4 +81,5 @@ public class Config {
 	public ArrayList<ConfigNotification> notifications;
 
 	private static Config instance = null;
+	private Set<Long> adminIds;
 }
