@@ -32,7 +32,7 @@ jobs:
         credentials: ${{ secrets.CREDENTIALS }}
       run: |
         mkdir config/credentials
-        echo -n "$credentials" >> credentials.json
+        echo -n "$credentials" >> config/credentials/credentials.json
     - name: Build with Maven
       run: mvn -B package --file pom.xml
 
