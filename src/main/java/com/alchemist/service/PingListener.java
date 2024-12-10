@@ -1,19 +1,11 @@
 package com.alchemist.service;
 
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
-import net.dv8tion.jda.api.events.Event;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.hooks.EventListener;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
-
-import java.awt.Color;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +52,7 @@ public class PingListener extends ListenerAdapter implements Service {
 			ping(channel);
 		}
 
-		else if (parser.getCommandSize() > 1)
+		else if (parser.getCommandSize() > 1) {
 			if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("exit")) {
 				if (!Config.getConfig().isAdmin(member.getIdLong())) {
 					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
@@ -76,119 +68,7 @@ public class PingListener extends ListenerAdapter implements Service {
 					System.exit(0);
 				}
 			}
-			/* DOES NOT FUNCTION CORRECTLY, DISABLED FOR NOW */
-			/*
-			else if (parser.getCommand().equals(">sudo") && parser.getCommand(1).equals("service")) {
-				if (!member.hasPermission(Permission.ADMINISTRATOR)) {
-					channel.sendMessage("Sorry! You don't have the permission to do this!").queue();
-				}
-				else { processServiceCommmand(event, parser, channel); }
-			} */
-	}
-
-	/**
-	 * DOES NOT START SERVICE CORRECTLY
-	 * @param event
-	 * @param parser
-	 * @param channel
-	 */
-	private void processServiceCommmand(Event event, ArgParser parser, MessageChannelUnion channel) {
-		if (parser.getCommand(2).equals("list")) {
-			channel.sendMessageEmbeds(getServiceList(event)).queue();
 		}
-		if (parser.getCommandSize() > 3) {
-			String serviceName = parser.getCommand(3);
-			if (parser.getCommand(2).equals("start")) {
-				if (isServiceRunning(parser.getCommand(3), event)) {
-					channel.sendMessage("Service " + parser.getCommand(3) + " is already running.").queue();
-				}
-				else {
-					logger.info("Starting service " + serviceName);
-
-					try {
-						EventListener listener = createEventListenerByName(serviceName);
-						event.getJDA().addEventListener(listener);
-						logger.info("Service " + serviceName + " started.");
-						channel.sendMessage("Service " + serviceName + " started.").queue();
-					} catch(IllegalArgumentException e) {
-						logger.warn("Cannot start service " + serviceName +
-									". Either service does not exist or was not made available.");
-						channel.sendMessage(
-								"Cannot start service " + serviceName +
-								". Either service does not exist or was not made available.").queue();
-					}
-				}
-			}
-			else if (parser.getCommand(2).equals("stop")) {
-				try {
-					Service service = (Service) getRunningEventListenerByName(serviceName, event.getJDA());
-					service.terminate();
-					event.getJDA().removeEventListener(service);
-
-					logger.info("Service " + serviceName + " stopped.");
-					channel.sendMessage("Service " + serviceName + " stopped.").queue();
-				} catch (IllegalArgumentException e) {
-					logger.warn("Failed to stop " + serviceName + ". Service is not running in JDA.");
-					channel.sendMessage("Failed to stop " + serviceName + ". Service is not running in JDA.").queue();
-				}
-			}
-		}
-	}
-
-	private EventListener createEventListenerByName(String name) {
-		switch (name) {
-		case "com.alchemist.service.AboutListener":
-			return new AboutListener();
-		case "com.alchemist.service.BonkListener":
-			return new BonkListener();
-		case "com.alchemist.service.CountDownListener":
-			return new CountDownListener();
-		case "com.alchemist.service.RollListener":
-			return new RollListener();
-		case "com.alchemist.service.StreamNotifierService":
-			return new StreamNotifierService();
-		case "com.alchemist.service.TwitterBroadcastService":
-			return new TwitterBroadcastService();
-		case "com.alchemist.service.VtuberListener":
-			return new VtubeListener();
-		default:
-			return null;
-		}
-	}
-
-	private EventListener getRunningEventListenerByName(String name, JDA jda) {
-		for (Service service: getRunningServices(jda)) {
-			if (service.getServiceName().equals(name))
-				return (EventListener) service;
-		}
-		return null;
-	}
-
-	private boolean isServiceRunning(String serviceName, Event event) {
-		for (Service service: getRunningServices(event.getJDA())) {
-			if (service.getServiceName().equals(serviceName)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private MessageEmbed getServiceList(Event event) {
-		EmbedBuilder builder = new EmbedBuilder()
-				.setTitle(">sudo service list")
-				.setColor(Color.red);
-		String serviceNames = "";
-		for (Service service: getRunningServices(event.getJDA())) {
-			serviceNames += " - " + service.getServiceName() + "\n";
-		}
-		builder.addField("Services", serviceNames, false);
-
-		return builder.build();
-	}
-
-	@SuppressWarnings("unchecked")
-	private List<Service> getRunningServices(JDA jda) {
-		return (List<Service>)(Object)jda.getRegisteredListeners();
 	}
 
 	private void ping(MessageChannelUnion channel) {
