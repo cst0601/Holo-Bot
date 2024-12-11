@@ -9,14 +9,14 @@ import org.junit.jupiter.api.Test;
 import com.alchemist.jsonResponse.HoloDexLiveJsonResponse;
 
 public class TestHoloDexLiveJsonResponse {
-	
+
 	@Test
 	void testParse() {
 		HoloDexLiveJsonResponse jsonResponse = new HoloDexLiveJsonResponse(200, rawJson);
-		
+
 		assertEquals(jsonResponse.getStatusCode(), 200);
 		ArrayList<LiveStream> streams = jsonResponse.getStream("upcoming");
-		
+
 		assertEquals(streams.size(), 11);
 		assertEquals(streams.get(0).getMemberName(), "桃鈴ねね");
 		assertEquals(streams.get(1).getMemberName(), "鷹嶺ルイ");
@@ -30,7 +30,7 @@ public class TestHoloDexLiveJsonResponse {
 		assertEquals(streams.get(9).getMemberName(), "風真いろは");
 		assertEquals(streams.get(10).getMemberName(), "クレイジー・オリー");
 	}
-	
+
 	private String rawJson = "[\n"
 			+ "  {\n"
 			+ "    \"id\": \"oihpC07HClQ\",\n"
