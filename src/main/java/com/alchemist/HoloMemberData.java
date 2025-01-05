@@ -7,128 +7,128 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
-
+import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.json.JSONArray;
 
 /**
  * Class for storing hololive member information.
- * @author chikuma
- *
  */
 public class HoloMemberData {
 
-	public static HoloMemberData getInstance() {
-		if (instance == null) {
-			synchronized (HoloMemberData.class) {
-				if (instance == null) {
-					instance = new HoloMemberData();
-				}
-			}
-		}
+  /** Singleton constructor. */
+  public static HoloMemberData getInstance() {
+    if (instance == null) {
+      synchronized (HoloMemberData.class) {
+        if (instance == null) {
+          instance = new HoloMemberData();
+        }
+      }
+    }
 
-		return instance;
-	}
+    return instance;
+  }
 
-	/**
-	 * Search all hololive divisions for the member by name
-	 * @param name
-	 * @return
-	 */
-	public HoloMember getMemberByName(String name) {
-		for (Map<String, HoloMember> divisionDict: memberDict.values()) {
-			HoloMember member = divisionDict.get(name);
-			if (member != null)
-				return member;
-		}
-		return null;
-	}
+  /**
+   * Search all hololive divisions for the member by name.
+   */
+  public HoloMember getMemberByName(String name) {
+    for (Map<String, HoloMember> divisionDict : memberDict.values()) {
+      HoloMember member = divisionDict.get(name);
+      if (member != null) {
+        return member;
+      }
+    }
+    return null;
+  }
 
-	/**
-	 * Get holotools API id by name
-	 * @param name
-	 * @return
-	 */
-	public int getApiIdByName(String name) throws NoSuchElementException {
-		for (Map<String, HoloMember> divisionDict: memberDict.values()) {
-			HoloMember member = divisionDict.get(name);
-			if (member != null)
-				return member.getApiId();
-		}
-		throw new NoSuchElementException("Member with given name does not exist.");
-	}
+  /**
+   * Get holotools API id by name.
+   */
+  public int getApiIdByName(String name) throws NoSuchElementException {
+    for (Map<String, HoloMember> divisionDict : memberDict.values()) {
+      HoloMember member = divisionDict.get(name);
+      if (member != null) {
+        return member.getApiId();
+      }
+    }
+    throw new NoSuchElementException("Member with given name does not exist.");
+  }
 
-	public Map<String, String> generateChannelIdNameMap() {
-		Map<String, String> map = new HashMap<String, String>();
+  /** Generate mapping between channdl ID and name. */
+  public Map<String, String> generateChannelIdNameMap() {
+    Map<String, String> map = new HashMap<String, String>();
 
-		for (Map<String, HoloMember> membersOfDiv: memberDict.values())
-			for (Map.Entry<String, HoloMember> entry: membersOfDiv.entrySet()) {
-				map.put(entry.getValue().getYoutubeId(),
-						entry.getValue().getName());
-			}
+    for (Map<String, HoloMember> membersOfDiv : memberDict.values()) {
+      for (Map.Entry<String, HoloMember> entry : membersOfDiv.entrySet()) {
+        map.put(entry.getValue().getYoutubeId(),
+            entry.getValue().getName());
+      }
+    }
 
-		return map;
-	}
+    return map;
+  }
 
-	public ArrayList<HoloMember> getAvaliableMembers(DIVISION division) {
-		return sortedMember.get(division);
-	}
+  public ArrayList<HoloMember> getAvaliableMembers(Division division) {
+    return sortedMember.get(division);
+  }
 
-	private HoloMemberData() {
-		logger = LoggerFactory.getLogger(HoloMemberData.class);
-		logger.info("Reading member data from config/member.json");
+  private HoloMemberData() {
+    logger = LoggerFactory.getLogger(HoloMemberData.class);
+    logger.info("Reading member data from config/member.json");
 
-		memberDict = new HashMap<DIVISION, Map<String, HoloMember>>();
-		sortedMember = new HashMap<DIVISION, ArrayList<HoloMember>>();
+    memberDict = new HashMap<Division, Map<String, HoloMember>>();
+    sortedMember = new HashMap<Division, ArrayList<HoloMember>>();
 
-		loadMemberInfoFromFile(DIVISION.JP, "member.json");
-		loadMemberInfoFromFile(DIVISION.EN, "member_en.json");
-		loadMemberInfoFromFile(DIVISION.ID, "member_id.json");
-	}
+    loadMemberInfoFromFile(Division.JP, "member.json");
+    loadMemberInfoFromFile(Division.EN, "member_en.json");
+    loadMemberInfoFromFile(Division.ID, "member_id.json");
+  }
 
-	/**
-	 * Read member files from config and save to dict
-	 * @param division Division of the group: JP, EN or ID
-	 * @param path
-	 */
-	private void loadMemberInfoFromFile(DIVISION division, String path) {
+  /**
+   * Read member files from config and save to dict.
+   *
+   * @param division Division of the group: JP, EN or ID.
+   * @param path File path.
+   */
+  private void loadMemberInfoFromFile(Division division, String path) {
 
-		Map<String, HoloMember> dict = new HashMap<String, HoloMember>();
-		ArrayList<HoloMember> sortedList = new ArrayList<HoloMember>();
+    Map<String, HoloMember> dict = new HashMap<String, HoloMember>();
+    ArrayList<HoloMember> sortedList = new ArrayList<HoloMember>();
 
-		try {
-			Scanner scanner = new Scanner(new File("config/" + path));
-			scanner.useDelimiter("\\Z");
-			JSONArray json = new JSONArray(scanner.next());
-			scanner.close();
+    try {
+      Scanner scanner = new Scanner(new File("config/" + path));
+      scanner.useDelimiter("\\Z");
+      JSONArray json = new JSONArray(scanner.next());
+      scanner.close();
 
-			for (int i = 0; i < json.length(); ++i) {
-				HoloMember member = new HoloMember(
-						json.getJSONObject(i).getString("id"),
-						json.getJSONObject(i).getString("name"),
-						json.getJSONObject(i).getString("generation"),
-						json.getJSONObject(i).getString("channel_id"),
-						json.getJSONObject(i).getInt("api_id"));
+      for (int i = 0; i < json.length(); ++i) {
+        HoloMember member = new HoloMember(
+            json.getJSONObject(i).getString("id"),
+            json.getJSONObject(i).getString("name"),
+            json.getJSONObject(i).getString("generation"),
+            json.getJSONObject(i).getString("channel_id"),
+            json.getJSONObject(i).getInt("api_id"));
 
-				dict.put(member.getId(), member);
-				sortedList.add(member);
-			}
+        dict.put(member.getId(), member);
+        sortedList.add(member);
+      }
 
-			memberDict.put(division, dict);
-			sortedMember.put(division, sortedList);
+      memberDict.put(division, dict);
+      sortedMember.put(division, sortedList);
 
-		} catch (FileNotFoundException e) {
-			logger.error("config/" + path + " is missing.");
-		}
-	}
+    } catch (FileNotFoundException e) {
+      logger.error("config/" + path + " is missing.");
+    }
+  }
 
-	public enum DIVISION {
-		JP, EN, ID
-	}
+  /** Enum of Hololive branches. */
+  public enum Division {
+    JP, EN, ID
+  }
 
-	private static HoloMemberData instance = null;
-	private Map<DIVISION, Map<String, HoloMember>> memberDict;
-	private Map<DIVISION, ArrayList<HoloMember>> sortedMember;
-	private Logger logger;
+  private static HoloMemberData instance = null;
+  private Map<Division, Map<String, HoloMember>> memberDict;
+  private Map<Division, ArrayList<HoloMember>> sortedMember;
+  private Logger logger;
 }

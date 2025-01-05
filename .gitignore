@@ -6,6 +6,9 @@ logs
 # Eclipse core
 .project
 
+# VS Code
+.vscode
+
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
 
