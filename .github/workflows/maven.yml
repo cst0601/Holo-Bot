@@ -15,27 +15,78 @@ on:
     branches: [ "master" ]
 
 jobs:
-  build:
-
+  test-and-build:
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
         cache: maven
+
     - name: Setup credentials
       env:
         credentials: ${{ secrets.CREDENTIALS }}
       run: |
         mkdir config/credentials
         echo -n "$credentials" >> config/credentials/credentials.json
-    - name: Build with Maven
+
+    - name: Test
+      run: mvn test --file pom.xml
+
+    - name: Lint
+      run: mvn checkstyle:check --file pom.xml
+
+    - name: Build with Maven 
       run: mvn compile assembly:single --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
+  
+  deploy:
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    runs-on: ubuntu-latest
+    needs: test-and-build 
+    if: success() && github.ref == 'refs/heads/master' 
+
+    steps: 
+    - uses: actions/checkout@v4
+
+    - name: Authenticate with Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
+      with:
+        project_id: 'holo-bot-445522'
+        workload_identity_provider: 'projects/253323470753/locations/global/workloadIdentityPools/github/providers/my-repo'
+        service_account: ${{ secrets.GCLOUD }}
+        token_format: 'access_token'
+
+    - name: Login to Artifact Registry
+      uses: docker/login-action@v3
+      with: 
+        registry: ${{ secrets.REGISTRY }}
+        username: oauth2accesstoken
+        password: ${{ steps.auth.outputs.access_token }}
+
+    - name: Prepare config for build
+      env:
+        credentials: ${{ secrets.CREDENTIALS }}
+      run: |
+        mkdir config/credentials
+        echo -n "$credentials" >> config/credentials/credentials.json
+
+    - name: Tag docker image and push to Google Artifact Registry
+      uses: docker/build-push-action@v6
+      with: 
+        push: true
+        tags: ${{secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:${{ github.sha }}
+
+    #- name: Trigger Cloud Run
