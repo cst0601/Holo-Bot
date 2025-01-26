@@ -90,10 +90,15 @@ jobs:
       with: 
         context: .              # specify context to have config copied to image
         push: true
-        tags: ${{ secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:${{ steps.config.outputs.sha_short }}
+        tags:  |
+          ${{ secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:${{ steps.config.outputs.sha_short }}
+          ${{ secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:latest
 
-    - name: Deploy to cloud run
-      uses: 'google-github-actions/deploy-cloudrun@v2'
+    - name: Deploy to CE
+      id: 'compute-ssh'
+      uses: 'google-github-actions/ssh-compute@v1'
       with:
-        service: ${{ secrets.CLOUD_RUN_URL }}
-        image: ${{ secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:${{ steps.config.outputs.sha_short }}
+        instance_name: 'holo-bot'
+        zone: 'us-central1-c' 
+        ssh_private_key: '${{ secrets.GCP_SSH_PRIVATE_KEY }}'
+        command: './deploy_startup.sh ${{ secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:latest'
