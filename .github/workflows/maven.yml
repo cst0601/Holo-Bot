@@ -80,10 +80,12 @@ jobs:
       id: config
       env:
         credentials: ${{ secrets.CREDENTIALS }}
+        stream_config: ${{ secrets.PROD_STREAM_CONFIG }}
       run: |
         echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
         mkdir config/credentials
         echo -n "$credentials" >> config/credentials/credentials.json
+        echo -n "$stream_config" >> config/stream_notification.json
 
     - name: Tag docker image and push to Google Artifact Registry
       uses: docker/build-push-action@v6
