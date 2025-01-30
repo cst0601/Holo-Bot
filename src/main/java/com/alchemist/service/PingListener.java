@@ -1,17 +1,28 @@
 package com.alchemist.service;
 
+import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
+
 import com.alchemist.ArgParser;
 import com.alchemist.Config;
 import com.alchemist.exceptions.ArgumentParseException;
+import java.util.Arrays;
+import java.util.List;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.MarkdownUtil;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 
 /**
  * Service for some basic commands: ping, sudo exit, about.
@@ -65,14 +76,21 @@ public class PingListener extends ListenerAdapter implements Service {
     }
   }
 
+  @Override
+  public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+    switch (event.getName()) {
+      case "ping":
+        ping(event);
+        break;
+      default:
+    }
+  }
+
   @SuppressWarnings("all")
   private void ping(MessageChannelUnion channel) {
     if (parser.getCommandSize() > 1) {
       if (parser.getCommand(1).equals("sl")) {
-        channel.sendMessage(new MessageCreateBuilder()
-          .addContent(MarkdownUtil.bold("YOU HAVE PINGED A STEAM LOCOMOTIVE !!!"))
-          .addContent(MarkdownUtil.codeblock("The steam locomotive is now under maintance...:("))
-          .build()).queue();
+        channel.sendMessage(createLocomotive()).queue();
       } else if (parser.getCommand(1).equals("ls")) {
         channel.sendMessage(new MessageCreateBuilder()
           .addContent(MarkdownUtil.bold("P\nO\nN\nG"))
@@ -81,7 +99,35 @@ public class PingListener extends ListenerAdapter implements Service {
     } else {
       channel.sendMessage("pong!").queue();
     }
+  }
 
+  private void ping(SlashCommandInteractionEvent event) {
+    String pingType = event.getOption("type",
+        () -> "",
+        OptionMapping::getAsString);
+
+    switch (pingType) {
+      case "sl":
+        event.reply(createLocomotive()).queue();
+        break;
+
+      case "ls":
+        event.reply(new MessageCreateBuilder()
+          .addContent(MarkdownUtil.bold("P\nO\nN\nG"))
+          .build()).queue();
+        break;
+
+      default:
+        event.reply("pong!").queue();
+        break;
+    }
+  }
+
+  private MessageCreateData createLocomotive() {
+    return new MessageCreateBuilder()
+      .addContent(MarkdownUtil.bold("YOU HAVE PINGED A STEAM LOCOMOTIVE !!!"))
+      .addContent(MarkdownUtil.codeblock("The steam locomotive is now under maintance...:("))
+      .build();
   }
 
   @Override
@@ -99,6 +145,14 @@ public class PingListener extends ListenerAdapter implements Service {
       + "OPTIONS\n"
       + "      ls: A listed version of ping\n"
       + "      sl: Steam Locomotive";
+  }
+
+  @Override
+  public List<CommandData> getSlashCommands() {
+    return Arrays.asList(
+      Commands.slash("ping", "pong!")
+        .addOptions(new OptionData(STRING, "type", "Different flavor of pings."))
+    );
   }
 
   private Logger logger;

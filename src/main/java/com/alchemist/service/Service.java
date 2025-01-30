@@ -1,5 +1,8 @@
 package com.alchemist.service;
 
+import java.util.List;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+
 /**
  * Interface for Services.
  */
@@ -31,4 +34,10 @@ public abstract interface Service {
     return getClass().getName();
   }
 
+  /**
+   * Get List of slash commands.
+   */
+  public default List<CommandData> getSlashCommands() { 
+    return null; 
+  }
 }

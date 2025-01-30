@@ -2,12 +2,16 @@ package com.alchemist.service;
 
 import com.alchemist.ArgParser;
 import java.awt.Color;
+import java.util.Arrays;
+import java.util.List;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
 
 /**
  * >about command listener. Sends information about this bot to discord.
@@ -74,6 +78,14 @@ public class AboutListener extends ListenerAdapter implements Service {
         + "        about - About the bot!\n\n"
         + "SYNOPSIS\n"
         + "        about: Show messages about the bot.";
+  }
+
+  @Override
+  public List<CommandData> getSlashCommands() {
+    return Arrays.asList(
+      Commands.slash("about", "about this bot")
+        .setGuildOnly(true)
+    );
   }
 
 }

@@ -63,6 +63,7 @@ public class DiscordMpNext {
       jda = builder.build();
       jda.awaitReady();
 
+      BotCommands.addCommands(jda);
       logger.info("Finish building JDA!");
     } catch (InterruptedException e) {
       // await is a blocking method, if interrupted
