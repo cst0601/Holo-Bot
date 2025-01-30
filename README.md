@@ -77,34 +77,15 @@ Unless otherwise stated, all configuration files need to be placed under the
 
 ### Setting Up Tokens
 
-#### Discord
-
-Discord bot token needs to be placed in `config.properties` with the form:
-```properties
-token=<your disocrd bot token>
-twitter=<true|false>
-member_verification=<true|false>
-```
-
-#### HoloDex, YouTube, Twitter API token
-
-HoloDex, YouTube and Twitter API tokens should be placed in
-`/config/credentials` directory with the following filename and format:
-
-(I do know this looks like a mess, but I didn't realized until when I'm updating
-this readme. I promise I will do something.)
-* `holodex.json`
+Keys and tokens should be placed in `config/credentials/credentials.json`.
 ```json
 {
-	"key": <your holodex api key>
+	"discord_token": "(discord token)",
+	"yt_api_key": "(youtube api key)",
+	"holodex_api_key": "(holodex api key)",
 }
 ```
-* `youtube_api.json`
-```json
-{
-	"youtube-api-key": <your youtube api key>
-}
-```
+
 * `twitter4j.properties`
 ```
 debug=false
@@ -117,12 +98,15 @@ oauth.accessTokenSecret=
 ### Enabling/Disabling Some Features
 
 YouTube member verification service and features related to Twitter could be
-disabled in `config.properties` file simply by changing the field value to
+disabled in `credentials.json` file simply by changing the field value to
 `false`.
 
-```
-twitter=false
-member_verification=false
+```json
+{
+	"twitter_broadcast": false,
+	"twitter_url_replace": false,
+	"member_verification": false,
+}
 ```
 
 ### Member Verification
@@ -142,8 +126,9 @@ storing user information (YouTube ID, membership status, renew date).
 ### Broadcasting Twitter content
 
 Tweet broadcasting is disabled in default, to enable the service, add
-`twitter=true` in `config.properties`. Edit `config/broadcast.json` to subscribe
-to twitter content and broadcast it in designated text channel.
+`twitter=true` in `config/credentials/credentials.json`. Edit
+`config/broadcast.json` to subscribe to twitter content and broadcast it in
+designated text channel.
 
 * `query`: The search query for twitter.
 * `target`: Target channel ID(s)

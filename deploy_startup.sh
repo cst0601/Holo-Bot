@@ -8,7 +8,7 @@
 # 
 # Required argument: the url to docker image. 
 #
-docker stop $(docker ps -a -q)
+docker stop $(docker ps -aq)
 docker rmi $(docker images -aq)
 docker pull $1 
 docker run -d --rm --name holo-bot $1 
