@@ -4,6 +4,8 @@ import com.alchemist.HoloDexApi;
 import com.alchemist.HoloMemberData;
 import com.alchemist.LiveStream;
 import java.text.ParseException;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,12 +62,17 @@ public class HoloDexLiveJsonResponse {
         continue;
       }
 
+      ZonedDateTime scheduledTime = ZonedDateTime.parse(
+          stream.getString("start_scheduled"), 
+          dateTimeFormatter
+      );
+
       try {
         streams.add(new LiveStream(
             members.get(channelId),
             stream.getString("id"),
             stream.getString("title"),
-            stream.getString("start_scheduled"),
+            scheduledTime,
             channel.getString("name")
           ));
       } catch (JSONException | ParseException e) {
@@ -81,6 +88,8 @@ public class HoloDexLiveJsonResponse {
   private int statusCode;
   private JSONArray body;
   private Map<String, String> members = new HashMap<String, String>();
+  private static final DateTimeFormatter dateTimeFormatter =
+      DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
   private static final Set<String> STREAM_STATUS = Set.of("upcoming", "live", "ended");
 
 }

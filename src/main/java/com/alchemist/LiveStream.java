@@ -2,7 +2,6 @@ package com.alchemist;
 
 import java.text.ParseException;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 /**
  * LiveStream.
@@ -20,12 +19,12 @@ public class LiveStream {
    * @throws ParseException throws exception if liveSchedule failed to be parsed
    *     into time.
    */
-  public LiveStream(String memberName, String videoId, String title, String liveSchedule,
+  public LiveStream(String memberName, String videoId, String title, ZonedDateTime liveSchedule,
             String channelTitle) throws ParseException {
     this.memberName = memberName;
     this.videoId = videoId;
     this.title = title;
-    this.liveSchedule = ZonedDateTime.parse(liveSchedule, formatter);
+    this.liveSchedule = liveSchedule;
     this.channelTitle = channelTitle;
   }
 
@@ -68,8 +67,6 @@ public class LiveStream {
   }
 
   private static final String URL_PREFIX = "https://www.youtube.com/watch?v=%s";
-  private static final DateTimeFormatter formatter =
-      DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX");
   private String memberName;
   private String videoId;
   private String title;

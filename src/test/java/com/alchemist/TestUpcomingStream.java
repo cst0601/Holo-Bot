@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +21,7 @@ class TestUpcomingStream {
     try {
       liveStream = new LiveStream("さくらみこ", "9_oc4fi_VJQ",
           "【 マリオカート8DX 】耐久１位を取るまで終われまてん開幕🏆！！！！！！！【ホロライブ/さくらみこ】",
-          DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX").format(time), "Miko Ch. さくらみこ");
+          time, "Miko Ch. さくらみこ");
     } catch (ParseException e) {
       e.printStackTrace();
       fail("time parse failed when creating liveStream");
