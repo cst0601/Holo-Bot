@@ -3,77 +3,120 @@
 		"id": "calliope",
 		"name": "森美声",
 		"generation": "EN",
-		"channel_id": "UCL_qhgtOy0dy1Agp8vkySQg",
-		"api_id": 199073
+		"channel_id": "UCL_qhgtOy0dy1Agp8vkySQg"
 	},
 	{
 		"id": "kiara",
 		"name": "小鳥遊キアラ",
 		"generation": "EN",
-		"channel_id": "UCHsx4Hqa-1ORjQTh9TYDhww",
-		"api_id": 199074
+		"channel_id": "UCHsx4Hqa-1ORjQTh9TYDhww"
 	},
 	{
 		"id": "ina",
 		"name": "一伊那尓栖",
 		"generation": "EN",
-		"channel_id": "UCMwGHR0BTZuLsmjY_NT5Pwg",
-		"api_id": 199075
+		"channel_id": "UCMwGHR0BTZuLsmjY_NT5Pwg"
 	},
 	{
 		"id": "gura",
 		"name": "がうる・ぐら",
 		"generation": "EN",
-		"channel_id": "UCoSrY_IQQVpmIRZ9Xf-y93g",
-		"api_id": 199076
+		"channel_id": "UCoSrY_IQQVpmIRZ9Xf-y93g"
 	},
 	{
 		"id": "amelia",
 		"name": "ワトソン・アメリア",
 		"generation": "EN",
-		"channel_id": "UCyl1z3jo3XHR1riLFKG5UAg",
-		"api_id": 199077
+		"channel_id": "UCyl1z3jo3XHR1riLFKG5UAg"
 	},
 	{
         "id": "irys",
         "name": "アイリス",
-        "generation": "HOPE",
-        "channel_id": "UC8rcEBzJSleTkf_-agPM20g",
-        "api_id": 2024827
+        "generation": "council_promise",
+        "channel_id": "UC8rcEBzJSleTkf_-agPM20g"
     },
     {
         "id": "sana",
         "name": "九十九佐命",
-        "generation": "EN_2",
-        "channel_id": "UCsUj0dszADCGbF3gNrQEuSQ",
-        "api_id": 2260364
+        "generation": "council_promise",
+        "channel_id": "UCsUj0dszADCGbF3gNrQEuSQ"
     },
     {
         "id": "fauna",
         "name": "セレス・ファウナ",
-        "generation": "EN_2",
-        "channel_id": "UCO_aKKYxn4tvrqPjcTzZ6EQ",
-        "api_id": 2260365
+        "generation": "council_promise",
+        "channel_id": "UCO_aKKYxn4tvrqPjcTzZ6EQ"
     },
     {
         "id": "kronii",
         "name": "オーロ・クロニー",
-        "generation": "EN_2",
-        "channel_id": "UCmbs8T6MWqUHP1tIQvSgKrg",
-        "api_id": 2260366
+        "generation": "council_promise",
+        "channel_id": "UCmbs8T6MWqUHP1tIQvSgKrg"
     },
     {
         "id": "mumei",
         "name": "七詩ムメイ",
-        "generation": "EN_2",
-        "channel_id": "UC3n5uGu18FoCy23ggWWp8tA",
-        "api_id": 2260367
+        "generation": "council_promise",
+        "channel_id": "UC3n5uGu18FoCy23ggWWp8tA"
     },
     {
         "id": "baelz",
         "name": "ハコス・ベールズ",
-        "generation": "EN_2",
-        "channel_id": "UCgmPnx-EEeOrZSg5Tiw7ZRQ",
-        "api_id": 2260368
+        "generation": "council_promise",
+        "channel_id": "UCgmPnx-EEeOrZSg5Tiw7ZRQ"
     },
+    {
+        "id": "shiori",
+        "name": "シオリ・ノヴェラ",
+        "generation": "advent",
+        "channel_id": "UCgnfPPb9JI3e9A4cXHnWbyg"
+    },
+    {
+        "id": "bijou",
+        "name": "古石ビジュー",
+        "generation": "advent",
+        "channel_id": "UC9p_lqQ0FEDz327Vgf5JwqA"
+    },
+    {
+        "id": "nerissa",
+        "name": "ネリッサ・レイヴンクロフト",
+        "generation": "advent",
+        "channel_id": "UC_sFNM0z0MWm9A6WlKPuMMg"
+    },
+    {
+        "id": "fuwawa",
+        "name": "フワワ・アビスガード",
+        "generation": "advent",
+        "channel_id": "UCt9H_RpQzhxzlyBxFqrdHqA"
+    },
+    {
+        "id": "mococo",
+        "name": "モココ・アビスガード",
+        "generation": "advent",
+        "channel_id": "UCt9H_RpQzhxzlyBxFqrdHqA"
+    },
+    {
+        "id": "elizabeth",
+        "name": "エリザベス・ローズ・ブラッドフレイム",
+        "generation": "justice",
+        "channel_id": "UCW5uhrG1eCBYditmhL0Ykjw"
+    },
+    {
+        "id": "gigi",
+        "name": "ジジ・ムリン",
+        "generation": "justice",
+        "channel_id": "UCDHABijvPBnJm7F-KlNME3w"
+    },
+    {
+        "id": "cecilia",
+        "name": "セシリア・イマーグリーン",
+        "generation": "justice",
+        "channel_id": "UCvN5h1ShZtc7nly3pezRayg"
+    },
+    {
+        "id": "raora",
+        "name": "ラオーラ・パンテーラ",
+        "generation": "justice",
+        "channel_id": "UCl69AEx4MdqMZH7Jtsm7Tig"
+    }
 ]

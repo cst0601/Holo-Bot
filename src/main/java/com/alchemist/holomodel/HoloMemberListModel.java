@@ -28,9 +28,10 @@ public class HoloMemberListModel {
     builder.addField("Generation 3", memberByGeneration.get("3"), false);
     builder.addField("Generation 4", memberByGeneration.get("4"), false);
     builder.addField("Generation 5", memberByGeneration.get("5"), false);
-    builder.addField("Generation 6", memberByGeneration.get("6"), false);
     builder.addField("Hololive Gamers", memberByGeneration.get("gamers"), false);
-    builder.addField("INNK Music", memberByGeneration.get("INNK Music"), false);
+    builder.addField("Holo X", memberByGeneration.get("6"), false);
+    builder.addField("ReGLOSS", memberByGeneration.get("regloss"), false);
+    builder.addField("FLOW GLOW", memberByGeneration.get("flow_glow"), false);
 
     return builder.build();
   }
@@ -42,9 +43,10 @@ public class HoloMemberListModel {
     Map<String, String> memberByGeneration = getMemberByGeneration(Division.EN);
 
     EmbedBuilder builder = getEmbedPrototype();
-    builder.addField("EN Generation 1", memberByGeneration.get("EN"), false);
-    builder.addField("Project Hope", memberByGeneration.get("HOPE"), false);
-    builder.addField("EN Generation 2", memberByGeneration.get("EN_2"), false);
+    builder.addField("Myth", memberByGeneration.get("EN"), false);
+    builder.addField("Council/Promise", memberByGeneration.get("council_promise"), false);
+    builder.addField("Advent", memberByGeneration.get("advent"), false);
+    builder.addField("Justice", memberByGeneration.get("justice"), false);
 
     return builder.build();
   }

@@ -6,13 +6,11 @@ package com.alchemist;
 public class HoloMember {
 
   /** constructor. */
-  public HoloMember(String id, String name, String generation,
-                String ytId, int apiId) {
+  public HoloMember(String id, String name, String generation, String ytId) {
     this.id = id;
     this.name = name;
     this.generation = generation;
     this.ytId = ytId;
-    this.apiId = apiId;
   }
 
   public String getId() {
@@ -31,13 +29,8 @@ public class HoloMember {
     return ytId;
   }
 
-  public int getApiId() {
-    return apiId;
-  }
-
   private String id;
   private String name;
   private String generation;
   private String ytId;
-  private int apiId;  // id used in holotoolsapi
 }

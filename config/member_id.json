@@ -3,42 +3,36 @@
 		"id": "lofi",
 		"name": "アイラニ・イオフィフティーン",
 		"generation": "ID_1",
-		"channel_id": "UCAoy6rzhSf4ydcYjJw3WoVg",
-		"api_id": 19
+		"channel_id": "UCAoy6rzhSf4ydcYjJw3WoVg"
 	},
 	{
 		"id": "moona",
 		"name": "ムーナ・ホシノヴァ",
 		"generation": "ID_1",
-		"channel_id": "UCP0BspO_AMEe3aQqqpo89Dg",
-		"api_id": 22
+		"channel_id": "UCP0BspO_AMEe3aQqqpo89Dg"
 	},
 	{
 		"id": "risu",
 		"name": "アユンダ・リス",
 		"generation": "ID_1",
-		"channel_id": "UCOyYb1c43VlX9rc_lT6NKQw",
-		"api_id": 31
+		"channel_id": "UCOyYb1c43VlX9rc_lT6NKQw"
 	},
 	{
 		"id": "kureiji",
 		"name": "クレイジー・オリー",
 		"generation": "ID_2",
-		"channel_id": "UCYz_5n-uDuChHtLo7My1HnQ",
-		"api_id": 676413
+		"channel_id": "UCYz_5n-uDuChHtLo7My1HnQ"
 	},
 	{
 		"id": "anya",
 		"name": "アーニャ・メルフィッサ",
 		"generation": "ID_2",
-		"channel_id": "UC727SQYUvx5pDDGQpTICNWg",
-		"api_id": 676414
+		"channel_id": "UC727SQYUvx5pDDGQpTICNWg"
 	},
 	{
 		"id": "reine",
 		"name": "パヴォリア・レイネ",
 		"generation": "ID_2",
-		"channel_id": "UChgTyjG-pdNvxxhdsXfHQ5Q",
-		"api_id": 676415
-	},
+		"channel_id": "UChgTyjG-pdNvxxhdsXfHQ5Q"
+	}
 ]

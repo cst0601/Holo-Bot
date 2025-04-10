@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -40,19 +39,6 @@ public class HoloMemberData {
       }
     }
     return null;
-  }
-
-  /**
-   * Get holotools API id by name.
-   */
-  public int getApiIdByName(String name) throws NoSuchElementException {
-    for (Map<String, HoloMember> divisionDict : memberDict.values()) {
-      HoloMember member = divisionDict.get(name);
-      if (member != null) {
-        return member.getApiId();
-      }
-    }
-    throw new NoSuchElementException("Member with given name does not exist.");
   }
 
   /** Generate mapping between channdl ID and name. */
@@ -107,8 +93,7 @@ public class HoloMemberData {
             json.getJSONObject(i).getString("id"),
             json.getJSONObject(i).getString("name"),
             json.getJSONObject(i).getString("generation"),
-            json.getJSONObject(i).getString("channel_id"),
-            json.getJSONObject(i).getInt("api_id"));
+            json.getJSONObject(i).getString("channel_id"));
 
         dict.put(member.getId(), member);
         sortedList.add(member);
