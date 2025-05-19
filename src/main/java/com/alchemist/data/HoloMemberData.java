@@ -1,10 +1,12 @@
-package com.alchemist;
+package com.alchemist.data;
 
+import com.alchemist.HoloMember;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -31,28 +33,29 @@ public class HoloMemberData {
   /**
    * Search all hololive divisions for the member by name.
    */
-  public HoloMember getMemberByName(String name) {
+  public HoloMember getMemberByName(String name) throws NoSuchElementException {
     for (Map<String, HoloMember> divisionDict : memberDict.values()) {
       HoloMember member = divisionDict.get(name);
       if (member != null) {
         return member;
       }
     }
-    return null;
+    throw new NoSuchElementException("Member with name: " + name + " not found.");
   }
 
-  /** Generate mapping between channdl ID and name. */
-  public Map<String, String> generateChannelIdNameMap() {
-    Map<String, String> map = new HashMap<String, String>();
-
-    for (Map<String, HoloMember> membersOfDiv : memberDict.values()) {
-      for (Map.Entry<String, HoloMember> entry : membersOfDiv.entrySet()) {
-        map.put(entry.getValue().getYoutubeId(),
-            entry.getValue().getName());
+  /** Get mapping between channdl ID and name. */
+  public Map<String, String> getChannelIdNameMap() {
+    if (channelIdNameMap == null) {
+      channelIdNameMap = new HashMap<String, String>();
+      for (Map<String, HoloMember> membersOfDiv : memberDict.values()) {
+        for (Map.Entry<String, HoloMember> entry : membersOfDiv.entrySet()) {
+          channelIdNameMap.put(entry.getValue().getYoutubeId(),
+              entry.getValue().getName());
+        }
       }
     }
 
-    return map;
+    return channelIdNameMap;
   }
 
   public ArrayList<HoloMember> getAvaliableMembers(Division division) {
@@ -113,7 +116,8 @@ public class HoloMemberData {
   }
 
   private static HoloMemberData instance = null;
-  private Map<Division, Map<String, HoloMember>> memberDict;
-  private Map<Division, ArrayList<HoloMember>> sortedMember;
+  private Map<Division, Map<String, HoloMember>> memberDict = null;
+  private Map<Division, ArrayList<HoloMember>> sortedMember = null;
+  private Map<String, String> channelIdNameMap = null;
   private Logger logger;
 }

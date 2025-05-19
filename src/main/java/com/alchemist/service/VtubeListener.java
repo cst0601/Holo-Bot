@@ -2,8 +2,8 @@ package com.alchemist.service;
 
 import com.alchemist.ArgParser;
 import com.alchemist.HoloDexApi;
-import com.alchemist.HoloMemberData;
 import com.alchemist.LiveStream;
+import com.alchemist.data.HoloMemberData;
 import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.holomodel.HoloMemberListModel;
 import com.alchemist.holomodel.HoloScheduleModel;

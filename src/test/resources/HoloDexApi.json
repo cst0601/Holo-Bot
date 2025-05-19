@@ -1,0 +1,463 @@
+[
+    {
+        "id": "rCe4rFxjdLs",
+        "title": "【FATAL FRAME】peering into your soul through our viewfinder 🐾【FUWAMOCO|零 zero】",
+        "type": "stream",
+        "topic_id": "Fatal_Frame",
+        "published_at": "2025-05-17T16:04:36.000Z",
+        "available_at": "2025-05-19T00:30:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T00:30:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCt9H_RpQzhxzlyBxFqrdHqA",
+            "name": "FUWAMOCO Ch. hololive-EN",
+            "org": "Hololive",
+            "suborg": "ihEnglish -Advent-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/eC6k63zvyZma-t4NwtxhKXaP7smdQuXM6KA9r8i-ZLxnfSh5ngfAPibEAwtbFy4QEGnt_lY6lA=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Fuwawa & Mococo Abyssgard"
+        }
+    },
+    {
+        "id": "gNNwFwksRLc",
+        "title": "【Fears to Fathom】Ep.1 - Home Alone",
+        "type": "stream",
+        "topic_id": "Fears_to_Fathom",
+        "published_at": "2025-05-18T23:36:56.000Z",
+        "available_at": "2025-05-19T01:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T01:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCMqGG8BRAiI1lJfKOpETM_w",
+            "name": "Josuiji Shinri Ch. HOLOSTARS-EN",
+            "org": "Hololive",
+            "suborg": "ocHOLOSTARS English -TEMPUS- Vanguard",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/GkDmDWOfKfFkcVmG3-ECCRMeFR4bXlWBvuGO3xu3Ud68kVTWssXpn5q266BmtXvcHuzc5Ib2iFQ=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Josuiji Shinri"
+        }
+    },
+    {
+        "id": "71vtWQsFNzA",
+        "title": "【Fantasy Life i】IRyS Living the Fantasy Life!",
+        "type": "stream",
+        "published_at": "2025-05-18T14:49:51.000Z",
+        "available_at": "2025-05-19T01:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T01:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UC8rcEBzJSleTkf_-agPM20g",
+            "name": "IRyS Ch. hololive-EN",
+            "org": "Hololive",
+            "suborg": "iaEnglish -Promise-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/zztv3u0fMtIbGu5nLjKPTwR_8-U0nSq80kmWW0xBpc42tA6dFHlDb_TG3VjSPLNFBuAIZtaFrw=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "IRyS"
+        }
+    },
+    {
+        "id": "UgNfjCvqd1I",
+        "title": "【Duck Detective: The Secret Salami】Not the Secret Salami... now everyone knows about it TToTT",
+        "type": "stream",
+        "topic_id": "Duck_Detective",
+        "published_at": "2025-05-19T00:02:52.000Z",
+        "available_at": "2025-05-19T02:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T02:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UC2hx0xVkMoHGWijwr_lA01w",
+            "name": "Axel Syrios Ch. HOLOSTARS-EN",
+            "org": "Hololive",
+            "suborg": "oaHOLOSTARS English -TEMPUS- HQ",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/uAvVek-I4lHF06RJdq5uPL-KHP3BvwtFgfBi7c9Yma8xUdAx_s8p0jc5GNooXJMSGizeoHXLiAk=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Axel Syrios"
+        }
+    },
+    {
+        "id": "M335ykiC87k",
+        "title": "【Clair Obscur: Expedition 33】last side-quests! ending??  (part 08) (SPOILERS!!)",
+        "type": "stream",
+        "topic_id": "Clair_Obscur",
+        "published_at": "2025-05-18T16:17:23.000Z",
+        "available_at": "2025-05-19T02:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T02:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCL_qhgtOy0dy1Agp8vkySQg",
+            "name": "Mori Calliope Ch. hololive-EN",
+            "org": "Hololive",
+            "suborg": "h English -Myth-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/ZZuzZBS3JHrZz49K3ApCYQo1NQLhN3ApfW0R9hAaIfCLMfx5YTL51bOgJv0zk6Ikdngmmn0G=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Mori Calliope"
+        }
+    },
+    {
+        "id": "r43ZU20cWB4",
+        "title": "【 Red Dead Redemption 】 初見 ：11日目 【vtuber /  /ホロスターズ 】",
+        "type": "stream",
+        "topic_id": "Red_Dead",
+        "published_at": "2025-05-18T14:25:12.000Z",
+        "available_at": "2025-05-19T03:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T03:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCgRqGV1gBf2Esxh0Tz1vxzw",
+            "name": "Uyu Ch. 羽継烏有 - UPROAR!! -",
+            "org": "Hololive",
+            "suborg": "naHOLOSTARS UPROAR!!",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/F8QDMCx8IrRiERV_Aat8HYnDDq8TmIEnquF6Sp8H6T-EuSF29q9Rf0YN57g1Yb6VJETuqkdM=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Utsugi Uyu"
+        }
+    },
+    {
+        "id": "CbtgG_QVcgo",
+        "title": "【緊急】人生初マシュマロ読み。15万人見届け配信 - 夜十神封魔",
+        "type": "stream",
+        "topic_id": "Marshmallow",
+        "published_at": "2025-05-18T10:50:31.000Z",
+        "available_at": "2025-05-19T03:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T03:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCc88OV45ICgHbn3ZqLLb52w",
+            "name": "Fuma Ch. 夜十神封魔 - UPROAR!! -",
+            "org": "Hololive",
+            "suborg": "naHOLOSTARS UPROAR!!",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/mtWfNstoxFmQrInOC7ZcIkOvzoMzDHUchDNpKTRR5ujOtI6bJD0YNFgKHqJpHPOmw2UDqjCu=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Yatogami Fuma"
+        }
+    },
+    {
+        "id": "Y11C8gk9aGc",
+        "title": "【BLEACH Rebirth of Souls】BANKAI.",
+        "type": "stream",
+        "topic_id": "BLEACH",
+        "published_at": "2025-05-15T17:39:36.000Z",
+        "available_at": "2025-05-19T04:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T04:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCTvHWSfBZgtxE4sILOaurIQ",
+            "name": "Vestia Zeta Ch. hololive-ID",
+            "org": "Hololive",
+            "suborg": "keIndonesia 3rd Gen (holoh3ro)",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/0pxwGbJZbeMVkF9wGW4FNE2vJERPo0zUkzSEFWj6IHio-uiLWMSJKdjhkqwRkWwDHNu0dXiynw=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Vestia Zeta"
+        }
+    },
+    {
+        "id": "8DWvYDaW_XY",
+        "title": "【KARAOKE / 歌枠】Singing some songs because why not :D",
+        "type": "stream",
+        "topic_id": "singing",
+        "published_at": "2025-05-18T17:29:41.000Z",
+        "available_at": "2025-05-19T04:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T04:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UC8rcEBzJSleTkf_-agPM20g",
+            "name": "IRyS Ch. hololive-EN",
+            "org": "Hololive",
+            "suborg": "iaEnglish -Promise-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/zztv3u0fMtIbGu5nLjKPTwR_8-U0nSq80kmWW0xBpc42tA6dFHlDb_TG3VjSPLNFBuAIZtaFrw=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "IRyS"
+        }
+    },
+    {
+        "id": "cXdRIp5zljE",
+        "title": "【3D RAFT】GUERILLA RAFT. THIS STREAM IS CANCELLED IF I DON'T WAKE UP IN TIME",
+        "type": "stream",
+        "topic_id": "Raft",
+        "published_at": "2025-05-18T00:16:59.000Z",
+        "available_at": "2025-05-19T05:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T05:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCTVSOgYuSWmNAt-lnJPkEEw",
+            "name": "Jurard T Rexford Ch. HOLOSTARS-EN",
+            "org": "Hololive",
+            "suborg": "oeHOLOSTARS English -ARMIS-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/EA7rVsjrX8vvWUcCw-tEiLj4mrTZK3pvCdRmq07ylzGLBvMRL0FyU6rnMvk6-4umPUWJm8TeNg=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Jurard T Rexford"
+        }
+    },
+    {
+        "id": "paminPJe0VU",
+        "title": "【格付】五感を研ぎ澄まして高級品を当てろ!【 #ホロの休日_仮 】",
+        "type": "stream",
+        "published_at": "2025-05-15T06:50:47.000Z",
+        "available_at": "2025-05-19T09:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T09:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCJFZiqLMntJufDCHc6bQixg",
+            "name": "hololive ホロライブ - VTuber Group",
+            "org": "Hololive",
+            "suborg": "0aOfficial",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/aDD5WjpOtpuZO8QLEVnDI5pX-fjUNcKo5XM0gTpMvWlCxwG5dowWHAUhaooKl7nCstEM_-87=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "hololive VTuber Group"
+        }
+    },
+    {
+        "id": "D4FQeJcr5mA",
+        "title": "【#ロベルないとめあ】『違う星のぼくら』で協力する我々 -ロベル視点-【夕刻ロベル/神楽めあ】",
+        "type": "stream",
+        "topic_id": "Bokura",
+        "published_at": "2025-05-18T17:53:56.000Z",
+        "available_at": "2025-05-19T10:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T10:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCANDOlYTJT7N5jlRC3zfzVA",
+            "name": "Roberu Ch. 夕刻ロベル",
+            "org": "Hololive",
+            "suborg": "mcHOLOSTARS 2nd Gen (SunTempo)",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/087yj2idU-aFOILEg1aycYQopvTOEQw4oILbI4p0u5jjSwauZRzfQkNvIhcKeUdLK-4owPQa4w=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Yukoku Roberu"
+        }
+    },
+    {
+        "id": "K-O4Xi6ipnk",
+        "title": "【お披露目/告知】VRchatで新3D衣装お披露目👗✨【ホロライブ / 星街すいせい】",
+        "type": "stream",
+        "topic_id": "VRChat",
+        "published_at": "2025-05-18T04:39:23.000Z",
+        "available_at": "2025-05-19T10:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T10:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UC5CwaMl1eIgY8h02uZw7u8A",
+            "name": "Suisei Channel",
+            "org": "Hololive",
+            "suborg": "0x0th Generation",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/ytc/AIdro_kLDBK5ksSvk5-XJ6S8e0kWfjy7mVl3jyUkgDeMQ7rlCpU=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Hoshimachi Suisei"
+        }
+    },
+    {
+        "id": "9Z0rzY36j4I",
+        "title": "【DXプラン限定】ロボ子さんと春先のどかの生アフタートーク! 【#ホロの休日_仮】",
+        "type": "stream",
+        "topic_id": "membersonly",
+        "published_at": "2025-05-15T06:55:09.000Z",
+        "available_at": "2025-05-19T10:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T10:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCJFZiqLMntJufDCHc6bQixg",
+            "name": "hololive ホロライブ - VTuber Group",
+            "org": "Hololive",
+            "suborg": "0aOfficial",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/aDD5WjpOtpuZO8QLEVnDI5pX-fjUNcKo5XM0gTpMvWlCxwG5dowWHAUhaooKl7nCstEM_-87=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "hololive VTuber Group"
+        }
+    },
+    {
+        "id": "QWTTjGB332Q",
+        "title": "【 #超ゲマズ2 】おかころから新情報をお知らせします🍙🥐🎮✦【 #おかころ/ホロライブ 】",
+        "type": "stream",
+        "topic_id": "announce",
+        "published_at": "2025-05-18T07:03:29.000Z",
+        "available_at": "2025-05-19T11:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T11:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCvaTdHTWBGv3MKj3KVqJVCw",
+            "name": "Okayu Ch. 猫又おかゆ",
+            "org": "Hololive",
+            "suborg": "d_GAMERS",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/oD8ISaA35737mg-lt5mYSfOIXmjCeHYcSFFpTQn4AVMkqiyzrMle_THvX6NdfSxbjUO6fQ6_wg=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Nekomata Okayu"
+        }
+    },
+    {
+        "id": "VPhLXeU25KA",
+        "title": "綺麗事 / 星街すいせい(official)",
+        "type": "stream",
+        "topic_id": "Original_Song",
+        "published_at": "2025-05-15T03:39:52.000Z",
+        "available_at": "2025-05-19T11:30:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "songcount": 1,
+        "start_scheduled": "2025-05-19T11:30:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UC5CwaMl1eIgY8h02uZw7u8A",
+            "name": "Suisei Channel",
+            "org": "Hololive",
+            "suborg": "0x0th Generation",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/ytc/AIdro_kLDBK5ksSvk5-XJ6S8e0kWfjy7mVl3jyUkgDeMQ7rlCpU=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Hoshimachi Suisei"
+        }
+    },
+    {
+        "id": "7uZ3l_JZ9yg",
+        "title": "【 Minecraft 】特大つのまきじゃんけん建築開始!!!【角巻わため/ホロライブ4期生】",
+        "type": "stream",
+        "topic_id": "minecraft",
+        "published_at": "2025-05-18T22:17:02.000Z",
+        "available_at": "2025-05-19T13:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T13:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCqm3BQLlJfvkTsX_hvm0UmA",
+            "name": "Watame Ch. 角巻わため",
+            "org": "Hololive",
+            "suborg": "fa4th Generation (holoForce)",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/XJYar8ZAQ59ce0nFlf-Dl6V16Dwznu5xfh3XnMW_JE-nCVLHLiRTS-x1gB_eR4_CJY3KDfKxsVo=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Tsunomaki Watame"
+        }
+    },
+    {
+        "id": "Hdw_p0p80iI",
+        "title": "【FUWAMOCO MORNING】episode 158 🐾 #FWMCMORNING",
+        "type": "stream",
+        "topic_id": "News_Show",
+        "published_at": "2025-05-15T19:30:47.000Z",
+        "available_at": "2025-05-19T15:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T15:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCt9H_RpQzhxzlyBxFqrdHqA",
+            "name": "FUWAMOCO Ch. hololive-EN",
+            "org": "Hololive",
+            "suborg": "ihEnglish -Advent-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/eC6k63zvyZma-t4NwtxhKXaP7smdQuXM6KA9r8i-ZLxnfSh5ngfAPibEAwtbFy4QEGnt_lY6lA=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Fuwawa & Mococo Abyssgard"
+        }
+    },
+    {
+        "id": "lcHxy9gsUN8",
+        "title": "【MEMBERS】MINECRAFT MOVIE TIME🍿🍿🍿🍿",
+        "type": "stream",
+        "topic_id": "membersonly",
+        "published_at": "2025-05-18T23:02:04.000Z",
+        "available_at": "2025-05-19T18:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T18:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCHsx4Hqa-1ORjQTh9TYDhww",
+            "name": "Takanashi Kiara Ch. hololive-EN",
+            "org": "Hololive",
+            "suborg": "h English -Myth-",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/vnzn_RiKneABPPnp1-0SO4IAZQRXqVsL5RNDQYGR9GhT-Flm47vM4UJeyGfn4U_gteKqJMBwNA=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Takanashi Kiara"
+        }
+    },
+    {
+        "id": "eSIpsXdDuOA",
+        "title": "【 朝活 】 火曜日!!仕事&学校がんばってーの枠 【vtuber / ホロスターズ 】",
+        "type": "stream",
+        "topic_id": "morning",
+        "published_at": "2025-05-18T14:19:36.000Z",
+        "available_at": "2025-05-19T22:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-19T22:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCgRqGV1gBf2Esxh0Tz1vxzw",
+            "name": "Uyu Ch. 羽継烏有 - UPROAR!! -",
+            "org": "Hololive",
+            "suborg": "naHOLOSTARS UPROAR!!",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/F8QDMCx8IrRiERV_Aat8HYnDDq8TmIEnquF6Sp8H6T-EuSF29q9Rf0YN57g1Yb6VJETuqkdM=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Utsugi Uyu"
+        }
+    },
+    {
+        "id": "149E0rH-97I",
+        "title": "【 Red Dead Redemption 】 初見 ：12日目 【vtuber /  /ホロスターズ 】",
+        "type": "stream",
+        "topic_id": "Red_Dead",
+        "published_at": "2025-05-18T14:26:20.000Z",
+        "available_at": "2025-05-20T03:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-20T03:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCgRqGV1gBf2Esxh0Tz1vxzw",
+            "name": "Uyu Ch. 羽継烏有 - UPROAR!! -",
+            "org": "Hololive",
+            "suborg": "naHOLOSTARS UPROAR!!",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/F8QDMCx8IrRiERV_Aat8HYnDDq8TmIEnquF6Sp8H6T-EuSF29q9Rf0YN57g1Yb6VJETuqkdM=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Utsugi Uyu"
+        }
+    },
+    {
+        "id": "LOm5abnwHeU",
+        "title": "【 朝活 】 水曜日!!仕事&学校がんばってーの枠 【vtuber / ホロスターズ 】",
+        "type": "stream",
+        "topic_id": "morning",
+        "published_at": "2025-05-18T14:20:20.000Z",
+        "available_at": "2025-05-20T22:00:00.000Z",
+        "duration": 0,
+        "status": "upcoming",
+        "start_scheduled": "2025-05-20T22:00:00.000Z",
+        "live_viewers": 0,
+        "channel": {
+            "id": "UCgRqGV1gBf2Esxh0Tz1vxzw",
+            "name": "Uyu Ch. 羽継烏有 - UPROAR!! -",
+            "org": "Hololive",
+            "suborg": "naHOLOSTARS UPROAR!!",
+            "type": "vtuber",
+            "photo": "https://yt3.ggpht.com/F8QDMCx8IrRiERV_Aat8HYnDDq8TmIEnquF6Sp8H6T-EuSF29q9Rf0YN57g1Yb6VJETuqkdM=s800-c-k-c0x00ffffff-no-rj",
+            "english_name": "Utsugi Uyu"
+        }
+    }
+]
