@@ -1,8 +1,8 @@
 package com.alchemist.jsonresponse;
 
-import com.alchemist.HoloDexApi;
-import com.alchemist.HoloMemberData;
 import com.alchemist.LiveStream;
+import com.alchemist.data.HoloMemberData;
+import com.alchemist.data.HoloMemberFilter;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +28,7 @@ public class HoloDexLiveJsonResponse {
    */
   public HoloDexLiveJsonResponse(int statusCode, String body) {
     logger = LoggerFactory.getLogger(HoloDexLiveJsonResponse.class);
-    members = HoloMemberData.getInstance().generateChannelIdNameMap();
+    members = HoloMemberData.getInstance().getChannelIdNameMap();
     this.statusCode = statusCode;
     this.body = new JSONArray(body);
   }
@@ -56,7 +56,7 @@ public class HoloDexLiveJsonResponse {
       String channelId = channel.getString("id");
 
 
-      if (!HoloDexApi.isMemberDesired(channelId)) {
+      if (!HoloMemberFilter.getInstance().isMemberDesired(channelId)) {
         continue;
       } else if (!stream.getString("status").equals(streamStatus)) {
         continue;

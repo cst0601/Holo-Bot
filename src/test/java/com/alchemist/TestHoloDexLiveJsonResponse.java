@@ -2,6 +2,7 @@ package com.alchemist;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.alchemist.helper.TestDataReader;
 import com.alchemist.jsonresponse.HoloDexLiveJsonResponse;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,25 @@ public class TestHoloDexLiveJsonResponse {
     assertEquals(streams.get(8).getMemberName(), "宝鐘マリン");
     assertEquals(streams.get(9).getMemberName(), "風真いろは");
     assertEquals(streams.get(10).getMemberName(), "クレイジー・オリー");
+  }
+
+  @Test
+  void testMentionedChannel() {
+    // streams mentioning raden
+    HoloDexLiveJsonResponse response = new HoloDexLiveJsonResponse(
+        200, 
+        TestDataReader
+          .getReader()
+          .readTestData("HoloDexMentionedChannel.json"));
+    ArrayList<LiveStream> streams = response.getStream("upcoming");
+    LiveStream stream = streams.get(0);
+
+    assertEquals(1, streams.size());
+
+    assertEquals("赤井はあと", stream.getMemberName());
+    assertEquals("jelFWBjk4qs", stream.getVideoId());
+    assertEquals("【#でんちゃま】語り合おう、もんじゃで。【ホロライブ/赤井はあと/儒烏風亭らでん #ReGLOSS】", stream.getTitle());
+    assertEquals("HAACHAMA Ch 赤井はあと", stream.getChannelName());
   }
 
   private String rawJson = "[\n"
