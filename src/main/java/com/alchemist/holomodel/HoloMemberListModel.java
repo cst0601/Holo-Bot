@@ -1,8 +1,8 @@
 package com.alchemist.holomodel;
 
 import com.alchemist.HoloMember;
-import com.alchemist.data.HoloMemberData;
-import com.alchemist.data.HoloMemberData.Division;
+import com.alchemist.HoloMemberData;
+import com.alchemist.HoloMemberData.Division;
 import java.awt.Color;
 import java.util.HashMap;
 import java.util.Map;

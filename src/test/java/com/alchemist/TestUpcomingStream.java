@@ -30,7 +30,7 @@ class TestUpcomingStream {
   }
 
   @BeforeEach
-  void init() {
+  private void init() {
     now = ZonedDateTime.now(ZoneId.of("UTC"));
   }
 

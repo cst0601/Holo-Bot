@@ -89,11 +89,8 @@ public class StreamNotifierRunner extends Thread {
 
   private void updateUpcomingStreams() {
     try {
-      ArrayList<UpcomingStream> updateStream = new ArrayList<UpcomingStream>();
-      ArrayList<LiveStream> liveStreams = api.getStreamOfMember(memberName, "upcoming");
-      liveStreams.addAll(api.getStreamMentioningMember(memberName, "upcoming"));
-
-      for (LiveStream stream : liveStreams) {
+      List<UpcomingStream> updateStream = new ArrayList<UpcomingStream>();
+      for (LiveStream stream : api.getStreamOfMember(memberName, "upcoming")) {
         UpcomingStream upcomingStream = new UpcomingStream(stream, jda);
         if (!upcomingStream.hasStarted()) { // api might give stream started but state = upcoming
           updateStream.add(upcomingStream);
