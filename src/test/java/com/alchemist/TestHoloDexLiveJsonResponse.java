@@ -17,7 +17,7 @@ public class TestHoloDexLiveJsonResponse {
     HoloDexLiveJsonResponse jsonResponse = new HoloDexLiveJsonResponse(200, rawJson);
 
     assertEquals(jsonResponse.getStatusCode(), 200);
-    ArrayList<LiveStream> streams = jsonResponse.getStream("upcoming");
+    ArrayList<LiveStream> streams = jsonResponse.getStream("upcoming", false);
 
     assertEquals(streams.size(), 11);
     assertEquals(streams.get(0).getMemberName(), "桃鈴ねね");
@@ -41,7 +41,7 @@ public class TestHoloDexLiveJsonResponse {
         TestDataReader
           .getReader()
           .readTestData("HoloDexMentionedChannel.json"));
-    ArrayList<LiveStream> streams = response.getStream("upcoming");
+    ArrayList<LiveStream> streams = response.getStream("upcoming", false);
     LiveStream stream = streams.get(0);
 
     assertEquals(1, streams.size());
