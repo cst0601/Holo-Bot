@@ -43,7 +43,7 @@ public class HoloDexLiveJsonResponse {
    * @param streamStatus One of the STREAM_STATUS.
    * @return list for formatted LiveStream objects.
    */
-  public ArrayList<LiveStream> getStream(String streamStatus) {
+  public ArrayList<LiveStream> getStream(String streamStatus, boolean isMentionedStream) {
     ArrayList<LiveStream> streams = new ArrayList<LiveStream>();
 
     if (!STREAM_STATUS.contains(streamStatus)) { // if not one of the vaild status of stream
@@ -73,7 +73,8 @@ public class HoloDexLiveJsonResponse {
             stream.getString("id"),
             stream.getString("title"),
             scheduledTime,
-            channel.getString("name")
+            channel.getString("name"),
+            isMentionedStream
           ));
       } catch (JSONException | ParseException e) {
         logger.warn("Failed to create live stream.");

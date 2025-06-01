@@ -26,6 +26,26 @@ public class LiveStream {
     this.title = title;
     this.liveSchedule = liveSchedule;
     this.channelTitle = channelTitle;
+    this.mentionedStream = false;
+  }
+
+  /** 
+   * Constructor that specifies if the stream is from another channel mentioning
+   * the member. 
+   */
+  public LiveStream(
+      String memberName, 
+      String videoId, 
+      String title, 
+      ZonedDateTime liveSchedule, 
+      String channelTitle, 
+      boolean isMentionedStream) throws ParseException {
+    this.memberName = memberName;
+    this.videoId = videoId;
+    this.title = title;
+    this.liveSchedule = liveSchedule;
+    this.channelTitle = channelTitle;
+    this.mentionedStream = isMentionedStream;
   }
 
   public String toString() {
@@ -56,6 +76,10 @@ public class LiveStream {
     return liveSchedule;
   }
 
+  public boolean isMentionedStream() {
+    return mentionedStream;
+  }
+
   // This is only a possibility of the stream being member only or not
   public boolean isPossibleMemberOnly() {
     String keyword = Config.getConfig().speculateName;
@@ -72,4 +96,5 @@ public class LiveStream {
   private String title;
   private ZonedDateTime liveSchedule;
   private String channelTitle;
+  private boolean mentionedStream;
 }

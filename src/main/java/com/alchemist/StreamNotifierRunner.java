@@ -95,7 +95,10 @@ public class StreamNotifierRunner extends Thread {
 
       for (LiveStream stream : liveStreams) {
         UpcomingStream upcomingStream = new UpcomingStream(stream, jda);
-        if (!upcomingStream.hasStarted()) { // api might give stream started but state = upcoming
+        // api might give stream started but state = upcoming. e.g. the bot 
+        // started after the streram started. We don't want it to be notified
+        // in this case.
+        if (!upcomingStream.hasStarted()) {           
           updateStream.add(upcomingStream);
         }
       }
@@ -118,7 +121,7 @@ public class StreamNotifierRunner extends Thread {
         } catch (NoSuchElementException e) {
           upcomingStreams.add(stream);
           if (!stream.hasStarted()) {
-            logger.info("New upcocmming stream " + stream.toString());
+            logger.info("New upcomming stream " + stream.toString());
           }
         }
       }

@@ -58,7 +58,7 @@ public class UpcomingStream {
         nextState();
         for (int i = 0; i < builders.size(); i++) {
           long roleId = notifications.get(i).pingRoleId;
-          if (roleId != 0) {
+          if (roleId != 0 && !liveStream.isMentionedStream()) {
             builders.get(i).addContent(
                 jda.getRoleById(roleId).getAsMention());
           }

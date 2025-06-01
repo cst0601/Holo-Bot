@@ -29,7 +29,7 @@ public class HoloDexApi extends Api {
   public ArrayList<LiveStream> getLiveStreams()
       throws IOException, InterruptedException {
     String apiRequest = "https://holodex.net/api/v2/live?max_upcoming_hours=48&org=Hololive";
-    return request(apiRequest).getStream("live");
+    return request(apiRequest).getStream("live", false);
   }
 
   /**
@@ -41,7 +41,7 @@ public class HoloDexApi extends Api {
       String channelId = HoloMemberData.getInstance().getMemberByName(member).getYoutubeId();
       String apiRequest = String.format("https://holodex.net/api/v2/live?max_upcoming_hours=48&org=Hololive&channel_id=%s", channelId);
 
-      return request(apiRequest).getStream(streamType);
+      return request(apiRequest).getStream(streamType, false);
     } catch (NoSuchElementException e) {
       logger.warn("Member with name " + member + " not found.");
     }
@@ -58,7 +58,7 @@ public class HoloDexApi extends Api {
       String channelId = HoloMemberData.getInstance().getMemberByName(member).getYoutubeId();
       String apiRequest = String.format("https://holodex.net/api/v2/live?max_upcoming_hours=48&mentioned_channel_id=%s", channelId);
 
-      return request(apiRequest).getStream(streamType);
+      return request(apiRequest).getStream(streamType, true);
     } catch (NoSuchElementException e) {
       logger.warn("Member with name " + member + " not found.");
     }
