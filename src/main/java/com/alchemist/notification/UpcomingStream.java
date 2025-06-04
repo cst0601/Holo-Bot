@@ -1,10 +1,11 @@
-package com.alchemist;
+package com.alchemist.notification;
 
+import com.alchemist.Config;
+import com.alchemist.ConfigNotification;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.utils.TimeFormat;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
@@ -36,20 +37,14 @@ public class UpcomingStream {
       nextState();
       Instant startTimeInstant = liveStream.getStreamStartTime().toInstant();
       builders.forEach(builder -> {
-        builder
-            .addContent("頻道有新動靜！快去看看！\n")
-            .addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
-            .addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
-            .addContent(getStreamUrl() + "\n");
+        NotificationMessage.getNewStreamMessage(builder, liveStream, startTimeInstant);
       });
       return builders;
     } else if (state == StreamState.NOTIFIED) {
       if (upcomingNotificationTime.toInstant().isBefore(Instant.now())) {
         nextState();
         builders.forEach(builder -> {
-          builder
-              .addContent("再過五分鐘配信開始！\n")
-              .addContent(getStreamUrl() + "\n");
+          NotificationMessage.getUpcomingStreamMessage(builder, liveStream);
         });
         return builders;
       }
@@ -58,13 +53,12 @@ public class UpcomingStream {
         nextState();
         for (int i = 0; i < builders.size(); i++) {
           long roleId = notifications.get(i).pingRoleId;
-          if (roleId != 0 && !liveStream.isMentionedStream()) {
-            builders.get(i).addContent(
-                jda.getRoleById(roleId).getAsMention());
-          }
-          builders.get(i)
-              .addContent("にゃっはろ～！配信開始了！\n")
-              .addContent(getStreamUrl() + "\n");
+          NotificationMessage.getStreamStartMessage(
+              builders.get(i),
+              liveStream,
+              // prevents jda call if invalid role id
+              (roleId == 0) ? null : jda.getRoleById(roleId)  
+          );
         }
         return builders;
       }
@@ -90,11 +84,7 @@ public class UpcomingStream {
       ArrayList<MessageCreateBuilder> builders =
           new ArrayList<MessageCreateBuilder>(notifications.size());
       builders.forEach(builder -> {
-        builder
-            .addContent("直播開始時間更新了！")
-            .addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
-            .addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
-            .addContent(getStreamUrl() + "\n");
+        NotificationMessage.getStreamStartTimeUpdateMessage(builder, liveStream, startTimeInstant);
       });
       return builders;
     }
@@ -113,14 +103,16 @@ public class UpcomingStream {
   public String toString() {
     return "* state: " + state
          + ", start_time:" + upcomingNotificationTime.toString()
-         + ", url: " + liveStream.toString();
+         + ", url: " + liveStream.toString()
+         + ", is_mentioned: " + liveStream.isMentionedStream();
   }
 
   /** Convert stream to markdown syntax message for displaying on discord. */
   public String toMarkdownString() {
-    return "* Start time: " + upcomingNotificationTime.toString()
+    return "* start_time: " + upcomingNotificationTime.toString()
          + ", [url](" + liveStream.toString() + "), "
-         + " state: " + state + "\n";
+         + " state: " + state 
+         + ", is_mentioned: " + liveStream.isMentionedStream() + "\n";
   }
 
   /** Append membership stream only message. */
@@ -136,11 +128,7 @@ public class UpcomingStream {
           && state == StreamState.NOTIFIED
           && liveStream.isPossibleMemberOnly()
       ) {
-        builders
-            .get(i)
-            .addContent("嗶嗶...從直播標題判斷，這個可能是會員限定直播...\n")
-            .addContent("如果是的話，請到<#" + memberShipChannelId + ">頻道同時視聽討論\n");
-
+        NotificationMessage.getMembershipOnlyStreamMessage(builders.get(i), memberShipChannelId);
       }
     }
 

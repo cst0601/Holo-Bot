@@ -1,5 +1,6 @@
-package com.alchemist;
+package com.alchemist.notification;
 
+import com.alchemist.Config;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 

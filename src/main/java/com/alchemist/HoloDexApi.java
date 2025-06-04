@@ -2,6 +2,7 @@ package com.alchemist;
 
 import com.alchemist.data.HoloMemberData;
 import com.alchemist.jsonresponse.HoloDexLiveJsonResponse;
+import com.alchemist.notification.LiveStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
