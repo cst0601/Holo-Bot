@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.alchemist.helper.TestDataReader;
 import com.alchemist.jsonresponse.HoloDexLiveJsonResponse;
+import com.alchemist.notification.LiveStream;
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 

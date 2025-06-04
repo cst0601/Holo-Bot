@@ -1,5 +1,7 @@
 package com.alchemist;
 
+import com.alchemist.notification.LiveStream;
+import com.alchemist.notification.UpcomingStream;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -121,7 +123,7 @@ public class StreamNotifierRunner extends Thread {
         } catch (NoSuchElementException e) {
           upcomingStreams.add(stream);
           if (!stream.hasStarted()) {
-            logger.info("New upcomming stream " + stream.toString());
+            logger.info("New upcoming stream " + stream.toString());
           }
         }
       }

@@ -2,11 +2,11 @@ package com.alchemist.service;
 
 import com.alchemist.ArgParser;
 import com.alchemist.HoloDexApi;
-import com.alchemist.LiveStream;
 import com.alchemist.data.HoloMemberData;
 import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.holomodel.HoloMemberListModel;
 import com.alchemist.holomodel.HoloScheduleModel;
+import com.alchemist.notification.LiveStream;
 import java.awt.Color;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;

@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
+import com.alchemist.notification.LiveStream;
+import com.alchemist.notification.UpcomingStream;
 import java.text.ParseException;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
