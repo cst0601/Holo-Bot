@@ -161,7 +161,7 @@ public class StreamNotifierRunner extends Thread {
       message += stream.toString() + "\n";
       formattedStreamList += stream.toMarkdownString();
     }
-    builder.addField("List (start_time, url, state)", formattedStreamList, false);
+    builder.addField("List (start_time, url, state, isMentioned)", formattedStreamList, false);
     serviceMessageBox.put(message);
     logger.info(message);
     jda.getTextChannelById(channelId).sendMessageEmbeds(builder.build()).queue();

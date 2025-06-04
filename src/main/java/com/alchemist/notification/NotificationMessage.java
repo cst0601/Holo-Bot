@@ -47,6 +47,19 @@ public class NotificationMessage {
         .addContent(liveStream.toString() + "\n");
   }
 
+  /** Append stream start time update notification message. */
+  public static void getStreamStartTimeUpdateMessage(
+      MessageCreateBuilder builder,
+      LiveStream liveStream,
+      Instant startTimeInstant
+  ) {
+    builder
+        .addContent("直播開始時間更新了！")
+        .addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
+        .addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
+        .addContent(liveStream.toString() + "\n");
+  }
+
   /** Append membership only stream notification message. */
   public static void getMembershipOnlyStreamMessage(
       MessageCreateBuilder builder,

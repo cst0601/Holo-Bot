@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.utils.TimeFormat;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 
@@ -85,11 +84,7 @@ public class UpcomingStream {
       ArrayList<MessageCreateBuilder> builders =
           new ArrayList<MessageCreateBuilder>(notifications.size());
       builders.forEach(builder -> {
-        builder
-            .addContent("直播開始時間更新了！")
-            .addContent("預定開始時間: " + TimeFormat.DATE_TIME_LONG.atInstant(startTimeInstant))
-            .addContent(", " + TimeFormat.RELATIVE.atInstant(startTimeInstant) + "\n")
-            .addContent(getStreamUrl() + "\n");
+        NotificationMessage.getStreamStartTimeUpdateMessage(builder, liveStream, startTimeInstant);
       });
       return builders;
     }
@@ -108,14 +103,16 @@ public class UpcomingStream {
   public String toString() {
     return "* state: " + state
          + ", start_time:" + upcomingNotificationTime.toString()
-         + ", url: " + liveStream.toString();
+         + ", url: " + liveStream.toString()
+         + ", is_mentioned: " + liveStream.isMentionedStream();
   }
 
   /** Convert stream to markdown syntax message for displaying on discord. */
   public String toMarkdownString() {
-    return "* Start time: " + upcomingNotificationTime.toString()
+    return "* start_time: " + upcomingNotificationTime.toString()
          + ", [url](" + liveStream.toString() + "), "
-         + " state: " + state + "\n";
+         + " state: " + state 
+         + ", is_mentioned: " + liveStream.isMentionedStream() + "\n";
   }
 
   /** Append membership stream only message. */
