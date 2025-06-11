@@ -14,7 +14,7 @@ public class NotificationMessage {
       LiveStream liveStream,
       Instant startTimeInstant) {
     if (liveStream.isMentionedStream()) {
-      builder.addContent("在其他頻道被提及了！快去看看！");
+      builder.addContent("在其他頻道被提及了！快去看看！\n");
     } else {
       builder.addContent("頻道有新動靜！快去看看！\n");
     }

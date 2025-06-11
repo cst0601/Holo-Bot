@@ -77,7 +77,8 @@ public class UpcomingStream {
       MessageCreateData msg = broadcast().get(0).build();
       while (msg != null) {
         msg.close();
-        msg = broadcast().get(0).build();
+        ArrayList<MessageCreateBuilder> newMsg = broadcast();
+        msg = (newMsg == null) ? null : newMsg.get(0).build();
       }
 
       Instant startTimeInstant = liveStream.getStreamStartTime().toInstant();
@@ -101,17 +102,17 @@ public class UpcomingStream {
 
   /** Convert stream to string for logging. */
   public String toString() {
-    return "* state: " + state
-         + ", start_time:" + upcomingNotificationTime.toString()
+    return "* start_time:" + upcomingNotificationTime.toString()
          + ", url: " + liveStream.toString()
+         + ", state: " + state
          + ", is_mentioned: " + liveStream.isMentionedStream();
   }
 
   /** Convert stream to markdown syntax message for displaying on discord. */
   public String toMarkdownString() {
     return "* start_time: " + upcomingNotificationTime.toString()
-         + ", [url](" + liveStream.toString() + "), "
-         + " state: " + state 
+         + ", [url](" + liveStream.toString() + ")"
+         + ", state: " + state 
          + ", is_mentioned: " + liveStream.isMentionedStream() + "\n";
   }
 
