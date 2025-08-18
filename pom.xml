@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.alchemist</groupId>
   <artifactId>Holo_Bot</artifactId>
-  <version>1.5.6b</version>
+  <version>1.5.7</version>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -41,29 +41,28 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.23.1</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-core</artifactId>
+      <version>1.5.18</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
     <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-api</artifactId>
-        <version>2.23.1</version>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+      <version>1.5.18</version>
+      <scope>compile</scope>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j2-impl -->
     <dependency>
-        <groupId>org.apache.logging.log4j</groupId>
-        <artifactId>log4j-slf4j2-impl</artifactId>
-        <version>2.23.1</version>
+      <groupId>com.google.cloud</groupId>
+      <artifactId>google-cloud-logging-logback</artifactId>
+      <version>0.131.11-alpha</version>
     </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>2.0.13</version>
+      <version>2.0.16</version>
     </dependency>
 
     <dependency>
@@ -101,6 +100,15 @@
           <version>1.4.0</version>
           <configuration>
             <mainClass>com.alchemist.DiscordMpNext</mainClass>
+            <systemProperties>
+              <systemProperty>
+                <!-- Set log configuration to dev -->
+                <key>logback.configurationFile</key>
+                <value>
+                  ${basedir}/src/test/resources/logback-test.xml
+                </value>
+              </systemProperty>
+            </systemProperties>
           </configuration>
         </plugin>
 
@@ -116,6 +124,38 @@
               <descriptorRef>jar-with-dependencies</descriptorRef>
             </descriptorRefs>
           </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-shade-plugin</artifactId>
+          <version>3.6.0</version>
+          <configuration>
+            <filters>
+              <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                      <exclude>META-INF/*.SF</exclude>
+                      <exclude>META-INF/*.DSA</exclude>
+                      <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+              </filter>
+            </filters>
+            <transformers>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                <mainClass>com.alchemist.DiscordMpNext</mainClass>
+              </transformer>
+              <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+            </transformers>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>shade</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
 
         <plugin>

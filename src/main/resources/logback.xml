@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+
+<configuration>
+  <import class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"/>
+  <import class="ch.qos.logback.core.ConsoleAppender"/>
+  <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
+
+  <appender name="STDOUT" class="ConsoleAppender">
+    <encoder class="PatternLayoutEncoder">
+      <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger -%kvp- %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="RollingFileAppender">
+    <file>logs/app.log</file>
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>logs/holo-bot-%d{yyyy-MM-dd}.log</fileNamePattern>
+      <maxHistory>30</maxHistory>
+    </rollingPolicy>
+    <encoder class="PatternLayoutEncoder">
+      <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger -%kvp- %msg%n</pattern>
+    </encoder>
+  </appender>
+  
+  <appender name="CLOUD" class="com.google.cloud.logging.logback.LoggingAppender">
+    <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+      <level>INFO</level>
+    </filter>
+    <log>application.log</log> 
+    <flushLevel>WARN</flushLevel> 
+  </appender>
+
+  <root level="info">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE"/>
+    <appender-ref ref="CLOUD"/>
+  </root>
+</configuration>
