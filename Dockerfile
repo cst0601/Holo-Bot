@@ -9,4 +9,4 @@ FROM openjdk:25-slim-bullseye
 WORKDIR /usr/holo-bot
 COPY --from=build /usr/holo-bot/target/*.jar .
 COPY config ./config
-CMD ["java", "-jar", "Holo_Bot-jar-with-dependencies.jar"]
+CMD ["java", "-jar", "Holo_Bot.jar"]

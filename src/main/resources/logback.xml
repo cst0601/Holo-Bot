@@ -6,6 +6,12 @@
   <import class="ch.qos.logback.core.ConsoleAppender"/>
   <import class="ch.qos.logback.core.rolling.RollingFileAppender"/>
 
+  <appender name="STDOUT" class="ConsoleAppender">
+    <encoder class="PatternLayoutEncoder">
+      <pattern>%d{HH:mm:ss.SSS} [%-5level] %logger -%kvp- %msg%n</pattern>
+    </encoder>
+  </appender>
+
   <appender name="FILE" class="RollingFileAppender">
     <file>logs/app.log</file>
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -22,15 +28,12 @@
       <level>INFO</level>
     </filter>
     <log>application.log</log> 
-    <redirectToStdout>true</redirectToStdout>
     <flushLevel>WARN</flushLevel> 
   </appender>
 
   <root level="info">
+    <appender-ref ref="STDOUT"/>
     <appender-ref ref="FILE"/>
-  </root>
-
-  <root level="info">
     <appender-ref ref="CLOUD"/>
   </root>
 </configuration>
