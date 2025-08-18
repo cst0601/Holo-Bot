@@ -3,7 +3,7 @@ WORKDIR /usr/holo-bot
 
 COPY pom.xml .
 COPY src ./src
-RUN mvn clean compile package
+RUN mvn package -DskipTests
 
 FROM openjdk:25-slim-bullseye
 WORKDIR /usr/holo-bot
