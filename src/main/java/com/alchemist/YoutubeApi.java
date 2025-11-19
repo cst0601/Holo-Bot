@@ -1,5 +1,6 @@
 package com.alchemist;
 
+import com.alchemist.config.Config;
 import com.alchemist.exceptions.ApiQuotaExceededException;
 import com.alchemist.exceptions.HttpException;
 import com.alchemist.jsonresponse.youtube.LiveStreamChatMessageList;

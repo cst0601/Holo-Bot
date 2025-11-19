@@ -2,6 +2,7 @@ src/main/resources/config.properties
 config/credentials/*
 target/
 logs
+.env
 
 # Eclipse core
 .project
@@ -17,5 +18,6 @@ logs
 .settings
 dependency-reduced-pom.xml
 
+# Macos files
 .DS_Store
 */.DS_Store

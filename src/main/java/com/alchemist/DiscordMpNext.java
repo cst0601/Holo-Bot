@@ -1,5 +1,7 @@
 package com.alchemist;
 
+import com.alchemist.config.Config;
+import com.alchemist.config.ConfigSentry;
 import com.alchemist.service.AboutListener;
 import com.alchemist.service.BonkListener;
 import com.alchemist.service.CountDownListener;
@@ -11,6 +13,7 @@ import com.alchemist.service.StreamNotifierService;
 import com.alchemist.service.TwitterBroadcastService;
 import com.alchemist.service.TwitterUrlReplaceListener;
 import com.alchemist.service.VtubeListener;
+import io.sentry.Sentry;
 import javax.security.auth.login.LoginException;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -32,6 +35,7 @@ public class DiscordMpNext {
       new DiscordMpNext().startUp(args);
     } catch (LoginException e) {
       e.printStackTrace();
+      Sentry.captureException(e);
     }
   }
 
@@ -44,6 +48,14 @@ public class DiscordMpNext {
   private void startUp(String [] args) throws LoginException {
     logger = LoggerFactory.getLogger(DiscordMpNext.class);
 
+    buildSentry();
+
+    try {
+      throw new Exception("Test in dev");
+    } catch (Exception e) {
+      Sentry.captureException(e);
+    }
+     
     try {
       JDABuilder builder = JDABuilder.createDefault(Config.getConfig().discordToken)
           .enableIntents(GatewayIntent.MESSAGE_CONTENT)
@@ -67,7 +79,19 @@ public class DiscordMpNext {
     } catch (InterruptedException e) {
       // await is a blocking method, if interrupted
       e.printStackTrace();
+      Sentry.captureException(e);
     }
+  }
+
+  /** Initialize sentry with config. */
+  private void buildSentry() {
+    ConfigSentry configSentry = Config.getConfig().configSentry;
+    Sentry.init(options -> {
+      options.setDsn(configSentry.dsn);
+      options.setEnvironment(configSentry.environment);
+      options.setSendDefaultPii(configSentry.sendDefaultPii);
+      options.setDebug(configSentry.debug);
+    });
   }
 
   /**

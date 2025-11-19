@@ -157,6 +157,10 @@ Schedule API](https://github.com/cst0601/holo_schedule_api) repo.
     `gcloud auth application-default login` to get the necessary authentication.
   * `mvn assembly:single` (deprecated)
 
+## Sentry
+
+* Setup `sentry.properties` to configure sentry.
+
 ## Contributing
 
 You're welcomed to do so either by sending over pull requests or submitting feed

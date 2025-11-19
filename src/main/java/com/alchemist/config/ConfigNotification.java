@@ -1,4 +1,4 @@
-package com.alchemist;
+package com.alchemist.config;
 
 import org.json.JSONObject;
 

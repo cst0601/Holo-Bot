@@ -1,7 +1,9 @@
 package com.alchemist;
 
+import com.alchemist.config.Config;
 import com.alchemist.notification.LiveStream;
 import com.alchemist.notification.UpcomingStream;
+import io.sentry.Sentry;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -129,8 +131,9 @@ public class StreamNotifierRunner extends Thread {
       }
     } catch (Exception e) {
       e.printStackTrace();
-      logger.warn("Failed to update upomming streams.");
-    }
+      logger.warn("Failed to update upoming streams. " + e.getMessage());
+      Sentry.captureException(e);
+    } 
   }
 
   private void notifyUpcomingStreams(boolean sendMessage) {
