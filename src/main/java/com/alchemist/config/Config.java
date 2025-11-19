@@ -1,4 +1,4 @@
-package com.alchemist;
+package com.alchemist.config;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -48,6 +48,7 @@ public class Config {
     while (adminJsonIter.hasNext()) {
       adminIds.add((Long) adminJsonIter.next());
     }
+    configSentry = new ConfigSentry(json.getJSONObject("sentry"));
   }
 
   /** Read from file and initialize the singleton instance. */
@@ -78,6 +79,7 @@ public class Config {
   public final boolean isTwitterBroadcastServiceOn;
   public final boolean isTwitterUrlReplaceServiceOn;
   public final boolean isMemberVerificationServiceOn;
+  public final ConfigSentry configSentry;
   public ArrayList<ConfigNotification> notifications;
 
   private static Config instance = null;

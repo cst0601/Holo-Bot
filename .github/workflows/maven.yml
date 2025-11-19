@@ -42,6 +42,10 @@ jobs:
       run: mvn checkstyle:check --file pom.xml
 
     - name: Build with Maven 
+      env: 
+        SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+        SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+        SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
       run: mvn compile package --file pom.xml
 
     # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
@@ -91,6 +95,10 @@ jobs:
       uses: docker/build-push-action@v6
       with: 
         context: .              # specify context to have config copied to image
+        build-args: |
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         push: true
         tags:  |
           ${{ secrets.ARTIFACT_REGISTRY_URL }}/chikuma/holo-bot:${{ steps.config.outputs.sha_short }}

@@ -1,7 +1,7 @@
 package com.alchemist.notification;
 
-import com.alchemist.Config;
-import com.alchemist.ConfigNotification;
+import com.alchemist.config.Config;
+import com.alchemist.config.ConfigNotification;
 import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;

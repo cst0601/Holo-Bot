@@ -1,7 +1,7 @@
 package com.alchemist.service;
 
 import com.alchemist.ArgParser;
-import com.alchemist.Config;
+import com.alchemist.config.Config;
 import com.alchemist.exceptions.ArgumentParseException;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
