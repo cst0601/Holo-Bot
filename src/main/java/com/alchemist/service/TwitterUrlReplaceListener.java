@@ -4,12 +4,13 @@ import com.alchemist.VxTwitterApi;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 
 /**
@@ -54,11 +55,14 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 
       message
           .reply(builder.build())
-          .addActionRow(
-              // component id format: delete/<member_id>/<original_message_id>
-              Button.secondary(
-                  "delete/" + event.getMember().getId() + "/" + message.getId(),
-                  "Delete"))
+          .addComponents(
+              ActionRow.of(
+                // component id format: delete/<member_id>/<original_message_id>
+                Button.secondary(
+                    "delete/" + event.getMember().getId() + "/" + message.getId(),
+                    "Delete")
+              )
+          )
           .queue();
     }
   }
@@ -72,6 +76,8 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 
     if (parts[0].equals("delete")) {
       if (parts[1].equals(event.getUser().getId())) {
+        // acknowledge the event and then delete the original message
+        event.deferEdit().queue();
         event.getMessage().delete().queue();
       } else {
         event
