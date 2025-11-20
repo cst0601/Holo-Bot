@@ -51,12 +51,6 @@ public class DiscordMpNext {
     buildSentry();
 
     try {
-      throw new Exception("Test in dev");
-    } catch (Exception e) {
-      Sentry.captureException(e);
-    }
-     
-    try {
       JDABuilder builder = JDABuilder.createDefault(Config.getConfig().discordToken)
           .enableIntents(GatewayIntent.MESSAGE_CONTENT)
           .addEventListeners(new PingListener())  // system commands
