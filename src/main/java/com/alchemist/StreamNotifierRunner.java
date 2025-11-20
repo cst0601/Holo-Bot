@@ -177,7 +177,10 @@ public class StreamNotifierRunner extends Thread {
     messageBuilders = stream.appendMemberOnlyMessage(messageBuilders);
     for (int i = 0; i < config.notifications.size(); i++) {
       MessageChannel channel = jda.getTextChannelById(config.notifications.get(i).targetChannelId);
-      logger.info("Send notification for stream: " + stream.getStreamUrl() + " to channel: " + channel.getId());
+      logger.info(
+          "Send notification for stream: " + stream.getStreamUrl() 
+          + " to channel: " + channel.getId()
+      );
 
       channel.sendMessage(messageBuilders.get(i).build()).queue();
     }
