@@ -72,7 +72,6 @@ public class StreamNotifierRunner extends Thread {
       } catch (InterruptedException e) {
         e.printStackTrace();
       }
-
     }
 
     logger.info("StreamNotifierRunner exit run.");
@@ -127,6 +126,7 @@ public class StreamNotifierRunner extends Thread {
           if (!stream.hasStarted()) {
             logger.info("New upcoming stream " + stream.toString());
           }
+          Sentry.captureException(e);
         }
       }
     } catch (Exception e) {
@@ -177,8 +177,9 @@ public class StreamNotifierRunner extends Thread {
     messageBuilders = stream.appendMemberOnlyMessage(messageBuilders);
     for (int i = 0; i < config.notifications.size(); i++) {
       MessageChannel channel = jda.getTextChannelById(config.notifications.get(i).targetChannelId);
-      channel.sendMessage(messageBuilders.get(i).build()).queue();
+      logger.info("Send notification for stream: " + stream.getStreamUrl() + " to channel: " + channel.getId());
 
+      channel.sendMessage(messageBuilders.get(i).build()).queue();
     }
   }
 

@@ -48,7 +48,7 @@ public class UpcomingStream {
         });
         return builders;
       }
-    } else if (state == StreamState.UPCOMMING) {
+    } else if (state == StreamState.UPCOMING) {
       if (liveStream.getStreamStartTime().toInstant().isBefore(Instant.now())) {
         nextState();
         for (int i = 0; i < builders.size(); i++) {
@@ -142,9 +142,9 @@ public class UpcomingStream {
         state = StreamState.NOTIFIED;
         break;
       case NOTIFIED:
-        state = StreamState.UPCOMMING;
+        state = StreamState.UPCOMING;
         break;
-      case UPCOMMING:
+      case UPCOMING:
         state = StreamState.STARTED;
         break;
       default:
@@ -155,10 +155,10 @@ public class UpcomingStream {
   /**
    * INIT: Havn't been announced.
    * NOTIFIED: Announced, before 5 min mark notification.
-   * UPCOMMING: After 5 min mark notification.
+   * UPCOMING: After 5 min mark notification.
    * STARTED: Stream has started.
    */
-  enum StreamState { INIT, NOTIFIED, UPCOMMING, STARTED }
+  enum StreamState { INIT, NOTIFIED, UPCOMING, STARTED }
 
   private JDA jda;
   private LiveStream liveStream;
