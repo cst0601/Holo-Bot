@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.NoSuchElementException;
+import java.util.OptionalInt;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -81,13 +81,13 @@ public class StreamNotifierRunner extends Thread {
     messageBox.put(message);
   }
 
-  private int containsUpcomingStream(UpcomingStream newStream) throws NoSuchElementException {
+  private OptionalInt getUpcomingStreamIndex(UpcomingStream newStream) {
     for (int i = 0; i < upcomingStreams.size(); ++i) {
       if (upcomingStreams.get(i).getStreamUrl().equals(newStream.getStreamUrl())) {
-        return i;
+        return OptionalInt.of(i);
       }
     }
-    throw new NoSuchElementException("Stream does not exist");
+    return OptionalInt.empty();  
   }
 
   private void updateUpcomingStreams() {
@@ -110,23 +110,21 @@ public class StreamNotifierRunner extends Thread {
         // if stream does not exist, add it to list
         // if does exist, check if scheduled start time needs update
         // TODO: if stream exist in cache but no longer in yt, delete it
-        try {
-          int streamIndex = containsUpcomingStream(stream);
+        OptionalInt streamIndex = getUpcomingStreamIndex(stream);
+        if (streamIndex.isPresent()) {
           ArrayList<MessageCreateBuilder> updateMessages = upcomingStreams
-              .get(streamIndex)
+              .get(streamIndex.getAsInt())
               .checkStreamStartTime(stream);
 
           if (updateMessages != null) {
-            sendMessageToChannels(updateMessages, upcomingStreams.get(streamIndex));
+            sendMessageToChannels(updateMessages, upcomingStreams.get(streamIndex.getAsInt()));
             logger.info("Updated stream start time " + stream.toString());
           }
-
-        } catch (NoSuchElementException e) {
+        } else {
           upcomingStreams.add(stream);
           if (!stream.hasStarted()) {
             logger.info("New upcoming stream " + stream.toString());
           }
-          Sentry.captureException(e);
         }
       }
     } catch (Exception e) {
