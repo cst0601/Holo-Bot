@@ -41,14 +41,14 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 
     String msg = message.getContentDisplay();
     Matcher matcher = PATTERN.matcher(msg);
-    ArrayList<MessageEmbed> tweets = new ArrayList<MessageEmbed>();
+    ArrayList<String> tweets = new ArrayList<String>();
 
     try {
       while (matcher.find()) {
         String twitterUrl = msg.substring(matcher.start(), matcher.end());
         twitterUrl = twitterUrl.replace("twitter.com", "api.vxtwitter.com");
         twitterUrl = twitterUrl.replace("x.com", "api.vxtwitter.com");
-        tweets.add(api.getTweet(twitterUrl).toMessageEmbed());
+        tweets.add(api.getTweet(twitterUrl).getVxTwitterUrl());
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -62,8 +62,10 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
         logger.error("Cannot remove message embed. " + e.getMessage());
       }
 
-      MessageCreateBuilder builder = new MessageCreateBuilder()
-          .addEmbeds(tweets);
+      MessageCreateBuilder builder = new MessageCreateBuilder();
+      for (String tweet : tweets) {
+        builder.addContent(tweet);
+      }
 
       message
           .reply(builder.build())

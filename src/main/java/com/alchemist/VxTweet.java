@@ -25,6 +25,10 @@ public record VxTweet(
     return String.format("https://twitter.com/%s/status/%s", userScreenName, tweetId);
   }
 
+  public String getVxTwitterUrl() {
+    return String.format("https://vxtwitter.com/%s/status/%s\n", userScreenName, tweetId);
+  }
+
   public String getTweetAuthorUrl() {
     return String.format("https://twitter.com/%s", userScreenName);
   }
