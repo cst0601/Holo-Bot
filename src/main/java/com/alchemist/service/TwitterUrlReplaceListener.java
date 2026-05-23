@@ -67,6 +67,7 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 
       message
           .reply(builder.build())
+          .mentionRepliedUser(false)
           .addComponents(
               ActionRow.of(
                 // component id format: delete/<member_id>/<original_message_id>
