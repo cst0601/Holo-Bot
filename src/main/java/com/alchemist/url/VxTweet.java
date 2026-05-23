@@ -33,10 +33,6 @@ public record VxTweet(
     return String.format("https://twitter.com/%s", userScreenName);
   }
 
-  private String getUserScreenName() { 
-    return userScreenName;
-  }
-
   /** Get twitter urls and other useful links in markdown format. */
   public String getTweetLinks() {
     return String.format(
