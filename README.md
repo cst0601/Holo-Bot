@@ -150,7 +150,7 @@ Schedule API](https://github.com/cst0601/holo_schedule_api) repo.
 
 ### Running, Test and Build
 
-* Run: `mvn compile exec:java`
+* Run: `mvn exec:java`
 * Test: `mvn test`
 * Build: `mvn clean package`
   * To run the jar files in dev, since it requires gcloud (cloud logging), do a 
