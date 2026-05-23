@@ -1,6 +1,6 @@
-package com.alchemist.service;
+package com.alchemist.url;
 
-import com.alchemist.VxTwitterApi;
+import com.alchemist.service.Service;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,14 +41,14 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
 
     String msg = message.getContentDisplay();
     Matcher matcher = PATTERN.matcher(msg);
-    ArrayList<String> tweets = new ArrayList<String>();
+    ArrayList<VxTweet> tweets = new ArrayList<VxTweet>();
 
     try {
       while (matcher.find()) {
         String twitterUrl = msg.substring(matcher.start(), matcher.end());
         twitterUrl = twitterUrl.replace("twitter.com", "api.vxtwitter.com");
         twitterUrl = twitterUrl.replace("x.com", "api.vxtwitter.com");
-        tweets.add(api.getTweet(twitterUrl).getVxTwitterUrl());
+        tweets.add(api.getTweet(twitterUrl));
       }
     } catch (Exception e) {
       e.printStackTrace();
@@ -63,8 +63,8 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
       }
 
       MessageCreateBuilder builder = new MessageCreateBuilder();
-      for (String tweet : tweets) {
-        builder.addContent(tweet);
+      for (VxTweet tweet : tweets) {
+        builder.addContent(tweet.getTweetLinks());
       }
 
       message

@@ -1,6 +1,5 @@
-package com.alchemist.jsonresponse;
+package com.alchemist.url;
 
-import com.alchemist.VxTweet;
 import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONObject;
