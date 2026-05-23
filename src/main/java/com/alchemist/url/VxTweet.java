@@ -1,4 +1,4 @@
-package com.alchemist;
+package com.alchemist.url;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -21,16 +21,27 @@ public record VxTweet(
     String profileImageUrl
 ) {
 
-  public String getTwitterUrl() {
+  private String getTwitterUrl() {
     return String.format("https://twitter.com/%s/status/%s", userScreenName, tweetId);
   }
 
-  public String getVxTwitterUrl() {
+  private String getVxTwitterUrl() {
     return String.format("https://vxtwitter.com/%s/status/%s\n", userScreenName, tweetId);
   }
 
-  public String getTweetAuthorUrl() {
+  private String getTweetAuthorUrl() {
     return String.format("https://twitter.com/%s", userScreenName);
+  }
+
+  /** Get twitter urls and other useful links in markdown format. */
+  public String getTweetLinks() {
+    return String.format(
+        "[twitter](<%s>) - [@%s](<%s>) - [vxtwitter](%s)\n",
+        getTwitterUrl(), 
+        userScreenName, 
+        getTweetAuthorUrl(), 
+        getVxTwitterUrl()
+    );
   }
 
   /** Convert tweet to MessageEmbed. */

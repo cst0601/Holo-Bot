@@ -1,7 +1,7 @@
-package com.alchemist;
+package com.alchemist.url;
 
+import com.alchemist.Api;
 import com.alchemist.exceptions.HttpException;
-import com.alchemist.jsonresponse.VxTwitterApiJsonResponse;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
