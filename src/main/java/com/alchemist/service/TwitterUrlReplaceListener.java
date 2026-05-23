@@ -12,11 +12,14 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Service for converting x.com or twitter.com urls to vxtwitter urls.
  */
 public class TwitterUrlReplaceListener extends ListenerAdapter implements Service {
+  private Logger logger;
 
   private VxTwitterApi api = new VxTwitterApi();
 
@@ -24,7 +27,9 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
       + "\\.com\\/([a-zA-Z0-9_]+)(\\/[a-zA-Z0-9]+)(\\/[a-zA-Z0-9]+)";
   public static final Pattern PATTERN = Pattern.compile(URL_REGEX);
 
-  public TwitterUrlReplaceListener() {}
+  public TwitterUrlReplaceListener() {
+    logger = LoggerFactory.getLogger(TwitterUrlReplaceListener.class);
+  }
 
   @Override
   public void onMessageReceived(MessageReceivedEvent event) {
@@ -50,6 +55,13 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
     }
 
     if (!tweets.isEmpty()) {
+      // remove original message embed
+      try {
+        message.suppressEmbeds(true).queue();
+      } catch (Exception e) {
+        logger.error("Cannot remove message embed. " + e.getMessage());
+      }
+
       MessageCreateBuilder builder = new MessageCreateBuilder()
           .addEmbeds(tweets);
 
