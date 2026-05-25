@@ -30,5 +30,4 @@ public abstract interface Service {
   public default String getServiceName() {
     return getClass().getName();
   }
-
 }

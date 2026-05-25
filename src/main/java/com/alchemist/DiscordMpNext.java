@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.restaction.CommandListUpdateAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +71,8 @@ public class DiscordMpNext {
       jda.awaitReady();
 
       logger.info("Finish building JDA!");
+
+      createSlashCommands(jda);
     } catch (InterruptedException e) {
       // await is a blocking method, if interrupted
       e.printStackTrace();
@@ -113,5 +116,15 @@ public class DiscordMpNext {
     }
 
     return builder;
+  }
+
+  private void createSlashCommands(JDA jda) {
+    CommandListUpdateAction commands = jda.updateCommands();
+
+    commands.addCommands(TwitterUrlReplaceListener.getSlashCommands());
+
+    commands.queue();
+
+    logger.info("Created slash commands.");
   }
 }
