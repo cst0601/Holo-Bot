@@ -1,16 +1,23 @@
 package com.alchemist.url;
 
+import static net.dv8tion.jda.api.interactions.commands.OptionType.STRING;
+
 import com.alchemist.service.Service;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
+import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,6 +38,14 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
     logger = LoggerFactory.getLogger(TwitterUrlReplaceListener.class);
   }
 
+  /** Create global slash commands. */
+  public static ArrayList<CommandData> getSlashCommands() {
+    return new ArrayList<>(Arrays.asList(
+        Commands.slash("embed", "Post a embed message with url.")
+          .addOption(STRING, "url", "The url for embed message.", true)
+    ));
+  }
+
   @Override
   public void onMessageReceived(MessageReceivedEvent event) {
     Message message = event.getMessage();
@@ -40,19 +55,7 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
     }
 
     String msg = message.getContentDisplay();
-    Matcher matcher = PATTERN.matcher(msg);
-    ArrayList<VxTweet> tweets = new ArrayList<VxTweet>();
-
-    try {
-      while (matcher.find()) {
-        String twitterUrl = msg.substring(matcher.start(), matcher.end());
-        twitterUrl = twitterUrl.replace("twitter.com", "api.vxtwitter.com");
-        twitterUrl = twitterUrl.replace("x.com", "api.vxtwitter.com");
-        tweets.add(api.getTweet(twitterUrl));
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+    ArrayList<VxTweet> tweets = getVxTweetsFromUrl(msg);
 
     if (!tweets.isEmpty()) {
       // remove original message embed
@@ -83,9 +86,46 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
   }
 
   @Override
+  public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+    if (!event.getName().equals("embed")) {
+      return;
+    }
+
+    String url = event.getOption("url").getAsString();
+    ArrayList<VxTweet> tweets = getVxTweetsFromUrl(url);
+
+    if (tweets.isEmpty()) {
+      event
+          .reply(
+            "Not a valid url. Only Twitter/X urls are supported for now."
+          )
+          .setEphemeral(true)
+          .queue();
+    } else {
+      MessageCreateBuilder builder = new MessageCreateBuilder();
+      for (VxTweet tweet : tweets) {
+        builder.addContent((tweet.getTweetLinks()));
+      }
+
+      // There's no shared interface for reply method between slash command
+      // events and Message as of now I think.
+      event 
+          .reply(builder.build())
+          .mentionRepliedUser(false)
+          .addComponents(
+            ActionRow.of(
+              // component id format: delete/<member_id>
+              Button.secondary("delete/" + event.getMember().getId(), "Delete")
+            )
+          )
+          .queue();
+    }
+  }
+
+  @Override
   public void onButtonInteraction(ButtonInteractionEvent event) {
     String[] parts = event.getComponentId().split("/");
-    if (parts.length != 3) {
+    if (parts.length < 2) {
       return;
     }
 
@@ -101,5 +141,23 @@ public class TwitterUrlReplaceListener extends ListenerAdapter implements Servic
             .queue();
       }
     }
+  }
+
+  private ArrayList<VxTweet> getVxTweetsFromUrl(String url) {
+    ArrayList<VxTweet> tweets = new ArrayList<VxTweet>();
+    Matcher matcher = PATTERN.matcher(url);
+
+    try {
+      while (matcher.find()) {
+        String twitterUrl = url.substring(matcher.start(), matcher.end());
+        twitterUrl = twitterUrl.replace("twitter.com", "api.vxtwitter.com");
+        twitterUrl = twitterUrl.replace("x.com", "api.vxtwitter.com");
+        tweets.add(api.getTweet(twitterUrl));
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+
+    return tweets;
   }
 }
