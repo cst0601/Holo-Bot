@@ -7,6 +7,7 @@ import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.holomodel.HoloMemberListModel;
 import com.alchemist.holomodel.HoloScheduleModel;
 import com.alchemist.notification.LiveStream;
+import io.sentry.Sentry;
 import java.awt.Color;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
@@ -149,6 +150,7 @@ public class VtubeListener extends ListenerAdapter implements Service {
     } catch (Exception e) {
       logger.warn("Failed to get request from holoToolsApi.");
       e.printStackTrace();
+      Sentry.captureException(e);
     }
   }
 

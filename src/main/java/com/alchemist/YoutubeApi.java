@@ -4,6 +4,7 @@ import com.alchemist.config.Config;
 import com.alchemist.exceptions.ApiQuotaExceededException;
 import com.alchemist.exceptions.HttpException;
 import com.alchemist.jsonresponse.youtube.LiveStreamChatMessageList;
+import io.sentry.Sentry;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -73,6 +74,7 @@ public class YoutubeApi extends Api {
       list = requestLiveStreamChat();
     } catch (Exception e) {
       e.printStackTrace();
+      Sentry.captureException(e);
       return false;
     }
 

@@ -3,6 +3,7 @@ package com.alchemist.service;
 import com.alchemist.ArgParser;
 import com.alchemist.StreamNotifierRunner;
 import com.alchemist.exceptions.ArgumentParseException;
+import io.sentry.Sentry;
 import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -32,6 +33,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
       logger.info("StreamNotifierService ready!");
     } catch (Exception e) {
       e.printStackTrace();
+      Sentry.captureException(e);
       logger.warn("Error occured when reading config file, skip runner build.");
     }
   }
@@ -49,6 +51,7 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
         parser.parse();
       } catch (ArgumentParseException e1) {
         e1.printStackTrace();
+        Sentry.captureException(e1);
       }
 
       if (parser.getCommandSize() > 1) {

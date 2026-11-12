@@ -3,6 +3,7 @@ package com.alchemist.service;
 import com.alchemist.ArgParser;
 import com.alchemist.config.Config;
 import com.alchemist.exceptions.ArgumentParseException;
+import io.sentry.Sentry;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
@@ -41,6 +42,7 @@ public class PingListener extends ListenerAdapter implements Service {
         parser.parse();
       } catch (ArgumentParseException e) {
         e.printStackTrace();
+        Sentry.captureException(e);
         return;
       }
     }

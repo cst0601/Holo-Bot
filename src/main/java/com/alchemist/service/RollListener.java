@@ -2,6 +2,7 @@ package com.alchemist.service;
 
 import com.alchemist.ArgParser;
 import com.alchemist.exceptions.ArgumentParseException;
+import io.sentry.Sentry;
 import java.awt.Color;
 import java.util.Random;
 import java.util.Stack;
@@ -52,6 +53,7 @@ public class RollListener extends ListenerAdapter implements Service {
         parser.parse();
       } catch (ArgumentParseException e) {
         e.printStackTrace();
+        Sentry.captureException(e);
         return;
       }
 

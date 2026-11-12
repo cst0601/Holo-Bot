@@ -99,7 +99,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.4.0</version>
+          <version>3.6.4</version>
           <configuration>
             <mainClass>com.alchemist.DiscordMpNext</mainClass>
             <systemProperties>
@@ -186,7 +186,7 @@
         <plugin>
           <groupId>io.sentry</groupId>
           <artifactId>sentry-maven-plugin</artifactId>
-          <version>0.9.0</version>
+          <version>0.11.0</version>
           <extensions>true</extensions>
           <configuration>
             <!-- for showing output of sentry-cli -->

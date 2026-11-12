@@ -1,5 +1,6 @@
 package com.alchemist;
 
+import io.sentry.Sentry;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
@@ -107,6 +108,7 @@ public class TwitterBroadcastConfig {
       writer.close();
     } catch (Exception e) {
       e.printStackTrace();
+      Sentry.captureException(e);
       logger.warn("Failed to update/write configuration back to twitter_broadcast.json");
     }
   }

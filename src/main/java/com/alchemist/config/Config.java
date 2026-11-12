@@ -1,5 +1,6 @@
 package com.alchemist.config;
 
+import io.sentry.Sentry;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -59,6 +60,7 @@ public class Config {
       } catch (FileNotFoundException e) {
         Logger logger = LoggerFactory.getLogger(Config.class);
         logger.error("Error finding config files.");
+        Sentry.captureException(e);
         e.printStackTrace();
       }
     }

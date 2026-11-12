@@ -87,7 +87,7 @@ public class StreamNotifierRunner extends Thread {
         return OptionalInt.of(i);
       }
     }
-    return OptionalInt.empty();  
+    return OptionalInt.empty();
   }
 
   private void updateUpcomingStreams() {
@@ -98,10 +98,10 @@ public class StreamNotifierRunner extends Thread {
 
       for (LiveStream stream : liveStreams) {
         UpcomingStream upcomingStream = new UpcomingStream(stream, jda);
-        // api might give stream started but state = upcoming. e.g. the bot 
+        // api might give stream started but state = upcoming. e.g. the bot
         // started after the streram started. We don't want it to be notified
         // in this case.
-        if (!upcomingStream.hasStarted()) {           
+        if (!upcomingStream.hasStarted()) {
           updateStream.add(upcomingStream);
         }
       }
@@ -129,9 +129,9 @@ public class StreamNotifierRunner extends Thread {
       }
     } catch (Exception e) {
       e.printStackTrace();
-      logger.warn("Failed to update upoming streams. " + e.getMessage());
       Sentry.captureException(e);
-    } 
+      logger.warn("Failed to update upoming streams. " + e.getMessage());
+    }
   }
 
   private void notifyUpcomingStreams(boolean sendMessage) {
@@ -176,7 +176,7 @@ public class StreamNotifierRunner extends Thread {
     for (int i = 0; i < config.notifications.size(); i++) {
       MessageChannel channel = jda.getTextChannelById(config.notifications.get(i).targetChannelId);
       logger.info(
-          "Send notification for stream: " + stream.getStreamUrl() 
+          "Send notification for stream: " + stream.getStreamUrl()
           + " to channel: " + channel.getId()
       );
 
