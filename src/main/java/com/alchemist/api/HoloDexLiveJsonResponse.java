@@ -2,7 +2,7 @@ package com.alchemist.jsonresponse;
 
 import com.alchemist.data.HoloMemberData;
 import com.alchemist.data.HoloMemberFilter;
-import com.alchemist.notification.LiveStream;
+import com.alchemist.notifier.LiveStream;
 import java.text.ParseException;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,7 +63,7 @@ public class HoloDexLiveJsonResponse {
       }
 
       ZonedDateTime scheduledTime = ZonedDateTime.parse(
-          stream.getString("start_scheduled"), 
+          stream.getString("start_scheduled"),
           dateTimeFormatter
       );
 

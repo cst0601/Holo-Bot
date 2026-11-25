@@ -1,9 +1,10 @@
-package com.alchemist;
+package com.alchemist.api;
 
+import com.alchemist.Api;
 import com.alchemist.config.Config;
 import com.alchemist.data.HoloMemberData;
 import com.alchemist.jsonresponse.HoloDexLiveJsonResponse;
-import com.alchemist.notification.LiveStream;
+import com.alchemist.notifier.LiveStream;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpRequest;

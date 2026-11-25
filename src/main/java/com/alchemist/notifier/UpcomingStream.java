@@ -1,4 +1,4 @@
-package com.alchemist.notification;
+package com.alchemist.notifier;
 
 import com.alchemist.config.Config;
 import com.alchemist.config.ConfigNotification;
@@ -57,7 +57,7 @@ public class UpcomingStream {
               builders.get(i),
               liveStream,
               // prevents jda call if invalid role id
-              (roleId == 0) ? null : jda.getRoleById(roleId)  
+              (roleId == 0) ? null : jda.getRoleById(roleId)
           );
         }
         return builders;
@@ -112,7 +112,7 @@ public class UpcomingStream {
   public String toMarkdownString() {
     return "* start_time: " + upcomingNotificationTime.toString()
          + ", [url](" + liveStream.toString() + ")"
-         + ", state: " + state 
+         + ", state: " + state
          + ", is_mentioned: " + liveStream.isMentionedStream() + "\n";
   }
 

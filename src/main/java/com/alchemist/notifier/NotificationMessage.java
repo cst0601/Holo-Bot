@@ -1,4 +1,4 @@
-package com.alchemist.notification;
+package com.alchemist.notifier;
 
 import java.time.Instant;
 import net.dv8tion.jda.api.entities.Role;
@@ -10,7 +10,7 @@ public class NotificationMessage {
 
   /** Append new stream notification message. */
   public static void getNewStreamMessage(
-      MessageCreateBuilder builder, 
+      MessageCreateBuilder builder,
       LiveStream liveStream,
       Instant startTimeInstant) {
     if (liveStream.isMentionedStream()) {
@@ -26,7 +26,7 @@ public class NotificationMessage {
 
   /** Append upcoming stream notification. */
   public static void getUpcomingStreamMessage(
-      MessageCreateBuilder builder, 
+      MessageCreateBuilder builder,
       LiveStream liveStream) {
     builder
         .addContent("再過五分鐘配信開始！\n")
@@ -41,7 +41,7 @@ public class NotificationMessage {
   ) {
     if (!liveStream.isMentionedStream() && role != null) {
       builder.addContent(role.getAsMention());
-    } 
+    }
     builder
         .addContent("にゃっはろ～！配信開始了！\n")
         .addContent(liveStream.toString() + "\n");
