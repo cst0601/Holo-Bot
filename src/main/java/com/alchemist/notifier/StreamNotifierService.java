@@ -4,7 +4,6 @@ import com.alchemist.ArgParser;
 import com.alchemist.exceptions.ArgumentParseException;
 import com.alchemist.service.Service;
 import io.sentry.Sentry;
-import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;

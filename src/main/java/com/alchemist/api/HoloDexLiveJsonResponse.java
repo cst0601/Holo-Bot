@@ -1,4 +1,4 @@
-package com.alchemist.jsonresponse;
+package com.alchemist.api;
 
 import com.alchemist.data.HoloMemberData;
 import com.alchemist.data.HoloMemberFilter;
