@@ -1,4 +1,4 @@
-package com.alchemist.notification;
+package com.alchemist.notifier;
 
 import com.alchemist.config.Config;
 import java.text.ParseException;
@@ -30,16 +30,16 @@ public class LiveStream {
     this.mentionedStream = false;
   }
 
-  /** 
+  /**
    * Constructor that specifies if the stream is from another channel mentioning
-   * the member. 
+   * the member.
    */
   public LiveStream(
-      String memberName, 
-      String videoId, 
-      String title, 
-      ZonedDateTime liveSchedule, 
-      String channelTitle, 
+      String memberName,
+      String videoId,
+      String title,
+      ZonedDateTime liveSchedule,
+      String channelTitle,
       boolean isMentionedStream) throws ParseException {
     this.memberName = memberName;
     this.videoId = videoId;

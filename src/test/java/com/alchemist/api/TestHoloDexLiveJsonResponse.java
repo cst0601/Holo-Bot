@@ -1,10 +1,10 @@
-package com.alchemist;
+package com.alchemist.api;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.alchemist.helper.TestDataReader;
-import com.alchemist.jsonresponse.HoloDexLiveJsonResponse;
-import com.alchemist.notification.LiveStream;
+import com.alchemist.notifier.LiveStream;
+
 import java.util.ArrayList;
 import org.junit.jupiter.api.Test;
 
@@ -38,7 +38,7 @@ public class TestHoloDexLiveJsonResponse {
   void testMentionedChannel() {
     // streams mentioning raden
     HoloDexLiveJsonResponse response = new HoloDexLiveJsonResponse(
-        200, 
+        200,
         TestDataReader
           .getReader()
           .readTestData("HoloDexMentionedChannel.json"));

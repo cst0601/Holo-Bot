@@ -1,8 +1,8 @@
-package com.alchemist;
+package com.alchemist.api;
 
 import com.alchemist.helper.TestDataReader;
-import com.alchemist.jsonresponse.HoloDexLiveJsonResponse;
-import com.alchemist.notification.LiveStream;
+import com.alchemist.notifier.LiveStream;
+
 import java.util.ArrayList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -45,7 +45,7 @@ public class TestHoloDexApi {
     } catch (Exception e) {
       Assertions.fail(e.getMessage());
     }
-    
+
     Assertions.assertEquals(0, streams.size());
   }
 

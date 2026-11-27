@@ -1,12 +1,17 @@
-package com.alchemist.service;
+package com.alchemist.notifier;
 
 import com.alchemist.ArgParser;
-import com.alchemist.StreamNotifierRunner;
 import com.alchemist.exceptions.ArgumentParseException;
+import com.alchemist.service.Service;
 import io.sentry.Sentry;
-import java.util.Arrays;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CancellationException;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
@@ -21,15 +26,18 @@ import org.slf4j.LoggerFactory;
  */
 public class StreamNotifierService extends ListenerAdapter implements Service {
 
-  public StreamNotifierService() {
-    logger = LoggerFactory.getLogger(StreamNotifierService.class);
-  }
+  private Logger logger = LoggerFactory.getLogger(StreamNotifierService.class);
+  private ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+  private ScheduledFuture<?> handle = null;
+  private StreamNotifierRunner streamNotifierRunner = null;
+  private ArgParser parser = null;
+  private BlockingQueue<String> serviceMessageBox = new LinkedBlockingQueue<String>();
 
   @Override
   public void onReady(ReadyEvent event) {
     try {
       streamNotifierRunner = new StreamNotifierRunner(event.getJDA(), serviceMessageBox);
-      streamNotifierRunner.start();
+      handle = executor.scheduleWithFixedDelay(streamNotifierRunner, 0, 1, TimeUnit.MINUTES);
       logger.info("StreamNotifierService ready!");
     } catch (Exception e) {
       e.printStackTrace();
@@ -59,20 +67,27 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
             && parser.getCommand(1).equals("stream_flush")) {
 
           try {
-            streamNotifierRunner.sendMessage(Arrays.asList("flush"));
-            streamNotifierRunner.interrupt();
+            executor.schedule(() -> {
+              streamNotifierRunner.flushStreams();
+            }, 0, TimeUnit.SECONDS);
             channel.sendMessage("upcoming stream cache cleared.").queue();
-          } catch (InterruptedException e) {
-            logger.warn("Interrupt occured when flushing stream cache.");
+          } catch (RejectedExecutionException | NullPointerException e) {
+            logger.warn("Failed to execute flush command.");
             e.printStackTrace();
           }
         } else if (parser.getCommand().equals(">sudo")
                    && parser.getCommand(1).equals("stream_list")) {
-
           try {
-            streamNotifierRunner.sendMessage(Arrays.asList("list", channel.getId()));
-            streamNotifierRunner.interrupt();
-          } catch (InterruptedException e) {
+            executor.schedule(() -> {
+              try {
+                streamNotifierRunner.listAllUpcomingStreams(channel.getId());
+              } catch (InterruptedException e) {
+                logger.warn("Failed to execute flush command.");
+                e.printStackTrace();
+              }
+            }, 0, TimeUnit.SECONDS);
+          } catch (RejectedExecutionException | NullPointerException e) {
+            logger.warn("Failed to execute steam_list command.");
             e.printStackTrace();
           }
         }
@@ -85,25 +100,15 @@ public class StreamNotifierService extends ListenerAdapter implements Service {
    * Send interrupt message to threads for termination.
    */
   public void terminate() {
-    // if runner did not build on ready
-    if (streamNotifierRunner == null) {
-      return;
-    }
-
     logger.info("Terminating stream notifier...");
     try {
-      streamNotifierRunner.sendMessage(Arrays.asList("stop"));
-      streamNotifierRunner.interrupt();
-      streamNotifierRunner.join();
-    } catch (InterruptedException e) {
-      logger.warn("Interrupt occured when stopping StreamNotifierRunner. Failed"
-          + " to terminate stream notifier.");
-      e.printStackTrace();
+      handle.get();
+    } catch (CancellationException e) {
+      logger.info("Terminated steam notifier task.");
+    } catch (InterruptedException | ExecutionException e) {
+      logger.error("Scheduled task died: " + e.getMessage());
+    } finally {
+      executor.shutdown();
     }
   }
-
-  private Logger logger;
-  private StreamNotifierRunner streamNotifierRunner = null;
-  private ArgParser parser = null;
-  private BlockingQueue<String> serviceMessageBox = new LinkedBlockingQueue<String>();
 }

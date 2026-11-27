@@ -1,17 +1,16 @@
-package com.alchemist;
+package com.alchemist.notifier;
 
+import com.alchemist.api.HoloDexApi;
 import com.alchemist.config.Config;
-import com.alchemist.notification.LiveStream;
-import com.alchemist.notification.UpcomingStream;
 import io.sentry.Sentry;
 import java.awt.Color;
+import java.lang.Runnable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.OptionalInt;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -22,7 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Workhorse of stream notification.
  */
-public class StreamNotifierRunner extends Thread {
+public class StreamNotifierRunner implements Runnable {
 
   /**
    * Thread that check stream and send out messasges.
@@ -40,45 +39,22 @@ public class StreamNotifierRunner extends Thread {
     // TODO: add some more message in member target channel
     // memberTargetChannel = jda.getTextChannelById(config.membershipTargetChannelId);
     this.memberName = config.memberName;
-  }
 
-  /** Thread main function. */
-  public void run() {
-    updateUpcomingStreams();  // init upcoming stream list
+    updateUpcomingStreams();
     notifyUpcomingStreams(false);
-
-    while (true) {
-      List<String> message;
-      try {
-        if ((message = messageBox.poll()) != null) {
-          if (message.get(0).equals("stop")) {
-            logger.info("StreamNotifierRunner terminating...");
-            break;
-          } else if (message.get(0).equals("flush")) {
-            upcomingStreams.clear();
-            updateUpcomingStreams();
-            notifyUpcomingStreams(false);
-            serviceMessageBox.put("Flushed all cached streams.");
-            logger.info("Flushed all cached streams.");
-          } else if (message.get(0).equals("list")) {
-            listAllUpcomingStreams(message.get(1));
-            logger.info("listed all upcoming stream");
-          }
-        } else {
-          updateUpcomingStreams();
-          notifyUpcomingStreams(true);
-          sleep(60000);  // 1 min
-        }
-      } catch (InterruptedException e) {
-        e.printStackTrace();
-      }
-    }
-
-    logger.info("StreamNotifierRunner exit run.");
   }
 
-  public void sendMessage(List<String> message) throws InterruptedException {
-    messageBox.put(message);
+  /** Runnable. */
+  public void run() {
+    updateUpcomingStreams();
+    notifyUpcomingStreams(true);
+  }
+
+  /** Flush cache and re-fetch. */
+  public void flushStreams() {
+    upcomingStreams.clear();
+    updateUpcomingStreams();
+    notifyUpcomingStreams(false);
   }
 
   private OptionalInt getUpcomingStreamIndex(UpcomingStream newStream) {
@@ -151,7 +127,8 @@ public class StreamNotifierRunner extends Thread {
     }
   }
 
-  private void listAllUpcomingStreams(String channelId) throws InterruptedException {
+  /** List all the upcoming streams. */
+  public void listAllUpcomingStreams(String channelId) throws InterruptedException {
     EmbedBuilder builder = new EmbedBuilder()
         .setTitle("Upcoming Streams")
         .setColor(Color.red)
@@ -187,7 +164,6 @@ public class StreamNotifierRunner extends Thread {
   private JDA jda;
   private Logger logger;
   private Config config;
-  private BlockingQueue<List<String>> messageBox = new LinkedBlockingQueue<List<String>>();
   private BlockingQueue<String> serviceMessageBox;
   private HoloDexApi api;
   private String memberName;

@@ -2,6 +2,7 @@ package com.alchemist;
 
 import com.alchemist.config.Config;
 import com.alchemist.config.ConfigSentry;
+import com.alchemist.notifier.StreamNotifierService;
 import com.alchemist.service.AboutListener;
 import com.alchemist.service.BonkListener;
 import com.alchemist.service.CountDownListener;
@@ -9,7 +10,6 @@ import com.alchemist.service.ManualListener;
 import com.alchemist.service.MemberVerificationService;
 import com.alchemist.service.PingListener;
 import com.alchemist.service.RollListener;
-import com.alchemist.service.StreamNotifierService;
 import com.alchemist.service.TwitterBroadcastService;
 import com.alchemist.service.VtubeListener;
 import com.alchemist.url.TwitterUrlReplaceListener;
